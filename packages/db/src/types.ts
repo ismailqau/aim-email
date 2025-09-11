@@ -1,0 +1,21 @@
+// Re-export Prisma types
+export type {
+  User,
+  Company,
+  Lead,
+  Pipeline,
+  PipelineStep,
+  EmailTemplate,
+  Email,
+  EmailEvent,
+  PipelineExecution,
+  StepExecution,
+  LeadActivity,
+  LeadStatus,
+  EmailStatus,
+  EmailEventType,
+  StepType,
+  PipelineExecutionStatus,
+  StepExecutionStatus,
+  ActivityType,
+} from '@prisma/client';

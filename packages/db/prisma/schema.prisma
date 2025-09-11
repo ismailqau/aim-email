@@ -1,0 +1,408 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  companies Company[]
+
+  @@map("users")
+}
+
+model Company {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  name        String
+  description String?
+  profileData Json?    @map("profile_data")
+  website     String?
+  industry    String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  leads          Lead[]
+  pipelines      Pipeline[]
+  emailTemplates EmailTemplate[]
+  emailSettings  EmailSettings?
+
+  @@map("companies")
+}
+
+model Lead {
+  id            String      @id @default(cuid())
+  companyId     String      @map("company_id")
+  email         String
+  firstName     String?     @map("first_name")
+  lastName      String?     @map("last_name")
+  title         String?
+  companyName   String?     @map("company_name")
+  customFields  Json?       @map("custom_fields")
+  priorityScore Float?      @map("priority_score")
+  status        LeadStatus  @default(ACTIVE)
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  company            Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  leadActivities     LeadActivity[]
+  pipelineExecutions PipelineExecution[]
+  emails             Email[]
+
+  @@unique([companyId, email])
+  @@map("leads")
+}
+
+model Pipeline {
+  id          String   @id @default(cuid())
+  companyId   String   @map("company_id")
+  name        String
+  description String?
+  steps       Json
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  company            Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  pipelineSteps      PipelineStep[]
+  pipelineExecutions PipelineExecution[]
+
+  @@map("pipelines")
+}
+
+model PipelineStep {
+  id          String      @id @default(cuid())
+  pipelineId  String      @map("pipeline_id")
+  templateId  String?     @map("template_id")
+  order       Int
+  delayHours  Int         @map("delay_hours")
+  conditions  Json?
+  stepType    StepType    @map("step_type")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  pipeline         Pipeline          @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+  emailTemplate    EmailTemplate?    @relation(fields: [templateId], references: [id])
+  stepExecutions   StepExecution[]
+
+  @@map("pipeline_steps")
+}
+
+model EmailTemplate {
+  id          String   @id @default(cuid())
+  companyId   String   @map("company_id")
+  name        String
+  subject     String
+  content     String
+  variables   Json?
+  aiGenerated Boolean  @default(false) @map("ai_generated")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  company       Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  pipelineSteps PipelineStep[]
+  emails        Email[]
+
+  @@map("email_templates")
+}
+
+model Email {
+  id               String      @id @default(cuid())
+  leadId           String      @map("lead_id")
+  templateId       String?     @map("template_id")
+  subject          String
+  content          String
+  status           EmailStatus @default(DRAFT)
+  sentAt           DateTime?   @map("sent_at")
+  sendgridMessageId String?    @map("sendgrid_message_id")
+  createdAt        DateTime    @default(now()) @map("created_at")
+  updatedAt        DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  lead          Lead           @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  emailTemplate EmailTemplate? @relation(fields: [templateId], references: [id])
+  emailEvents   EmailEvent[]
+
+  @@map("emails")
+}
+
+model EmailEvent {
+  id         String         @id @default(cuid())
+  emailId    String         @map("email_id")
+  eventType  EmailEventType @map("event_type")
+  timestamp  DateTime       @default(now())
+  eventData  Json?          @map("event_data")
+
+  // Relations
+  email Email @relation(fields: [emailId], references: [id], onDelete: Cascade)
+
+  @@map("email_events")
+}
+
+model PipelineExecution {
+  id         String                  @id @default(cuid())
+  pipelineId String                  @map("pipeline_id")
+  leadId     String                  @map("lead_id")
+  status     PipelineExecutionStatus @default(RUNNING)
+  startedAt  DateTime                @default(now()) @map("started_at")
+  completedAt DateTime?              @map("completed_at")
+  createdAt  DateTime                @default(now()) @map("created_at")
+  updatedAt  DateTime                @updatedAt @map("updated_at")
+
+  // Relations
+  pipeline       Pipeline        @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+  lead           Lead            @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  stepExecutions StepExecution[]
+
+  @@unique([pipelineId, leadId])
+  @@map("pipeline_executions")
+}
+
+model StepExecution {
+  id                  String                @id @default(cuid())
+  pipelineExecutionId String                @map("pipeline_execution_id")
+  stepId              String                @map("step_id")
+  status              StepExecutionStatus   @default(PENDING)
+  scheduledAt         DateTime?             @map("scheduled_at")
+  executedAt          DateTime?             @map("executed_at")
+  result              Json?
+  createdAt           DateTime              @default(now()) @map("created_at")
+  updatedAt           DateTime              @updatedAt @map("updated_at")
+
+  // Relations
+  pipelineExecution PipelineExecution @relation(fields: [pipelineExecutionId], references: [id], onDelete: Cascade)
+  step              PipelineStep      @relation(fields: [stepId], references: [id], onDelete: Cascade)
+
+  @@map("step_executions")
+}
+
+model LeadActivity {
+  id          String       @id @default(cuid())
+  leadId      String       @map("lead_id")
+  activityType ActivityType @map("activity_type")
+  description String
+  metadata    Json?
+  timestamp   DateTime     @default(now())
+
+  // Relations
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@map("lead_activities")
+}
+
+model EmailSettings {
+  id              String                @id @default(cuid())
+  companyId       String                @unique @map("company_id")
+  provider        EmailProvider         @default(SENDGRID)
+  sendgridConfig  SendGridConfig?
+  smtpConfig      SmtpConfig?
+  isActive        Boolean               @default(true) @map("is_active")
+  createdAt       DateTime              @default(now()) @map("created_at")
+  updatedAt       DateTime              @updatedAt @map("updated_at")
+
+  // Relations
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("email_settings")
+}
+
+model SendGridConfig {
+  id              String   @id @default(cuid())
+  emailSettingsId String   @unique @map("email_settings_id")
+  apiKey          String   @map("api_key")
+  fromEmail       String   @map("from_email")
+  fromName        String   @map("from_name")
+  webhookUrl      String?  @map("webhook_url")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  emailSettings EmailSettings @relation(fields: [emailSettingsId], references: [id], onDelete: Cascade)
+
+  @@map("sendgrid_configs")
+}
+
+model SmtpConfig {
+  id              String   @id @default(cuid())
+  emailSettingsId String   @unique @map("email_settings_id")
+  host            String
+  port            Int
+  secure          Boolean  @default(false)
+  username        String
+  password        String
+  fromEmail       String   @map("from_email")
+  fromName        String   @map("from_name")
+  replyToEmail    String?  @map("reply_to_email")
+  
+  // Advanced SMTP Features
+  enableDkim      Boolean  @default(false) @map("enable_dkim")
+  dkimPrivateKey  String?  @map("dkim_private_key")
+  dkimSelector    String?  @map("dkim_selector")
+  dkimDomain      String?  @map("dkim_domain")
+  
+  // Connection pooling and rate limiting
+  maxConnections  Int      @default(5) @map("max_connections")
+  maxMessages     Int      @default(100) @map("max_messages")
+  rateLimit       Int      @default(10) @map("rate_limit")
+  
+  // Retry and timeout settings
+  connectionTimeout Int    @default(60000) @map("connection_timeout")
+  socketTimeout     Int    @default(60000) @map("socket_timeout")
+  greetingTimeout   Int    @default(30000) @map("greeting_timeout")
+  
+  // Reputation management
+  useStaticIp     Boolean  @default(false) @map("use_static_ip")
+  staticIpAddress String?  @map("static_ip_address")
+  enableTls       Boolean  @default(true) @map("enable_tls")
+  requireTls      Boolean  @default(false) @map("require_tls")
+  
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  emailSettings EmailSettings @relation(fields: [emailSettingsId], references: [id], onDelete: Cascade)
+
+  @@map("smtp_configs")
+}
+
+model DnsRecord {
+  id          String      @id @default(cuid())
+  companyId   String      @map("company_id")
+  domain      String
+  recordType  DnsRecordType @map("record_type")
+  name        String
+  value       String
+  ttl         Int         @default(3600)
+  isVerified  Boolean     @default(false) @map("is_verified")
+  lastChecked DateTime?   @map("last_checked")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  @@map("dns_records")
+}
+
+model EmailDeliveryLog {
+  id              String   @id @default(cuid())
+  emailId         String   @map("email_id")
+  provider        EmailProvider
+  messageId       String?  @map("message_id")
+  status          DeliveryStatus
+  errorMessage    String?  @map("error_message")
+  deliveryTime    Int?     @map("delivery_time") // milliseconds
+  retryCount      Int      @default(0) @map("retry_count")
+  reputationScore Float?   @map("reputation_score")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@map("email_delivery_logs")
+}
+
+// Enums
+enum LeadStatus {
+  ACTIVE
+  PAUSED
+  UNSUBSCRIBED
+  BOUNCED
+  REPLIED
+  CONVERTED
+}
+
+enum EmailStatus {
+  DRAFT
+  SCHEDULED
+  SENT
+  DELIVERED
+  BOUNCED
+  FAILED
+}
+
+enum EmailEventType {
+  DELIVERED
+  OPENED
+  CLICKED
+  BOUNCED
+  SPAM_REPORT
+  UNSUBSCRIBE
+  DROPPED
+  DEFERRED
+  PROCESSED
+}
+
+enum StepType {
+  EMAIL
+  DELAY
+  CONDITION
+  ACTION
+}
+
+enum PipelineExecutionStatus {
+  RUNNING
+  COMPLETED
+  PAUSED
+  FAILED
+  CANCELLED
+}
+
+enum StepExecutionStatus {
+  PENDING
+  SCHEDULED
+  EXECUTED
+  FAILED
+  SKIPPED
+}
+
+enum ActivityType {
+  EMAIL_SENT
+  EMAIL_OPENED
+  EMAIL_CLICKED
+  EMAIL_REPLIED
+  EMAIL_BOUNCED
+  PIPELINE_STARTED
+  PIPELINE_COMPLETED
+  LEAD_IMPORTED
+  LEAD_UPDATED
+  UNSUBSCRIBED
+}
+
+enum EmailProvider {
+  SENDGRID
+  SMTP
+  CUSTOM
+}
+
+enum DnsRecordType {
+  SPF
+  DKIM
+  DMARC
+  MX
+  TXT
+  CNAME
+}
+
+enum DeliveryStatus {
+  PENDING
+  SENT
+  DELIVERED
+  FAILED
+  BOUNCED
+  REJECTED
+  RETRY
+}

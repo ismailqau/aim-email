@@ -1,0 +1,6 @@
+{
+  "version": "20240101000000",
+  "dialect": "postgresql",
+  "name": "init",
+  "checksum": "abc123def456"
+}
