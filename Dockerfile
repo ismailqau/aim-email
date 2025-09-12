@@ -2,7 +2,7 @@
 # Multi-stage Dockerfile for production deployment
 
 # Base stage with Node.js
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 WORKDIR /app
 RUN apk add --no-cache libc6-compat openssl
 RUN npm install -g turbo
@@ -11,8 +11,8 @@ RUN npm install -g turbo
 FROM base AS deps
 COPY package*.json ./
 COPY turbo.json ./
-COPY packages/*/package.json ./packages/*/
-COPY apps/*/package.json ./apps/*/
+COPY packages/*/package.json ./packages/
+COPY apps/*/package.json ./apps/
 RUN npm ci --omit=dev --ignore-scripts
 
 # Build stage
@@ -22,7 +22,7 @@ COPY --from=deps /app/node_modules ./node_modules
 RUN turbo run build
 
 # API Production stage
-FROM node:18-alpine AS api-production
+FROM node:20-alpine AS api-production
 WORKDIR /app
 
 # Install curl for health checks
@@ -47,7 +47,7 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 CMD ["npm", "run", "start:prod"]
 
 # Web Production stage  
-FROM node:18-alpine AS web-production
+FROM node:20-alpine AS web-production
 WORKDIR /app
 
 # Install curl for health checks
