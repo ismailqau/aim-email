@@ -31,7 +31,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install -g octokit
+          npm init -y
+          npm install @octokit/rest
 
       - name: Generate contributor statistics
         env:

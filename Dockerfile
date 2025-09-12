@@ -13,7 +13,7 @@ COPY package*.json ./
 COPY turbo.json ./
 COPY packages/*/package.json ./packages/*/
 COPY apps/*/package.json ./apps/*/
-RUN npm ci --only=production --ignore-scripts
+RUN npm ci --omit=dev --ignore-scripts
 
 # Build stage
 FROM base AS builder
