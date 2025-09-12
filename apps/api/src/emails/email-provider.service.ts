@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -44,11 +44,13 @@ export class EmailProviderService {
     private readonly database: DatabaseService,
     private readonly enhancedSmtpService: EnhancedSmtpService,
     private readonly sendGridService: SendGridService,
-    private readonly dnsValidationService: DnsValidationService,
+    private readonly dnsValidationService: DnsValidationService
   ) {}
 
   async configureEmailProvider(config: EmailProviderConfig): Promise<any> {
-    this.logger.log(`Configuring email provider for company ${config.companyId}: ${config.provider}`);
+    this.logger.log(
+      `Configuring email provider for company ${config.companyId}: ${config.provider}`
+    );
 
     try {
       // Validate configuration before saving
@@ -150,24 +152,31 @@ export class EmailProviderService {
       return await this.getEmailProviderConfig(config.companyId);
     } catch (error) {
       this.logger.error(`Failed to configure email provider:`, error);
-      throw new BadRequestException(`Email provider configuration failed: ${error.message}`);
+      throw new BadRequestException(
+        `Email provider configuration failed: ${error.message}`
+      );
     }
   }
 
   async sendEmailWithCompanyConfig(request: EmailSendRequest): Promise<any> {
     const config = await this.getEmailProviderConfig(request.companyId);
-    
+
     if (!config || !config.isActive) {
-      throw new BadRequestException(`No active email configuration found for company ${request.companyId}`);
+      throw new BadRequestException(
+        `No active email configuration found for company ${request.companyId}`
+      );
     }
 
     const startTime = Date.now();
-    
+
     try {
       let result;
-      
+
       if (config.provider === 'SENDGRID' && config.sendgridConfig) {
-        result = await this.sendViaConfiguredSendGrid(request, config.sendgridConfig);
+        result = await this.sendViaConfiguredSendGrid(
+          request,
+          config.sendgridConfig
+        );
       } else if (config.provider === 'SMTP' && config.smtpConfig) {
         result = await this.enhancedSmtpService.sendEmailWithConfig(
           {
@@ -219,7 +228,7 @@ export class EmailProviderService {
 
   async validateEmailSetup(companyId: string): Promise<any> {
     const config = await this.getEmailProviderConfig(companyId);
-    
+
     if (!config) {
       return {
         isValid: false,
@@ -234,11 +243,14 @@ export class EmailProviderService {
 
     // Validate SendGrid configuration
     if (config.provider === 'SENDGRID' && config.sendgridConfig) {
-      if (!config.sendgridConfig.apiKey || config.sendgridConfig.apiKey === 'SG.your-actual-sendgrid-api-key') {
+      if (
+        !config.sendgridConfig.apiKey ||
+        config.sendgridConfig.apiKey === 'SG.your-actual-sendgrid-api-key'
+      ) {
         issues.push('SendGrid API key is missing or using placeholder value');
         recommendations.push('Add a valid SendGrid API key');
       }
-      
+
       if (!config.sendgridConfig.fromEmail) {
         issues.push('SendGrid from email is not configured');
         recommendations.push('Configure a from email address');
@@ -247,24 +259,37 @@ export class EmailProviderService {
 
     // Validate SMTP configuration and DNS setup
     if (config.provider === 'SMTP' && config.smtpConfig) {
-      if (!config.smtpConfig.host || !config.smtpConfig.username || !config.smtpConfig.password) {
+      if (
+        !config.smtpConfig.host ||
+        !config.smtpConfig.username ||
+        !config.smtpConfig.password
+      ) {
         issues.push('SMTP configuration is incomplete');
-        recommendations.push('Complete SMTP host, username, and password configuration');
+        recommendations.push(
+          'Complete SMTP host, username, and password configuration'
+        );
       }
-      
+
       if (!config.smtpConfig.fromEmail) {
         issues.push('SMTP from email is not configured');
         recommendations.push('Configure a from email address');
       }
-      
+
       // Validate DNS setup for SMTP
       if (config.smtpConfig.fromEmail) {
         const domain = config.smtpConfig.fromEmail.split('@')[1];
-        dnsValidation = await this.dnsValidationService.validateDomainSetup(domain, config.smtpConfig.host);
-        
+        dnsValidation = await this.dnsValidationService.validateDomainSetup(
+          domain,
+          config.smtpConfig.host
+        );
+
         if (dnsValidation.overallScore < 80) {
-          issues.push(`DNS configuration score is ${dnsValidation.overallScore}% - may affect deliverability`);
-          recommendations.push('Improve DNS configuration (SPF, DKIM, DMARC records)');
+          issues.push(
+            `DNS configuration score is ${dnsValidation.overallScore}% - may affect deliverability`
+          );
+          recommendations.push(
+            'Improve DNS configuration (SPF, DKIM, DMARC records)'
+          );
         }
       }
     }
@@ -279,9 +304,12 @@ export class EmailProviderService {
     };
   }
 
-  async testEmailConfiguration(companyId: string, testEmail: string): Promise<any> {
+  async testEmailConfiguration(
+    companyId: string,
+    testEmail: string
+  ): Promise<any> {
     const config = await this.getEmailProviderConfig(companyId);
-    
+
     if (!config || !config.isActive) {
       throw new BadRequestException('No active email configuration found');
     }
@@ -304,7 +332,7 @@ export class EmailProviderService {
 
   async generateDKIMKeyPair(companyId: string): Promise<any> {
     const keyPair = await this.dnsValidationService.generateDKIMKeyPair();
-    
+
     // Store the private key in the SMTP configuration
     const config = await this.getEmailProviderConfig(companyId);
     if (config && config.smtpConfig) {
@@ -330,12 +358,14 @@ export class EmailProviderService {
     };
   }
 
-  private async validateProviderConfig(config: EmailProviderConfig): Promise<void> {
+  private async validateProviderConfig(
+    config: EmailProviderConfig
+  ): Promise<void> {
     if (config.provider === 'SENDGRID') {
       if (!config.sendgridConfig || !config.sendgridConfig.apiKey) {
         throw new Error('SendGrid configuration requires API key');
       }
-      
+
       if (!config.sendgridConfig.fromEmail) {
         throw new Error('SendGrid configuration requires from email');
       }
@@ -345,7 +375,7 @@ export class EmailProviderService {
       if (!config.smtpConfig) {
         throw new Error('SMTP configuration is required');
       }
-      
+
       const required = ['host', 'port', 'username', 'password', 'fromEmail'];
       for (const field of required) {
         if (!config.smtpConfig[field]) {
@@ -355,7 +385,10 @@ export class EmailProviderService {
     }
   }
 
-  private async sendViaConfiguredSendGrid(request: EmailSendRequest, sendgridConfig: any): Promise<any> {
+  private async sendViaConfiguredSendGrid(
+    request: EmailSendRequest,
+    sendgridConfig: any
+  ): Promise<any> {
     // This would use the configured SendGrid credentials
     // For now, using the existing SendGrid service
     return this.sendGridService.sendEmail({

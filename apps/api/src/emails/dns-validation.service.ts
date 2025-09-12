@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -41,9 +41,12 @@ export class DnsValidationService {
 
   constructor(private readonly database: DatabaseService) {}
 
-  async validateDomainSetup(domain: string, smtpHost?: string): Promise<DomainSetupGuide> {
+  async validateDomainSetup(
+    domain: string,
+    smtpHost?: string
+  ): Promise<DomainSetupGuide> {
     this.logger.log(`Validating DNS setup for domain: ${domain}`);
-    
+
     const [spf, dkim, dmarc, mx] = await Promise.all([
       this.validateSPF(domain, smtpHost),
       this.validateDKIM(domain),
@@ -52,7 +55,13 @@ export class DnsValidationService {
     ]);
 
     const overallScore = this.calculateOverallScore([spf, dkim, dmarc, mx]);
-    const setupInstructions = this.generateSetupInstructions(domain, spf, dkim, dmarc, mx);
+    const setupInstructions = this.generateSetupInstructions(
+      domain,
+      spf,
+      dkim,
+      dmarc,
+      mx
+    );
 
     return {
       domain,
@@ -65,11 +74,14 @@ export class DnsValidationService {
     };
   }
 
-  async validateSPF(domain: string, smtpHost?: string): Promise<DnsRecordValidation> {
+  async validateSPF(
+    domain: string,
+    smtpHost?: string
+  ): Promise<DnsRecordValidation> {
     try {
       const txtRecords = await this.lookupTXTRecords(domain);
       const spfRecord = txtRecords.find(record => record.includes('v=spf1'));
-      
+
       const validation: DnsRecordValidation = {
         domain,
         recordType: 'SPF',
@@ -84,10 +96,15 @@ export class DnsValidationService {
       } else {
         validation.currentValue = spfRecord;
         validation.isValid = this.validateSPFRecord(spfRecord, smtpHost);
-        
+
         if (!validation.isValid) {
-          validation.issues.push('SPF record exists but may not include your SMTP server');
-          validation.recommendedValue = this.generateSPFRecord(domain, smtpHost);
+          validation.issues.push(
+            'SPF record exists but may not include your SMTP server'
+          );
+          validation.recommendedValue = this.generateSPFRecord(
+            domain,
+            smtpHost
+          );
         }
       }
 
@@ -104,12 +121,15 @@ export class DnsValidationService {
     }
   }
 
-  async validateDKIM(domain: string, selector: string = 'default'): Promise<DnsRecordValidation> {
+  async validateDKIM(
+    domain: string,
+    selector: string = 'default'
+  ): Promise<DnsRecordValidation> {
     try {
       const dkimDomain = `${selector}._domainkey.${domain}`;
       const txtRecords = await this.lookupTXTRecords(dkimDomain);
       const dkimRecord = txtRecords.find(record => record.includes('v=DKIM1'));
-      
+
       const validation: DnsRecordValidation = {
         domain,
         recordType: 'DKIM',
@@ -119,14 +139,18 @@ export class DnsValidationService {
       };
 
       if (!dkimRecord) {
-        validation.issues.push(`No DKIM record found for selector '${selector}'`);
+        validation.issues.push(
+          `No DKIM record found for selector '${selector}'`
+        );
         validation.recommendedValue = this.generateDKIMRecord();
       } else {
         validation.currentValue = dkimRecord;
-        
+
         if (!dkimRecord.includes('p=')) {
           validation.isValid = false;
-          validation.issues.push('DKIM record missing public key (p= parameter)');
+          validation.issues.push(
+            'DKIM record missing public key (p= parameter)'
+          );
         }
       }
 
@@ -147,8 +171,10 @@ export class DnsValidationService {
     try {
       const dmarcDomain = `_dmarc.${domain}`;
       const txtRecords = await this.lookupTXTRecords(dmarcDomain);
-      const dmarcRecord = txtRecords.find(record => record.includes('v=DMARC1'));
-      
+      const dmarcRecord = txtRecords.find(record =>
+        record.includes('v=DMARC1')
+      );
+
       const validation: DnsRecordValidation = {
         domain,
         recordType: 'DMARC',
@@ -162,13 +188,15 @@ export class DnsValidationService {
         validation.recommendedValue = this.generateDMARCRecord(domain);
       } else {
         validation.currentValue = dmarcRecord;
-        
+
         // Validate DMARC policy
         if (!dmarcRecord.includes('p=')) {
           validation.isValid = false;
           validation.issues.push('DMARC record missing policy (p= parameter)');
         } else if (dmarcRecord.includes('p=none')) {
-          validation.issues.push('DMARC policy is set to \"none\" - consider using \"quarantine\" or \"reject\"');
+          validation.issues.push(
+            'DMARC policy is set to \"none\" - consider using \"quarantine\" or \"reject\"'
+          );
         }
       }
 
@@ -188,7 +216,7 @@ export class DnsValidationService {
   async validateMX(domain: string): Promise<DnsRecordValidation> {
     try {
       const mxRecords = await this.lookupMXRecords(domain);
-      
+
       const validation: DnsRecordValidation = {
         domain,
         recordType: 'MX',
@@ -198,14 +226,20 @@ export class DnsValidationService {
       };
 
       if (mxRecords.length === 0) {
-        validation.issues.push('No MX records found - this domain cannot receive email');
+        validation.issues.push(
+          'No MX records found - this domain cannot receive email'
+        );
       } else {
-        validation.currentValue = mxRecords.map(mx => `${mx.priority} ${mx.exchange}`).join(', ');
-        
+        validation.currentValue = mxRecords
+          .map(mx => `${mx.priority} ${mx.exchange}`)
+          .join(', ');
+
         // Check for proper MX configuration
         const sortedMX = mxRecords.sort((a, b) => a.priority - b.priority);
         if (sortedMX.length === 1 && sortedMX[0].priority !== 10) {
-          validation.issues.push('Consider using priority 10 for your primary MX record');
+          validation.issues.push(
+            'Consider using priority 10 for your primary MX record'
+          );
         }
       }
 
@@ -228,7 +262,7 @@ export class DnsValidationService {
         if (err) {
           reject(err);
         } else {
-          const flatRecords = (records || []).map(record => 
+          const flatRecords = (records || []).map(record =>
             Array.isArray(record) ? record.join('') : record
           );
           resolve(flatRecords);
@@ -251,13 +285,13 @@ export class DnsValidationService {
 
   private generateSPFRecord(domain: string, smtpHost?: string): string {
     let spf = 'v=spf1';
-    
+
     // Include common email services
     const commonIncludes = [
-      'include:_spf.google.com',  // Google Workspace
-      'include:spf.protection.outlook.com',  // Microsoft 365
+      'include:_spf.google.com', // Google Workspace
+      'include:spf.protection.outlook.com', // Microsoft 365
     ];
-    
+
     // Add SMTP host if provided
     if (smtpHost) {
       if (smtpHost.includes('gmail') || smtpHost.includes('google')) {
@@ -268,7 +302,7 @@ export class DnsValidationService {
         spf += ` a:${smtpHost}`;
       }
     }
-    
+
     spf += ' ~all';
     return spf;
   }
@@ -285,14 +319,16 @@ export class DnsValidationService {
     // Basic SPF validation
     if (!spfRecord.includes('v=spf1')) return false;
     if (!spfRecord.includes('all')) return false;
-    
+
     // If SMTP host is provided, check if it's included
     if (smtpHost) {
-      return spfRecord.includes(smtpHost) || 
-             spfRecord.includes('include:') || 
-             spfRecord.includes('a:');
+      return (
+        spfRecord.includes(smtpHost) ||
+        spfRecord.includes('include:') ||
+        spfRecord.includes('a:')
+      );
     }
-    
+
     return true;
   }
 
@@ -304,7 +340,7 @@ export class DnsValidationService {
     validations.forEach(validation => {
       const weight = weights[validation.recordType] || 0;
       totalWeight += weight;
-      
+
       if (validation.isValid) {
         totalScore += weight;
       } else if (validation.issues && validation.issues.length > 0) {
@@ -325,9 +361,13 @@ export class DnsValidationService {
   ): string[] {
     const instructions: string[] = [];
 
-    instructions.push('# DNS Configuration Instructions for Email Deliverability');
+    instructions.push(
+      '# DNS Configuration Instructions for Email Deliverability'
+    );
     instructions.push('');
-    instructions.push('Add the following DNS records to your domain registrar or DNS provider:');
+    instructions.push(
+      'Add the following DNS records to your domain registrar or DNS provider:'
+    );
     instructions.push('');
 
     if (!spf.isValid && spf.recommendedValue) {
@@ -343,14 +383,20 @@ export class DnsValidationService {
       instructions.push('## DKIM Record (DomainKeys Identified Mail)');
       instructions.push('Record Type: TXT');
       instructions.push(`Name: default._domainkey.${domain}`);
-      instructions.push(`Value: ${dkim.recommendedValue || this.generateDKIMRecord()}`);
+      instructions.push(
+        `Value: ${dkim.recommendedValue || this.generateDKIMRecord()}`
+      );
       instructions.push('TTL: 3600');
-      instructions.push('Note: You need to generate a DKIM key pair. Use the private key in your SMTP configuration.');
+      instructions.push(
+        'Note: You need to generate a DKIM key pair. Use the private key in your SMTP configuration.'
+      );
       instructions.push('');
     }
 
     if (!dmarc.isValid && dmarc.recommendedValue) {
-      instructions.push('## DMARC Record (Domain-based Message Authentication)');
+      instructions.push(
+        '## DMARC Record (Domain-based Message Authentication)'
+      );
       instructions.push('Record Type: TXT');
       instructions.push(`Name: _dmarc.${domain}`);
       instructions.push(`Value: ${dmarc.recommendedValue}`);
@@ -364,7 +410,9 @@ export class DnsValidationService {
       instructions.push(`Name: ${domain}`);
       instructions.push('Value: 10 mail.your-provider.com');
       instructions.push('TTL: 3600');
-      instructions.push('Note: Replace \"mail.your-provider.com\" with your actual mail server.');
+      instructions.push(
+        'Note: Replace \"mail.your-provider.com\" with your actual mail server.'
+      );
       instructions.push('');
     }
 
@@ -378,37 +426,45 @@ export class DnsValidationService {
     return instructions;
   }
 
-  async generateDKIMKeyPair(): Promise<{ privateKey: string; publicKey: string; selector: string }> {
+  async generateDKIMKeyPair(): Promise<{
+    privateKey: string;
+    publicKey: string;
+    selector: string;
+  }> {
     return new Promise((resolve, reject) => {
-      crypto.generateKeyPair('rsa', {
-        modulusLength: 2048,
-        publicKeyEncoding: {
-          type: 'spki',
-          format: 'pem'
+      crypto.generateKeyPair(
+        'rsa',
+        {
+          modulusLength: 2048,
+          publicKeyEncoding: {
+            type: 'spki',
+            format: 'pem',
+          },
+          privateKeyEncoding: {
+            type: 'pkcs8',
+            format: 'pem',
+          },
         },
-        privateKeyEncoding: {
-          type: 'pkcs8',
-          format: 'pem'
+        (err, publicKey, privateKey) => {
+          if (err) {
+            reject(err);
+          } else {
+            // Extract the public key for DNS record
+            const publicKeyForDNS = publicKey
+              .replace(/-----BEGIN PUBLIC KEY-----/, '')
+              .replace(/-----END PUBLIC KEY-----/, '')
+              .replace(/\\s/g, '');
+
+            const selector = `sel${Date.now()}`;
+
+            resolve({
+              privateKey,
+              publicKey: `v=DKIM1; k=rsa; p=${publicKeyForDNS}`,
+              selector,
+            });
+          }
         }
-      }, (err, publicKey, privateKey) => {
-        if (err) {
-          reject(err);
-        } else {
-          // Extract the public key for DNS record
-          const publicKeyForDNS = publicKey
-            .replace(/-----BEGIN PUBLIC KEY-----/, '')
-            .replace(/-----END PUBLIC KEY-----/, '')
-            .replace(/\\s/g, '');
-          
-          const selector = `sel${Date.now()}`;
-          
-          resolve({
-            privateKey,
-            publicKey: `v=DKIM1; k=rsa; p=${publicKeyForDNS}`,
-            selector
-          });
-        }
-      });
+      );
     });
   }
 }

@@ -3,17 +3,18 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
 import * as React from 'react';
 import { cn } from '../utils';
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {

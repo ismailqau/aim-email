@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -84,7 +84,9 @@ describe('CompaniesService', () => {
       const error = new Error('Database error');
       mockDatabaseService.client.company.create.mockRejectedValue(error);
 
-      await expect(service.createCompany(userId, companyData)).rejects.toThrow(error);
+      await expect(service.createCompany(userId, companyData)).rejects.toThrow(
+        error
+      );
     });
   });
 
@@ -108,7 +110,9 @@ describe('CompaniesService', () => {
     ];
 
     it('should return companies for a user', async () => {
-      mockDatabaseService.client.company.findMany.mockResolvedValue(mockCompanies);
+      mockDatabaseService.client.company.findMany.mockResolvedValue(
+        mockCompanies
+      );
 
       const result = await service.getCompanies(userId);
 
@@ -139,13 +143,17 @@ describe('CompaniesService', () => {
     };
 
     it('should return a company by id', async () => {
-      mockDatabaseService.client.company.findFirst.mockResolvedValue(mockCompany);
+      mockDatabaseService.client.company.findFirst.mockResolvedValue(
+        mockCompany
+      );
 
       const result = await service.getCompanyById(userId, companyId);
 
-      expect(mockDatabaseService.client.company.findFirst).toHaveBeenCalledWith({
-        where: { id: companyId, userId },
-      });
+      expect(mockDatabaseService.client.company.findFirst).toHaveBeenCalledWith(
+        {
+          where: { id: companyId, userId },
+        }
+      );
       expect(result).toEqual(mockCompany);
     });
 
@@ -174,7 +182,9 @@ describe('CompaniesService', () => {
     };
 
     it('should update a company successfully', async () => {
-      mockDatabaseService.client.company.update.mockResolvedValue(mockUpdatedCompany);
+      mockDatabaseService.client.company.update.mockResolvedValue(
+        mockUpdatedCompany
+      );
 
       const result = await service.updateCompany(userId, companyId, updateData);
 
@@ -189,7 +199,9 @@ describe('CompaniesService', () => {
       const error = new Error('Update failed');
       mockDatabaseService.client.company.update.mockRejectedValue(error);
 
-      await expect(service.updateCompany(userId, companyId, updateData)).rejects.toThrow(error);
+      await expect(
+        service.updateCompany(userId, companyId, updateData)
+      ).rejects.toThrow(error);
     });
   });
 
@@ -212,7 +224,9 @@ describe('CompaniesService', () => {
       const error = new Error('Delete failed');
       mockDatabaseService.client.company.delete.mockRejectedValue(error);
 
-      await expect(service.deleteCompany(userId, companyId)).rejects.toThrow(error);
+      await expect(service.deleteCompany(userId, companyId)).rejects.toThrow(
+        error
+      );
     });
   });
 });

@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -21,7 +21,11 @@ jest.mock('@google/generative-ai', () => ({
     getGenerativeModel: jest.fn().mockReturnValue({
       generateContent: jest.fn().mockResolvedValue({
         response: {
-          text: jest.fn().mockReturnValue('{"subject": "Test Subject", "content": "Test Content"}'),
+          text: jest
+            .fn()
+            .mockReturnValue(
+              '{"subject": "Test Subject", "content": "Test Content"}'
+            ),
         },
       }),
     }),
@@ -130,31 +134,31 @@ describe('EmailsService', () => {
     it('should throw error when lead not found', async () => {
       mockDatabaseService.client.lead.findUnique.mockResolvedValue(null);
 
-      await expect(service.generateEmailContent('non-existent-lead')).rejects.toThrow(
-        'Lead not found',
-      );
+      await expect(
+        service.generateEmailContent('non-existent-lead')
+      ).rejects.toThrow('Lead not found');
     });
 
     it('should handle AI generation failure', async () => {
       mockDatabaseService.client.lead.findUnique.mockResolvedValue(mockLead);
-      
+
       // Mock AI failure
       const mockModel = {
         generateContent: jest.fn().mockRejectedValue(new Error('API Error')),
       };
-      
+
       (service as any).genAI = {
         getGenerativeModel: jest.fn().mockReturnValue(mockModel),
       };
 
       await expect(service.generateEmailContent(leadId)).rejects.toThrow(
-        'AI generation failed: API Error',
+        'AI generation failed: API Error'
       );
     });
 
     it('should handle invalid JSON response from AI', async () => {
       mockDatabaseService.client.lead.findUnique.mockResolvedValue(mockLead);
-      
+
       const mockModel = {
         generateContent: jest.fn().mockResolvedValue({
           response: {
@@ -162,7 +166,7 @@ describe('EmailsService', () => {
           },
         }),
       };
-      
+
       (service as any).genAI = {
         getGenerativeModel: jest.fn().mockReturnValue(mockModel),
       };
@@ -177,15 +181,19 @@ describe('EmailsService', () => {
 
     it('should parse subject from non-JSON response', async () => {
       mockDatabaseService.client.lead.findUnique.mockResolvedValue(mockLead);
-      
+
       const mockModel = {
         generateContent: jest.fn().mockResolvedValue({
           response: {
-            text: jest.fn().mockReturnValue('Subject: Custom Subject\n\nEmail body content here'),
+            text: jest
+              .fn()
+              .mockReturnValue(
+                'Subject: Custom Subject\n\nEmail body content here'
+              ),
           },
         }),
       };
-      
+
       (service as any).genAI = {
         getGenerativeModel: jest.fn().mockReturnValue(mockModel),
       };
@@ -217,11 +225,15 @@ describe('EmailsService', () => {
     };
 
     it('should create email template successfully', async () => {
-      mockDatabaseService.client.emailTemplate.create.mockResolvedValue(mockTemplate);
+      mockDatabaseService.client.emailTemplate.create.mockResolvedValue(
+        mockTemplate
+      );
 
       const result = await service.createEmailTemplate(companyId, templateData);
 
-      expect(mockDatabaseService.client.emailTemplate.create).toHaveBeenCalledWith({
+      expect(
+        mockDatabaseService.client.emailTemplate.create
+      ).toHaveBeenCalledWith({
         data: {
           ...templateData,
           companyId,
@@ -234,12 +246,19 @@ describe('EmailsService', () => {
     it('should create AI-generated template', async () => {
       const aiTemplateData = { ...templateData, aiGenerated: true };
       const mockAiTemplate = { ...mockTemplate, aiGenerated: true };
-      
-      mockDatabaseService.client.emailTemplate.create.mockResolvedValue(mockAiTemplate);
 
-      const result = await service.createEmailTemplate(companyId, aiTemplateData);
+      mockDatabaseService.client.emailTemplate.create.mockResolvedValue(
+        mockAiTemplate
+      );
 
-      expect(mockDatabaseService.client.emailTemplate.create).toHaveBeenCalledWith({
+      const result = await service.createEmailTemplate(
+        companyId,
+        aiTemplateData
+      );
+
+      expect(
+        mockDatabaseService.client.emailTemplate.create
+      ).toHaveBeenCalledWith({
         data: {
           ...aiTemplateData,
           companyId,
@@ -252,7 +271,9 @@ describe('EmailsService', () => {
       const error = new Error('Database error');
       mockDatabaseService.client.emailTemplate.create.mockRejectedValue(error);
 
-      await expect(service.createEmailTemplate(companyId, templateData)).rejects.toThrow(error);
+      await expect(
+        service.createEmailTemplate(companyId, templateData)
+      ).rejects.toThrow(error);
     });
   });
 
@@ -276,11 +297,15 @@ describe('EmailsService', () => {
     ];
 
     it('should return email templates for company', async () => {
-      mockDatabaseService.client.emailTemplate.findMany.mockResolvedValue(mockTemplates);
+      mockDatabaseService.client.emailTemplate.findMany.mockResolvedValue(
+        mockTemplates
+      );
 
       const result = await service.getEmailTemplates(companyId);
 
-      expect(mockDatabaseService.client.emailTemplate.findMany).toHaveBeenCalledWith({
+      expect(
+        mockDatabaseService.client.emailTemplate.findMany
+      ).toHaveBeenCalledWith({
         where: { companyId },
         orderBy: { createdAt: 'desc' },
       });
@@ -373,8 +398,9 @@ describe('EmailsService', () => {
 
   describe('parseEmailContent', () => {
     it('should parse valid JSON response', () => {
-      const jsonResponse = '{"subject": "Test Subject", "content": "Test Content"}';
-      
+      const jsonResponse =
+        '{"subject": "Test Subject", "content": "Test Content"}';
+
       // Access private method through any
       const serviceAny = service as any;
       const result = serviceAny.parseEmailContent(jsonResponse);
@@ -386,8 +412,9 @@ describe('EmailsService', () => {
     });
 
     it('should parse JSON from mixed response', () => {
-      const mixedResponse = 'Some text before\n{"subject": "Test Subject", "content": "Test Content"}\nSome text after';
-      
+      const mixedResponse =
+        'Some text before\n{"subject": "Test Subject", "content": "Test Content"}\nSome text after';
+
       const serviceAny = service as any;
       const result = serviceAny.parseEmailContent(mixedResponse);
 
@@ -398,8 +425,9 @@ describe('EmailsService', () => {
     });
 
     it('should extract subject from text response', () => {
-      const textResponse = 'Subject: Custom Subject\n\nThis is the email content';
-      
+      const textResponse =
+        'Subject: Custom Subject\n\nThis is the email content';
+
       const serviceAny = service as any;
       const result = serviceAny.parseEmailContent(textResponse);
 
@@ -411,7 +439,7 @@ describe('EmailsService', () => {
 
     it('should handle plain text response', () => {
       const plainResponse = 'This is just plain email content';
-      
+
       const serviceAny = service as any;
       const result = serviceAny.parseEmailContent(plainResponse);
 

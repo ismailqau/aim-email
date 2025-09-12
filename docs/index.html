@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Email Marketing System - AimNexus.ai</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="./assets/favicon.ico" type="image/x-icon" />
+    <meta
+      name="description"
+      content="AI-powered email marketing automation platform by AimNexus.ai. Open source, scalable, and ready for commercial use."
+    />
+    <meta
+      name="keywords"
+      content="email marketing, AI, automation, open source, AimNovo, AimNexus"
+    />
+    <meta name="author" content="Muhammad Ismail" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://aimnovo.github.io/email-marketing/"
+    />
+    <meta
+      property="og:title"
+      content="AI Email Marketing System - AimNexus.ai"
+    />
+    <meta
+      property="og:description"
+      content="AI-powered email marketing automation platform by AimNexus.ai"
+    />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta
+      property="twitter:url"
+      content="https://aimnovo.github.io/email-marketing/"
+    />
+    <meta
+      property="twitter:title"
+      content="AI Email Marketing System - AimNexus.ai"
+    />
+    <meta
+      property="twitter:description"
+      content="AI-powered email marketing automation platform by AimNexus.ai"
+    />
+  </head>
+  <body class="bg-gray-50 text-gray-900">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <h1 class="text-xl font-bold text-blue-600">
+                AI Email Marketing
+              </h1>
+            </div>
+            <div class="hidden md:block ml-10">
+              <div class="flex items-baseline space-x-4">
+                <a href="#overview" class="nav-link">Overview</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#documentation" class="nav-link">Docs</a>
+                <a href="#contributors" class="nav-link">Contributors</a>
+                <a href="#reports" class="nav-link">Reports</a>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <a
+              href="https://github.com/aimnovo/email-marketing"
+              class="btn-secondary"
+            >
+              <i class="fab fa-github mr-2"></i>GitHub
+            </a>
+            <a href="#get-started" class="btn-primary">Get Started</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div class="text-center">
+          <h1 class="text-4xl md:text-6xl font-bold mb-6">
+            AI Email Marketing System
+          </h1>
+          <p class="text-xl md:text-2xl mb-8 text-blue-100">
+            Open-source, AI-powered email marketing automation platform
+          </p>
+          <p class="text-lg mb-8 text-blue-200">
+            Created by <strong>Muhammad Ismail</strong> | Founder of
+            <strong>AimNovo.com</strong> & <strong>AimNexus.ai</strong>
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="#get-started" class="btn-white">
+              <i class="fas fa-rocket mr-2"></i>Get Started
+            </a>
+            <a href="./coverage/index.html" class="btn-outline-white">
+              <i class="fas fa-chart-line mr-2"></i>View Coverage
+            </a>
+            <a href="./test-results/index.html" class="btn-outline-white">
+              <i class="fas fa-vial mr-2"></i>Test Reports
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Badges -->
+    <div class="bg-white py-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-wrap justify-center gap-4">
+          <img
+            src="https://img.shields.io/github/workflow/status/aimnovo/email-marketing/CI"
+            alt="Build Status"
+          />
+          <img
+            src="https://img.shields.io/codecov/c/github/aimnovo/email-marketing"
+            alt="Coverage"
+          />
+          <img
+            src="https://img.shields.io/github/license/aimnovo/email-marketing"
+            alt="License"
+          />
+          <img
+            src="https://img.shields.io/github/stars/aimnovo/email-marketing"
+            alt="Stars"
+          />
+          <img
+            src="https://img.shields.io/github/forks/aimnovo/email-marketing"
+            alt="Forks"
+          />
+          <img
+            src="https://img.shields.io/github/issues/aimnovo/email-marketing"
+            alt="Issues"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Overview Section -->
+    <section id="overview" class="py-16 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-900">Project Overview</h2>
+          <p class="mt-4 text-lg text-gray-600">
+            A comprehensive email marketing automation platform powered by
+            artificial intelligence
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h3 class="text-2xl font-bold mb-6">What is this project?</h3>
+            <p class="text-gray-600 mb-4">
+              This is a full-stack email marketing automation platform that
+              leverages AI to create personalized email campaigns. Built with
+              modern technologies and designed for scalability and commercial
+              use.
+            </p>
+            <ul class="space-y-2 text-gray-600">
+              <li>
+                <i class="fas fa-check text-green-500 mr-2"></i>MIT Licensed for
+                commercial use
+              </li>
+              <li>
+                <i class="fas fa-check text-green-500 mr-2"></i>Monorepo
+                architecture with Turborepo
+              </li>
+              <li>
+                <i class="fas fa-check text-green-500 mr-2"></i>Next.js frontend
+                with NestJS backend
+              </li>
+              <li>
+                <i class="fas fa-check text-green-500 mr-2"></i>AI-powered
+                content generation
+              </li>
+              <li>
+                <i class="fas fa-check text-green-500 mr-2"></i>Real-time
+                analytics and reporting
+              </li>
+            </ul>
+          </div>
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <h4 class="text-lg font-semibold mb-4">Quick Stats</h4>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="text-center">
+                <div class="text-2xl font-bold text-blue-600" id="commit-count">
+                  -
+                </div>
+                <div class="text-sm text-gray-600">Commits</div>
+              </div>
+              <div class="text-center">
+                <div
+                  class="text-2xl font-bold text-green-600"
+                  id="contributor-count"
+                >
+                  -
+                </div>
+                <div class="text-sm text-gray-600">Contributors</div>
+              </div>
+              <div class="text-center">
+                <div
+                  class="text-2xl font-bold text-purple-600"
+                  id="test-coverage"
+                >
+                  -
+                </div>
+                <div class="text-sm text-gray-600">Coverage</div>
+              </div>
+              <div class="text-center">
+                <div
+                  class="text-2xl font-bold text-yellow-600"
+                  id="last-updated"
+                >
+                  -
+                </div>
+                <div class="text-sm text-gray-600">Last Updated</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-900">Key Features</h2>
+          <p class="mt-4 text-lg text-gray-600">
+            Everything you need for modern email marketing automation
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="feature-card">
+            <div class="feature-icon bg-blue-100 text-blue-600">
+              <i class="fas fa-robot"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">AI-Powered Content</h3>
+            <p class="text-gray-600">
+              Generate personalized email content using Google Gemini AI
+              integration.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon bg-green-100 text-green-600">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Real-time Analytics</h3>
+            <p class="text-gray-600">
+              Track campaign performance with detailed analytics and reporting.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon bg-purple-100 text-purple-600">
+              <i class="fas fa-cogs"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Automation Pipelines</h3>
+            <p class="text-gray-600">
+              Build complex email automation workflows with conditional logic.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon bg-red-100 text-red-600">
+              <i class="fas fa-users"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Lead Management</h3>
+            <p class="text-gray-600">
+              Import, organize, and segment your leads with advanced filtering.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon bg-yellow-100 text-yellow-600">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Email Delivery</h3>
+            <p class="text-gray-600">
+              Reliable email delivery powered by SendGrid integration.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon bg-indigo-100 text-indigo-600">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Enterprise Security</h3>
+            <p class="text-gray-600">
+              JWT authentication, role-based access, and data encryption.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Documentation Section -->
+    <section id="documentation" class="py-16 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-900">
+            Documentation & Resources
+          </h2>
+          <p class="mt-4 text-lg text-gray-600">
+            Everything you need to get started and contribute
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <a
+            href="https://github.com/aimnovo/email-marketing/blob/main/README.md"
+            class="doc-card"
+          >
+            <div class="doc-icon bg-blue-100 text-blue-600">
+              <i class="fas fa-book"></i>
+            </div>
+            <h3 class="text-lg font-semibold">Quick Start Guide</h3>
+            <p class="text-gray-600">Get up and running in minutes</p>
+          </a>
+
+          <a
+            href="https://github.com/aimnovo/email-marketing/blob/main/CONTRIBUTING.md"
+            class="doc-card"
+          >
+            <div class="doc-icon bg-green-100 text-green-600">
+              <i class="fas fa-hands-helping"></i>
+            </div>
+            <h3 class="text-lg font-semibold">Contributing Guide</h3>
+            <p class="text-gray-600">How to contribute to the project</p>
+          </a>
+
+          <a href="./api-docs/index.html" class="doc-card">
+            <div class="doc-icon bg-purple-100 text-purple-600">
+              <i class="fas fa-code"></i>
+            </div>
+            <h3 class="text-lg font-semibold">API Documentation</h3>
+            <p class="text-gray-600">Complete API reference</p>
+          </a>
+
+          <a href="./architecture/index.html" class="doc-card">
+            <div class="doc-icon bg-yellow-100 text-yellow-600">
+              <i class="fas fa-sitemap"></i>
+            </div>
+            <h3 class="text-lg font-semibold">Architecture Guide</h3>
+            <p class="text-gray-600">System design and architecture</p>
+          </a>
+
+          <a href="./deployment/index.html" class="doc-card">
+            <div class="doc-icon bg-red-100 text-red-600">
+              <i class="fas fa-rocket"></i>
+            </div>
+            <h3 class="text-lg font-semibold">Deployment Guide</h3>
+            <p class="text-gray-600">Production deployment instructions</p>
+          </a>
+
+          <a
+            href="https://github.com/aimnovo/email-marketing/blob/main/LICENSE"
+            class="doc-card"
+          >
+            <div class="doc-icon bg-indigo-100 text-indigo-600">
+              <i class="fas fa-certificate"></i>
+            </div>
+            <h3 class="text-lg font-semibold">License</h3>
+            <p class="text-gray-600">MIT License - Commercial use allowed</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contributors Section -->
+    <section id="contributors" class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-900">Contributors</h2>
+          <p class="mt-4 text-lg text-gray-600">
+            Amazing people who make this project possible
+          </p>
+        </div>
+
+        <div class="mb-8">
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-xl font-semibold mb-4">Project Founder</h3>
+            <div
+              class="flex items-center space-x-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg"
+            >
+              <div
+                class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-xl font-bold"
+              >
+                MI
+              </div>
+              <div>
+                <h4 class="text-lg font-semibold">Muhammad Ismail</h4>
+                <p class="text-gray-600">
+                  Founder of AimNovo.com & AimNexus.ai
+                </p>
+                <p class="text-sm text-gray-500">quaid@live.com</p>
+                <div class="flex space-x-2 mt-2">
+                  <span class="badge badge-blue">Project Creator</span>
+                  <span class="badge badge-green">Lead Developer</span>
+                  <span class="badge badge-purple">Architect</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="contributors-list"
+          class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          <!-- Contributors will be loaded dynamically -->
+        </div>
+
+        <div class="text-center mt-8">
+          <a
+            href="https://github.com/aimnovo/email-marketing/graphs/contributors"
+            class="btn-primary"
+          >
+            <i class="fab fa-github mr-2"></i>View All Contributors
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reports Section -->
+    <section id="reports" class="py-16 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-900">Project Reports</h2>
+          <p class="mt-4 text-lg text-gray-600">
+            Continuous integration, testing, and quality metrics
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="report-card">
+            <div class="report-icon bg-green-100 text-green-600">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <h3 class="text-lg font-semibold">Build Status</h3>
+            <div class="mt-2">
+              <span id="build-status" class="status-badge">Loading...</span>
+            </div>
+            <a href="./ci-reports/index.html" class="report-link"
+              >View Details</a
+            >
+          </div>
+
+          <div class="report-card">
+            <div class="report-icon bg-blue-100 text-blue-600">
+              <i class="fas fa-vial"></i>
+            </div>
+            <h3 class="text-lg font-semibold">Test Results</h3>
+            <div class="mt-2">
+              <span id="test-results" class="status-badge">Loading...</span>
+            </div>
+            <a href="./test-results/index.html" class="report-link"
+              >View Tests</a
+            >
+          </div>
+
+          <div class="report-card">
+            <div class="report-icon bg-purple-100 text-purple-600">
+              <i class="fas fa-chart-pie"></i>
+            </div>
+            <h3 class="text-lg font-semibold">Code Coverage</h3>
+            <div class="mt-2">
+              <span id="coverage-percent" class="status-badge">Loading...</span>
+            </div>
+            <a href="./coverage/index.html" class="report-link"
+              >View Coverage</a
+            >
+          </div>
+
+          <div class="report-card">
+            <div class="report-icon bg-yellow-100 text-yellow-600">
+              <i class="fas fa-code-branch"></i>
+            </div>
+            <h3 class="text-lg font-semibold">Code Quality</h3>
+            <div class="mt-2">
+              <span id="quality-score" class="status-badge">Loading...</span>
+            </div>
+            <a href="./quality-reports/index.html" class="report-link"
+              >View Quality</a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Get Started Section -->
+    <section
+      id="get-started"
+      class="py-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+    >
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl font-bold mb-6">Ready to Get Started?</h2>
+        <p class="text-xl mb-8 text-blue-100">
+          Join the community and start building amazing email marketing
+          campaigns today!
+        </p>
+
+        <div class="bg-gray-900 rounded-lg p-6 text-left mb-8">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-gray-400">Quick Installation</span>
+            <button
+              onclick="copyToClipboard()"
+              class="text-blue-400 hover:text-blue-300"
+            >
+              <i class="fas fa-copy"></i>
+            </button>
+          </div>
+          <code class="text-green-400" id="install-command">
+            git clone https://github.com/aimnovo/email-marketing.git<br />
+            cd email-marketing<br />
+            npm install<br />
+            npm run dev
+          </code>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="https://github.com/aimnovo/email-marketing"
+            class="btn-white"
+          >
+            <i class="fab fa-github mr-2"></i>View on GitHub
+          </a>
+          <a
+            href="https://github.com/aimnovo/email-marketing/fork"
+            class="btn-outline-white"
+          >
+            <i class="fas fa-code-branch mr-2"></i>Fork Project
+          </a>
+          <a
+            href="https://github.com/aimnovo/email-marketing/issues/new"
+            class="btn-outline-white"
+          >
+            <i class="fas fa-bug mr-2"></i>Report Issue
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-8">
+          <div>
+            <h3 class="text-lg font-semibold mb-4">AI Email Marketing</h3>
+            <p class="text-gray-400 mb-4">
+              Open-source email marketing automation platform powered by AI.
+            </p>
+            <div class="flex space-x-4">
+              <a
+                href="https://github.com/aimnovo"
+                class="text-gray-400 hover:text-white"
+              >
+                <i class="fab fa-github"></i>
+              </a>
+              <a
+                href="https://aimnovo.com"
+                class="text-gray-400 hover:text-white"
+              >
+                <i class="fas fa-globe"></i>
+              </a>
+              <a
+                href="https://aimnexus.ai"
+                class="text-gray-400 hover:text-white"
+              >
+                <i class="fas fa-brain"></i>
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Documentation</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li><a href="#" class="hover:text-white">Quick Start</a></li>
+              <li><a href="#" class="hover:text-white">API Reference</a></li>
+              <li><a href="#" class="hover:text-white">Contributing</a></li>
+              <li><a href="#" class="hover:text-white">License</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Community</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li><a href="#" class="hover:text-white">GitHub Issues</a></li>
+              <li><a href="#" class="hover:text-white">Discussions</a></li>
+              <li><a href="#" class="hover:text-white">Contributors</a></li>
+              <li><a href="#" class="hover:text-white">Changelog</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Contact</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li>Muhammad Ismail</li>
+              <li>quaid@live.com</li>
+              <li>
+                <a href="https://aimnovo.com" class="hover:text-white"
+                  >AimNovo.com</a
+                >
+              </li>
+              <li>
+                <a href="https://aimnexus.ai" class="hover:text-white"
+                  >AimNexus.ai</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div
+          class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400"
+        >
+          <p>&copy; 2024 Muhammad Ismail. Licensed under MIT License.</p>
+          <p class="mt-2">Created with ❤️ for the open-source community</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="./js/main.js"></script>
+
+    <style>
+      .nav-link {
+        @apply text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors;
+      }
+
+      .btn-primary {
+        @apply bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors;
+      }
+
+      .btn-secondary {
+        @apply bg-gray-100 hover:bg-gray-200 text-gray-900 px-6 py-2 rounded-lg font-medium transition-colors;
+      }
+
+      .btn-white {
+        @apply bg-white hover:bg-gray-100 text-blue-600 px-6 py-3 rounded-lg font-medium transition-colors shadow-lg;
+      }
+
+      .btn-outline-white {
+        @apply border-2 border-white hover:bg-white hover:text-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors;
+      }
+
+      .feature-card {
+        @apply bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow;
+      }
+
+      .feature-icon {
+        @apply w-12 h-12 rounded-lg flex items-center justify-center text-xl mb-4;
+      }
+
+      .doc-card {
+        @apply bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow hover:scale-105 transform duration-200 block;
+      }
+
+      .doc-icon {
+        @apply w-12 h-12 rounded-lg flex items-center justify-center text-xl mb-4;
+      }
+
+      .report-card {
+        @apply bg-white p-6 rounded-lg shadow-lg text-center;
+      }
+
+      .report-icon {
+        @apply w-12 h-12 rounded-lg flex items-center justify-center text-xl mx-auto mb-4;
+      }
+
+      .report-link {
+        @apply text-blue-600 hover:text-blue-700 text-sm font-medium;
+      }
+
+      .status-badge {
+        @apply inline-block px-3 py-1 rounded-full text-sm font-medium;
+      }
+
+      .badge {
+        @apply px-2 py-1 rounded-full text-xs font-medium;
+      }
+
+      .badge-blue {
+        @apply bg-blue-100 text-blue-800;
+      }
+
+      .badge-green {
+        @apply bg-green-100 text-green-800;
+      }
+
+      .badge-purple {
+        @apply bg-purple-100 text-purple-800;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+    </style>
+  </body>
+</html>

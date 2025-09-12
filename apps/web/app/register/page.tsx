@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -46,68 +46,71 @@ export default function RegisterPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8">
+    <div className='min-h-screen flex items-center justify-center bg-gray-50'>
+      <div className='max-w-md w-full space-y-8'>
         <div>
-          <h2 className="text-center text-3xl font-extrabold text-gray-900">
+          <h2 className='text-center text-3xl font-extrabold text-gray-900'>
             Create your account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className='mt-2 text-center text-sm text-gray-600'>
             Or{' '}
-            <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
+            <Link
+              href='/login'
+              className='font-medium text-blue-600 hover:text-blue-500'
+            >
               sign in to existing account
             </Link>
           </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className='mt-8 space-y-6' onSubmit={handleSubmit}>
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
+            <div className='bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded'>
               {error}
             </div>
           )}
           <div>
             <input
-              name="name"
-              type="text"
+              name='name'
+              type='text'
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              placeholder="Full name"
+              className='w-full px-3 py-2 border border-gray-300 rounded-md'
+              placeholder='Full name'
               value={formData.name}
               onChange={handleChange}
             />
           </div>
           <div>
             <input
-              name="email"
-              type="email"
+              name='email'
+              type='email'
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              placeholder="Email address"
+              className='w-full px-3 py-2 border border-gray-300 rounded-md'
+              placeholder='Email address'
               value={formData.email}
               onChange={handleChange}
             />
           </div>
           <div>
             <input
-              name="password"
-              type="password"
+              name='password'
+              type='password'
               required
               minLength={8}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              placeholder="Password (min 8 characters)"
+              className='w-full px-3 py-2 border border-gray-300 rounded-md'
+              placeholder='Password (min 8 characters)'
               value={formData.password}
               onChange={handleChange}
             />
           </div>
           <button
-            type="submit"
+            type='submit'
             disabled={isLoading}
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50"
+            className='w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50'
           >
             {isLoading ? 'Creating account...' : 'Create account'}
           </button>

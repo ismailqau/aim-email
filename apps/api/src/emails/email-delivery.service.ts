@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -36,20 +36,25 @@ export class EmailDeliveryService {
   constructor(
     private readonly configService: ConfigService,
     private readonly sendGridService: SendGridService,
-    private readonly smtpService: SmtpService,
+    private readonly smtpService: SmtpService
   ) {}
 
   async sendEmail(emailData: EmailData): Promise<EmailResult> {
     // First try SendGrid if API key is available
     const sendGridApiKey = this.configService.get<string>('SENDGRID_API_KEY');
-    
-    if (sendGridApiKey && sendGridApiKey !== 'SG.your-actual-sendgrid-api-key') {
+
+    if (
+      sendGridApiKey &&
+      sendGridApiKey !== 'SG.your-actual-sendgrid-api-key'
+    ) {
       try {
         this.logger.log('Attempting to send email via SendGrid...');
         const result = await this.sendGridService.sendEmail(emailData);
-        
+
         if (result.success) {
-          this.logger.log(`Email sent successfully via SendGrid to ${emailData.to}`);
+          this.logger.log(
+            `Email sent successfully via SendGrid to ${emailData.to}`
+          );
           return {
             ...result,
             provider: 'sendgrid',
@@ -61,7 +66,9 @@ export class EmailDeliveryService {
         this.logger.error('SendGrid error, falling back to SMTP:', error);
       }
     } else {
-      this.logger.log('SendGrid API key not configured, using SMTP fallback...');
+      this.logger.log(
+        'SendGrid API key not configured, using SMTP fallback...'
+      );
     }
 
     // Fallback to SMTP
@@ -76,11 +83,11 @@ export class EmailDeliveryService {
     try {
       this.logger.log('Attempting to send email via SMTP...');
       const result = await this.smtpService.sendEmail(emailData);
-      
+
       if (result.success) {
         this.logger.log(`Email sent successfully via SMTP to ${emailData.to}`);
       }
-      
+
       return {
         ...result,
         provider: 'smtp',
@@ -99,14 +106,17 @@ export class EmailDeliveryService {
     smtp: { available: boolean; message: string };
   }> {
     const sendGridApiKey = this.configService.get<string>('SENDGRID_API_KEY');
-    const sendGridAvailable = sendGridApiKey && sendGridApiKey !== 'SG.your-actual-sendgrid-api-key';
-    
+    const sendGridAvailable =
+      sendGridApiKey && sendGridApiKey !== 'SG.your-actual-sendgrid-api-key';
+
     const smtpTest = await this.smtpService.testConnection();
-    
+
     return {
       sendgrid: {
         available: !!sendGridAvailable,
-        message: sendGridAvailable ? 'SendGrid API key configured' : 'SendGrid API key not configured',
+        message: sendGridAvailable
+          ? 'SendGrid API key configured'
+          : 'SendGrid API key not configured',
       },
       smtp: {
         available: smtpTest.success,
@@ -117,16 +127,19 @@ export class EmailDeliveryService {
 
   async getPreferredProvider(): Promise<'sendgrid' | 'smtp' | 'none'> {
     const sendGridApiKey = this.configService.get<string>('SENDGRID_API_KEY');
-    
-    if (sendGridApiKey && sendGridApiKey !== 'SG.your-actual-sendgrid-api-key') {
+
+    if (
+      sendGridApiKey &&
+      sendGridApiKey !== 'SG.your-actual-sendgrid-api-key'
+    ) {
       return 'sendgrid';
     }
-    
+
     const smtpAvailable = await this.smtpService.isAvailable();
     if (smtpAvailable) {
       return 'smtp';
     }
-    
+
     return 'none';
   }
 }

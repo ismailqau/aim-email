@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -88,7 +88,9 @@ describe('PipelinesService', () => {
     };
 
     it('should create a pipeline successfully', async () => {
-      mockDatabaseService.client.pipeline.create.mockResolvedValue(mockPipeline);
+      mockDatabaseService.client.pipeline.create.mockResolvedValue(
+        mockPipeline
+      );
 
       const result = await service.createPipeline(companyId, pipelineData);
 
@@ -105,7 +107,9 @@ describe('PipelinesService', () => {
       const error = new Error('Database error');
       mockDatabaseService.client.pipeline.create.mockRejectedValue(error);
 
-      await expect(service.createPipeline(companyId, pipelineData)).rejects.toThrow(error);
+      await expect(
+        service.createPipeline(companyId, pipelineData)
+      ).rejects.toThrow(error);
     });
   });
 
@@ -126,27 +130,29 @@ describe('PipelinesService', () => {
         id: 'pipeline-2',
         name: 'Follow-up Series',
         companyId,
-        pipelineSteps: [
-          { id: 'step-3', order: 1, delayHours: 48 },
-        ],
+        pipelineSteps: [{ id: 'step-3', order: 1, delayHours: 48 }],
         createdAt: new Date('2023-01-02'),
       },
     ];
 
     it('should return pipelines for company', async () => {
-      mockDatabaseService.client.pipeline.findMany.mockResolvedValue(mockPipelines);
+      mockDatabaseService.client.pipeline.findMany.mockResolvedValue(
+        mockPipelines
+      );
 
       const result = await service.getPipelines(companyId);
 
-      expect(mockDatabaseService.client.pipeline.findMany).toHaveBeenCalledWith({
-        where: { companyId },
-        include: {
-          pipelineSteps: {
-            orderBy: { order: 'asc' },
+      expect(mockDatabaseService.client.pipeline.findMany).toHaveBeenCalledWith(
+        {
+          where: { companyId },
+          include: {
+            pipelineSteps: {
+              orderBy: { order: 'asc' },
+            },
           },
-        },
-        orderBy: { createdAt: 'desc' },
-      });
+          orderBy: { createdAt: 'desc' },
+        }
+      );
       expect(result).toEqual(mockPipelines);
     });
 
@@ -185,11 +191,15 @@ describe('PipelinesService', () => {
     };
 
     it('should return pipeline with details', async () => {
-      mockDatabaseService.client.pipeline.findFirst.mockResolvedValue(mockPipeline);
+      mockDatabaseService.client.pipeline.findFirst.mockResolvedValue(
+        mockPipeline
+      );
 
       const result = await service.getPipelineById(companyId, pipelineId);
 
-      expect(mockDatabaseService.client.pipeline.findFirst).toHaveBeenCalledWith({
+      expect(
+        mockDatabaseService.client.pipeline.findFirst
+      ).toHaveBeenCalledWith({
         where: { id: pipelineId, companyId },
         include: {
           pipelineSteps: {
@@ -213,7 +223,10 @@ describe('PipelinesService', () => {
     it('should return null when pipeline not found', async () => {
       mockDatabaseService.client.pipeline.findFirst.mockResolvedValue(null);
 
-      const result = await service.getPipelineById(companyId, 'non-existent-id');
+      const result = await service.getPipelineById(
+        companyId,
+        'non-existent-id'
+      );
 
       expect(result).toBeNull();
     });
@@ -238,16 +251,22 @@ describe('PipelinesService', () => {
     ];
 
     it('should start pipeline for multiple leads', async () => {
-      mockDatabaseService.client.pipeline.findUnique.mockResolvedValue(mockPipeline);
+      mockDatabaseService.client.pipeline.findUnique.mockResolvedValue(
+        mockPipeline
+      );
       mockDatabaseService.client.pipelineExecution.create
         .mockResolvedValueOnce(mockExecutions[0])
         .mockResolvedValueOnce(mockExecutions[1]);
 
-      const queueNextStepSpy = jest.spyOn(service, 'queueNextStep').mockResolvedValue();
+      const queueNextStepSpy = jest
+        .spyOn(service, 'queueNextStep')
+        .mockResolvedValue();
 
       const result = await service.startPipeline(pipelineId, leadIds);
 
-      expect(mockDatabaseService.client.pipeline.findUnique).toHaveBeenCalledWith({
+      expect(
+        mockDatabaseService.client.pipeline.findUnique
+      ).toHaveBeenCalledWith({
         where: { id: pipelineId },
         include: {
           pipelineSteps: {
@@ -256,7 +275,9 @@ describe('PipelinesService', () => {
         },
       });
 
-      expect(mockDatabaseService.client.pipelineExecution.create).toHaveBeenCalledTimes(2);
+      expect(
+        mockDatabaseService.client.pipelineExecution.create
+      ).toHaveBeenCalledTimes(2);
       expect(queueNextStepSpy).toHaveBeenCalledTimes(2);
       expect(queueNextStepSpy).toHaveBeenCalledWith('execution-1', 0);
       expect(queueNextStepSpy).toHaveBeenCalledWith('execution-2', 0);
@@ -272,17 +293,19 @@ describe('PipelinesService', () => {
     it('should throw error when pipeline not found', async () => {
       mockDatabaseService.client.pipeline.findUnique.mockResolvedValue(null);
 
-      await expect(service.startPipeline('non-existent-id', leadIds)).rejects.toThrow(
-        'Pipeline not found or inactive',
-      );
+      await expect(
+        service.startPipeline('non-existent-id', leadIds)
+      ).rejects.toThrow('Pipeline not found or inactive');
     });
 
     it('should throw error when pipeline is inactive', async () => {
       const inactivePipeline = { ...mockPipeline, isActive: false };
-      mockDatabaseService.client.pipeline.findUnique.mockResolvedValue(inactivePipeline);
+      mockDatabaseService.client.pipeline.findUnique.mockResolvedValue(
+        inactivePipeline
+      );
 
       await expect(service.startPipeline(pipelineId, leadIds)).rejects.toThrow(
-        'Pipeline not found or inactive',
+        'Pipeline not found or inactive'
       );
     });
   });
@@ -308,12 +331,18 @@ describe('PipelinesService', () => {
     };
 
     it('should queue next step successfully', async () => {
-      mockDatabaseService.client.pipelineExecution.findUnique.mockResolvedValue(mockExecution);
-      mockDatabaseService.client.stepExecution.create.mockResolvedValue(mockStepExecution);
+      mockDatabaseService.client.pipelineExecution.findUnique.mockResolvedValue(
+        mockExecution
+      );
+      mockDatabaseService.client.stepExecution.create.mockResolvedValue(
+        mockStepExecution
+      );
 
       await service.queueNextStep(executionId, 0);
 
-      expect(mockDatabaseService.client.pipelineExecution.findUnique).toHaveBeenCalledWith({
+      expect(
+        mockDatabaseService.client.pipelineExecution.findUnique
+      ).toHaveBeenCalledWith({
         where: { id: executionId },
         include: {
           pipeline: {
@@ -327,7 +356,9 @@ describe('PipelinesService', () => {
         },
       });
 
-      expect(mockDatabaseService.client.stepExecution.create).toHaveBeenCalledWith({
+      expect(
+        mockDatabaseService.client.stepExecution.create
+      ).toHaveBeenCalledWith({
         data: {
           pipelineExecutionId: executionId,
           stepId: 'step-1',
@@ -345,16 +376,20 @@ describe('PipelinesService', () => {
         },
         {
           delay: 0, // 0 hours delay
-        },
+        }
       );
     });
 
     it('should complete execution when no more steps', async () => {
-      mockDatabaseService.client.pipelineExecution.findUnique.mockResolvedValue(mockExecution);
+      mockDatabaseService.client.pipelineExecution.findUnique.mockResolvedValue(
+        mockExecution
+      );
 
       await service.queueNextStep(executionId, 2); // stepIndex beyond available steps
 
-      expect(mockDatabaseService.client.pipelineExecution.update).toHaveBeenCalledWith({
+      expect(
+        mockDatabaseService.client.pipelineExecution.update
+      ).toHaveBeenCalledWith({
         where: { id: executionId },
         data: {
           status: 'COMPLETED',
@@ -362,12 +397,16 @@ describe('PipelinesService', () => {
         },
       });
 
-      expect(mockDatabaseService.client.stepExecution.create).not.toHaveBeenCalled();
+      expect(
+        mockDatabaseService.client.stepExecution.create
+      ).not.toHaveBeenCalled();
       expect(mockPipelineQueue.add).not.toHaveBeenCalled();
     });
 
     it('should handle delayed steps', async () => {
-      mockDatabaseService.client.pipelineExecution.findUnique.mockResolvedValue(mockExecution);
+      mockDatabaseService.client.pipelineExecution.findUnique.mockResolvedValue(
+        mockExecution
+      );
       mockDatabaseService.client.stepExecution.create.mockResolvedValue({
         ...mockStepExecution,
         stepId: 'step-2',
@@ -380,16 +419,20 @@ describe('PipelinesService', () => {
         expect.any(Object),
         {
           delay: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
-        },
+        }
       );
     });
 
     it('should handle execution not found', async () => {
-      mockDatabaseService.client.pipelineExecution.findUnique.mockResolvedValue(null);
+      mockDatabaseService.client.pipelineExecution.findUnique.mockResolvedValue(
+        null
+      );
 
       await service.queueNextStep('non-existent-id', 0);
 
-      expect(mockDatabaseService.client.stepExecution.create).not.toHaveBeenCalled();
+      expect(
+        mockDatabaseService.client.stepExecution.create
+      ).not.toHaveBeenCalled();
       expect(mockPipelineQueue.add).not.toHaveBeenCalled();
     });
   });
@@ -414,12 +457,22 @@ describe('PipelinesService', () => {
     };
 
     it('should update pipeline successfully', async () => {
-      mockDatabaseService.client.pipeline.findFirst.mockResolvedValue(mockPipeline);
-      mockDatabaseService.client.pipeline.update.mockResolvedValue(mockUpdatedPipeline);
+      mockDatabaseService.client.pipeline.findFirst.mockResolvedValue(
+        mockPipeline
+      );
+      mockDatabaseService.client.pipeline.update.mockResolvedValue(
+        mockUpdatedPipeline
+      );
 
-      const result = await service.updatePipeline(companyId, pipelineId, updateData);
+      const result = await service.updatePipeline(
+        companyId,
+        pipelineId,
+        updateData
+      );
 
-      expect(mockDatabaseService.client.pipeline.findFirst).toHaveBeenCalledWith({
+      expect(
+        mockDatabaseService.client.pipeline.findFirst
+      ).toHaveBeenCalledWith({
         where: { id: pipelineId, companyId },
       });
       expect(mockDatabaseService.client.pipeline.update).toHaveBeenCalledWith({
@@ -432,9 +485,9 @@ describe('PipelinesService', () => {
     it('should throw error when pipeline not found', async () => {
       mockDatabaseService.client.pipeline.findFirst.mockResolvedValue(null);
 
-      await expect(service.updatePipeline(companyId, 'non-existent-id', updateData)).rejects.toThrow(
-        'Pipeline not found',
-      );
+      await expect(
+        service.updatePipeline(companyId, 'non-existent-id', updateData)
+      ).rejects.toThrow('Pipeline not found');
     });
   });
 
@@ -448,12 +501,16 @@ describe('PipelinesService', () => {
     };
 
     it('should delete pipeline successfully', async () => {
-      mockDatabaseService.client.pipeline.findFirst.mockResolvedValue(mockPipeline);
+      mockDatabaseService.client.pipeline.findFirst.mockResolvedValue(
+        mockPipeline
+      );
       mockDatabaseService.client.pipeline.delete.mockResolvedValue({});
 
       const result = await service.deletePipeline(companyId, pipelineId);
 
-      expect(mockDatabaseService.client.pipeline.findFirst).toHaveBeenCalledWith({
+      expect(
+        mockDatabaseService.client.pipeline.findFirst
+      ).toHaveBeenCalledWith({
         where: { id: pipelineId, companyId },
       });
       expect(mockDatabaseService.client.pipeline.delete).toHaveBeenCalledWith({
@@ -465,9 +522,9 @@ describe('PipelinesService', () => {
     it('should throw error when pipeline not found', async () => {
       mockDatabaseService.client.pipeline.findFirst.mockResolvedValue(null);
 
-      await expect(service.deletePipeline(companyId, 'non-existent-id')).rejects.toThrow(
-        'Pipeline not found',
-      );
+      await expect(
+        service.deletePipeline(companyId, 'non-existent-id')
+      ).rejects.toThrow('Pipeline not found');
     });
   });
 });

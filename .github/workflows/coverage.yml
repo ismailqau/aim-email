@@ -1,0 +1,245 @@
+name: Test Coverage Report
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  coverage:
+    name: Generate Coverage Report
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: email_marketing_coverage
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Setup environment
+        run: |
+          cp .env.example .env
+          echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/email_marketing_coverage" >> .env
+          echo "REDIS_URL=redis://localhost:6379" >> .env
+          echo "JWT_SECRET=coverage-test-secret" >> .env
+          echo "SENDGRID_API_KEY=SG.test-key" >> .env
+          echo "GEMINI_API_KEY=test-gemini-key" >> .env
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+
+      - name: Run database migrations
+        run: npm run db:migrate
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
+      - name: Generate coverage badge
+        run: |
+          mkdir -p coverage/badges
+          COVERAGE=$(node -e "
+            const fs = require('fs');
+            try {
+              const coverage = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf8'));
+              const pct = coverage.total.lines.pct;
+              console.log(pct);
+            } catch (e) {
+              console.log('0');
+            }
+          ")
+
+          COLOR="red"
+          if (( $(echo "$COVERAGE >= 80" | bc -l) )); then
+            COLOR="brightgreen"
+          elif (( $(echo "$COVERAGE >= 60" | bc -l) )); then
+            COLOR="yellow"
+          elif (( $(echo "$COVERAGE >= 40" | bc -l) )); then
+            COLOR="orange"
+          fi
+
+          curl -s "https://img.shields.io/badge/coverage-${COVERAGE}%25-${COLOR}" > coverage/badges/coverage.svg
+
+      - name: Generate detailed coverage report
+        run: |
+          mkdir -p coverage/detailed
+          cat > coverage/detailed/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Coverage Report - AI Email Marketing System</title>
+              <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+              <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet">
+          </head>
+          <body class="bg-gray-50">
+              <div class="container mx-auto px-4 py-8">
+                  <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                      <h1 class="text-3xl font-bold mb-6">Test Coverage Report</h1>
+                      
+                      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                          <div class="bg-blue-50 p-4 rounded-lg text-center">
+                              <div class="text-2xl font-bold text-blue-600" id="lines-coverage">-</div>
+                              <div class="text-sm text-gray-600">Lines</div>
+                          </div>
+                          <div class="bg-green-50 p-4 rounded-lg text-center">
+                              <div class="text-2xl font-bold text-green-600" id="functions-coverage">-</div>
+                              <div class="text-sm text-gray-600">Functions</div>
+                          </div>
+                          <div class="bg-yellow-50 p-4 rounded-lg text-center">
+                              <div class="text-2xl font-bold text-yellow-600" id="branches-coverage">-</div>
+                              <div class="text-sm text-gray-600">Branches</div>
+                          </div>
+                          <div class="bg-purple-50 p-4 rounded-lg text-center">
+                              <div class="text-2xl font-bold text-purple-600" id="statements-coverage">-</div>
+                              <div class="text-sm text-gray-600">Statements</div>
+                          </div>
+                      </div>
+                      
+                      <div class="mb-6">
+                          <h2 class="text-xl font-semibold mb-4">Coverage by Module</h2>
+                          <div id="module-coverage" class="space-y-2">
+                              <!-- Module coverage will be populated by JavaScript -->
+                          </div>
+                      </div>
+                      
+                      <div class="flex space-x-4">
+                          <a href="../lcov-report/index.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                              View Detailed Report
+                          </a>
+                          <a href="../../index.html" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                              Back to Main
+                          </a>
+                      </div>
+                  </div>
+              </div>
+              
+              <script>
+                  // Load coverage data
+                  fetch('../coverage-summary.json')
+                      .then(response => response.json())
+                      .then(data => {
+                          const total = data.total;
+                          
+                          document.getElementById('lines-coverage').textContent = total.lines.pct + '%';
+                          document.getElementById('functions-coverage').textContent = total.functions.pct + '%';
+                          document.getElementById('branches-coverage').textContent = total.branches.pct + '%';
+                          document.getElementById('statements-coverage').textContent = total.statements.pct + '%';
+                          
+                          // Generate module coverage
+                          const moduleContainer = document.getElementById('module-coverage');
+                          Object.keys(data).forEach(key => {
+                              if (key !== 'total') {
+                                  const module = data[key];
+                                  const moduleDiv = document.createElement('div');
+                                  moduleDiv.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-lg';
+                                  moduleDiv.innerHTML = `
+                                      <span class="font-medium">${key}</span>
+                                      <div class="flex space-x-4 text-sm">
+                                          <span class="text-blue-600">${module.lines.pct}% lines</span>
+                                          <span class="text-green-600">${module.functions.pct}% functions</span>
+                                          <span class="text-yellow-600">${module.branches.pct}% branches</span>
+                                      </div>
+                                  `;
+                                  moduleContainer.appendChild(moduleDiv);
+                              }
+                          });
+                      })
+                      .catch(error => {
+                          console.error('Error loading coverage data:', error);
+                      });
+              </script>
+          </body>
+          </html>
+          EOF
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage/lcov.info
+          fail_ci_if_error: false
+          verbose: true
+
+      - name: Comment coverage on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let coverage = '0';
+            try {
+              const coverageData = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf8'));
+              coverage = coverageData.total.lines.pct;
+            } catch (e) {
+              console.log('Could not read coverage data');
+            }
+
+            const body = `## 📊 Coverage Report
+
+            **Total Coverage: ${coverage}%**
+
+            | Metric | Coverage |
+            |--------|----------|
+            | Lines | ${coverage}% |
+            | Functions | ${coverage}% |
+            | Branches | ${coverage}% |
+            | Statements | ${coverage}% |
+
+            View detailed report: [Coverage Report](https://aimnovo.github.io/email-marketing/coverage/)
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+      - name: Archive coverage artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: |
+            coverage/
+          retention-days: 30
+
+      - name: Publish coverage to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        run: |
+          # This will be handled by the deploy-pages workflow
+          echo "Coverage report will be published to GitHub Pages"

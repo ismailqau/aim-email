@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -95,10 +95,15 @@ describe('EmailsController', () => {
 
     controller = module.get<EmailsController>(EmailsController);
     emailsService = module.get<EmailsService>(EmailsService);
-    emailDeliveryService = module.get<EmailDeliveryService>(EmailDeliveryService);
-    emailProviderService = module.get<EmailProviderService>(EmailProviderService);
-    dnsValidationService = module.get<DnsValidationService>(DnsValidationService);
-    emailReputationService = module.get<EmailReputationService>(EmailReputationService);
+    emailDeliveryService =
+      module.get<EmailDeliveryService>(EmailDeliveryService);
+    emailProviderService =
+      module.get<EmailProviderService>(EmailProviderService);
+    dnsValidationService =
+      module.get<DnsValidationService>(DnsValidationService);
+    emailReputationService = module.get<EmailReputationService>(
+      EmailReputationService
+    );
 
     jest.clearAllMocks();
   });
@@ -119,13 +124,15 @@ describe('EmailsController', () => {
     };
 
     it('should generate AI email content', async () => {
-      mockEmailsService.generateEmailContent.mockResolvedValue(mockEmailContent);
+      mockEmailsService.generateEmailContent.mockResolvedValue(
+        mockEmailContent
+      );
 
       const result = await controller.generateEmail(generateData);
 
       expect(emailsService.generateEmailContent).toHaveBeenCalledWith(
         generateData.leadId,
-        generateData.context,
+        generateData.context
       );
       expect(result).toEqual(mockEmailContent);
     });
@@ -134,7 +141,9 @@ describe('EmailsController', () => {
       const error = new Error('AI generation failed');
       mockEmailsService.generateEmailContent.mockRejectedValue(error);
 
-      await expect(controller.generateEmail(generateData)).rejects.toThrow(error);
+      await expect(controller.generateEmail(generateData)).rejects.toThrow(
+        error
+      );
     });
   });
 
@@ -152,11 +161,15 @@ describe('EmailsController', () => {
     };
 
     it('should send email using company config', async () => {
-      mockEmailProviderService.sendEmailWithCompanyConfig.mockResolvedValue(mockSendResponse);
+      mockEmailProviderService.sendEmailWithCompanyConfig.mockResolvedValue(
+        mockSendResponse
+      );
 
       const result = await controller.sendEmail(emailData, mockRequest);
 
-      expect(emailProviderService.sendEmailWithCompanyConfig).toHaveBeenCalledWith({
+      expect(
+        emailProviderService.sendEmailWithCompanyConfig
+      ).toHaveBeenCalledWith({
         ...emailData,
         companyId: 'company-1',
       });
@@ -165,9 +178,13 @@ describe('EmailsController', () => {
 
     it('should handle send errors', async () => {
       const error = new Error('Send failed');
-      mockEmailProviderService.sendEmailWithCompanyConfig.mockRejectedValue(error);
+      mockEmailProviderService.sendEmailWithCompanyConfig.mockRejectedValue(
+        error
+      );
 
-      await expect(controller.sendEmail(emailData, mockRequest)).rejects.toThrow(error);
+      await expect(
+        controller.sendEmail(emailData, mockRequest)
+      ).rejects.toThrow(error);
     });
   });
 
@@ -178,7 +195,9 @@ describe('EmailsController', () => {
     };
 
     it('should test email service availability', async () => {
-      mockEmailDeliveryService.testEmailServices.mockResolvedValue(mockTestResults);
+      mockEmailDeliveryService.testEmailServices.mockResolvedValue(
+        mockTestResults
+      );
 
       const result = await controller.testEmailServices();
 
@@ -189,7 +208,9 @@ describe('EmailsController', () => {
 
   describe('getPreferredProvider', () => {
     it('should get preferred email provider', async () => {
-      mockEmailDeliveryService.getPreferredProvider.mockResolvedValue('sendgrid');
+      mockEmailDeliveryService.getPreferredProvider.mockResolvedValue(
+        'sendgrid'
+      );
 
       const result = await controller.getPreferredProvider();
 
@@ -215,9 +236,14 @@ describe('EmailsController', () => {
     };
 
     it('should configure email provider', async () => {
-      mockEmailProviderService.configureEmailProvider.mockResolvedValue(mockConfigResponse);
+      mockEmailProviderService.configureEmailProvider.mockResolvedValue(
+        mockConfigResponse
+      );
 
-      const result = await controller.configureProvider(configData, mockRequest);
+      const result = await controller.configureProvider(
+        configData,
+        mockRequest
+      );
 
       expect(emailProviderService.configureEmailProvider).toHaveBeenCalledWith({
         ...configData,
@@ -237,11 +263,15 @@ describe('EmailsController', () => {
     };
 
     it('should get provider configuration', async () => {
-      mockEmailProviderService.getEmailProviderConfig.mockResolvedValue(mockConfig);
+      mockEmailProviderService.getEmailProviderConfig.mockResolvedValue(
+        mockConfig
+      );
 
       const result = await controller.getProviderConfig(mockRequest);
 
-      expect(emailProviderService.getEmailProviderConfig).toHaveBeenCalledWith('company-1');
+      expect(emailProviderService.getEmailProviderConfig).toHaveBeenCalledWith(
+        'company-1'
+      );
       expect(result).toEqual(mockConfig);
     });
   });
@@ -253,11 +283,15 @@ describe('EmailsController', () => {
     };
 
     it('should validate email setup', async () => {
-      mockEmailProviderService.validateEmailSetup.mockResolvedValue(mockValidation);
+      mockEmailProviderService.validateEmailSetup.mockResolvedValue(
+        mockValidation
+      );
 
       const result = await controller.validateSetup(mockRequest);
 
-      expect(emailProviderService.validateEmailSetup).toHaveBeenCalledWith('company-1');
+      expect(emailProviderService.validateEmailSetup).toHaveBeenCalledWith(
+        'company-1'
+      );
       expect(result).toEqual(mockValidation);
     });
   });
@@ -270,13 +304,15 @@ describe('EmailsController', () => {
     };
 
     it('should test email configuration', async () => {
-      mockEmailProviderService.testEmailConfiguration.mockResolvedValue(mockTestResult);
+      mockEmailProviderService.testEmailConfiguration.mockResolvedValue(
+        mockTestResult
+      );
 
       const result = await controller.testConfiguration(testData, mockRequest);
 
       expect(emailProviderService.testEmailConfiguration).toHaveBeenCalledWith(
         'company-1',
-        'test@example.com',
+        'test@example.com'
       );
       expect(result).toEqual(mockTestResult);
     });
@@ -292,20 +328,30 @@ describe('EmailsController', () => {
     };
 
     it('should validate DNS setup', async () => {
-      mockDnsValidationService.validateDomainSetup.mockResolvedValue(mockDnsValidation);
+      mockDnsValidationService.validateDomainSetup.mockResolvedValue(
+        mockDnsValidation
+      );
 
       const result = await controller.validateDNS(domain, smtpHost);
 
-      expect(dnsValidationService.validateDomainSetup).toHaveBeenCalledWith(domain, smtpHost);
+      expect(dnsValidationService.validateDomainSetup).toHaveBeenCalledWith(
+        domain,
+        smtpHost
+      );
       expect(result).toEqual(mockDnsValidation);
     });
 
     it('should validate DNS without SMTP host', async () => {
-      mockDnsValidationService.validateDomainSetup.mockResolvedValue(mockDnsValidation);
+      mockDnsValidationService.validateDomainSetup.mockResolvedValue(
+        mockDnsValidation
+      );
 
       await controller.validateDNS(domain);
 
-      expect(dnsValidationService.validateDomainSetup).toHaveBeenCalledWith(domain, undefined);
+      expect(dnsValidationService.validateDomainSetup).toHaveBeenCalledWith(
+        domain,
+        undefined
+      );
     });
   });
 
@@ -317,11 +363,15 @@ describe('EmailsController', () => {
     };
 
     it('should generate DKIM key pair', async () => {
-      mockEmailProviderService.generateDKIMKeyPair.mockResolvedValue(mockDkimKeys);
+      mockEmailProviderService.generateDKIMKeyPair.mockResolvedValue(
+        mockDkimKeys
+      );
 
       const result = await controller.generateDKIM(mockRequest);
 
-      expect(emailProviderService.generateDKIMKeyPair).toHaveBeenCalledWith('company-1');
+      expect(emailProviderService.generateDKIMKeyPair).toHaveBeenCalledWith(
+        'company-1'
+      );
       expect(result).toEqual(mockDkimKeys);
     });
   });
@@ -339,7 +389,10 @@ describe('EmailsController', () => {
 
       const result = await controller.getDeliveryStats(mockRequest);
 
-      expect(emailProviderService.getDeliveryStats).toHaveBeenCalledWith('company-1', 30);
+      expect(emailProviderService.getDeliveryStats).toHaveBeenCalledWith(
+        'company-1',
+        30
+      );
       expect(result).toEqual(mockStats);
     });
 
@@ -348,7 +401,10 @@ describe('EmailsController', () => {
 
       const result = await controller.getDeliveryStats(mockRequest, '7');
 
-      expect(emailProviderService.getDeliveryStats).toHaveBeenCalledWith('company-1', 7);
+      expect(emailProviderService.getDeliveryStats).toHaveBeenCalledWith(
+        'company-1',
+        7
+      );
       expect(result).toEqual(mockStats);
     });
   });
@@ -387,7 +443,10 @@ describe('EmailsController', () => {
 
       const result = await controller.createTemplate(mockRequest, templateData);
 
-      expect(emailsService.createEmailTemplate).toHaveBeenCalledWith('company-1', templateData);
+      expect(emailsService.createEmailTemplate).toHaveBeenCalledWith(
+        'company-1',
+        templateData
+      );
       expect(result).toEqual(mockTemplate);
     });
   });
@@ -401,11 +460,15 @@ describe('EmailsController', () => {
     };
 
     it('should get reputation metrics', async () => {
-      mockEmailReputationService.getCompanyReputationMetrics.mockResolvedValue(mockMetrics);
+      mockEmailReputationService.getCompanyReputationMetrics.mockResolvedValue(
+        mockMetrics
+      );
 
       const result = await controller.getReputationMetrics(mockRequest);
 
-      expect(emailReputationService.getCompanyReputationMetrics).toHaveBeenCalledWith('company-1');
+      expect(
+        emailReputationService.getCompanyReputationMetrics
+      ).toHaveBeenCalledWith('company-1');
       expect(result).toEqual(mockMetrics);
     });
   });
@@ -417,11 +480,15 @@ describe('EmailsController', () => {
     };
 
     it('should get delivery optimization', async () => {
-      mockEmailReputationService.analyzeDeliveryOptimization.mockResolvedValue(mockOptimization);
+      mockEmailReputationService.analyzeDeliveryOptimization.mockResolvedValue(
+        mockOptimization
+      );
 
       const result = await controller.getDeliveryOptimization(mockRequest);
 
-      expect(emailReputationService.analyzeDeliveryOptimization).toHaveBeenCalledWith('company-1');
+      expect(
+        emailReputationService.analyzeDeliveryOptimization
+      ).toHaveBeenCalledWith('company-1');
       expect(result).toEqual(mockOptimization);
     });
   });
@@ -435,11 +502,15 @@ describe('EmailsController', () => {
     };
 
     it('should check blacklist status', async () => {
-      mockEmailReputationService.monitorBlacklistStatus.mockResolvedValue(mockBlacklistStatus);
+      mockEmailReputationService.monitorBlacklistStatus.mockResolvedValue(
+        mockBlacklistStatus
+      );
 
       const result = await controller.checkBlacklistStatus(domain);
 
-      expect(emailReputationService.monitorBlacklistStatus).toHaveBeenCalledWith(domain);
+      expect(
+        emailReputationService.monitorBlacklistStatus
+      ).toHaveBeenCalledWith(domain);
       expect(result).toEqual(mockBlacklistStatus);
     });
   });
@@ -457,9 +528,14 @@ describe('EmailsController', () => {
     };
 
     it('should track delivery event', async () => {
-      mockEmailReputationService.trackEmailDelivery.mockResolvedValue(mockTrackResponse);
+      mockEmailReputationService.trackEmailDelivery.mockResolvedValue(
+        mockTrackResponse
+      );
 
-      const result = await controller.trackDeliveryEvent(eventData, mockRequest);
+      const result = await controller.trackDeliveryEvent(
+        eventData,
+        mockRequest
+      );
 
       expect(emailReputationService.trackEmailDelivery).toHaveBeenCalledWith({
         ...eventData,

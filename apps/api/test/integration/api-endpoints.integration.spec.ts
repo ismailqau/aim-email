@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -32,8 +32,17 @@ describe('API Endpoints Integration Tests', () => {
     client: {
       user: { findUnique: jest.fn(), create: jest.fn() },
       company: { create: jest.fn(), findMany: jest.fn(), findFirst: jest.fn() },
-      lead: { create: jest.fn(), findMany: jest.fn(), count: jest.fn(), findFirst: jest.fn() },
-      pipeline: { create: jest.fn(), findMany: jest.fn(), findFirst: jest.fn() },
+      lead: {
+        create: jest.fn(),
+        findMany: jest.fn(),
+        count: jest.fn(),
+        findFirst: jest.fn(),
+      },
+      pipeline: {
+        create: jest.fn(),
+        findMany: jest.fn(),
+        findFirst: jest.fn(),
+      },
       email: { create: jest.fn(), count: jest.fn() },
       emailTemplate: { create: jest.fn(), findMany: jest.fn() },
       emailEvent: { groupBy: jest.fn() },
@@ -186,7 +195,9 @@ describe('API Endpoints Integration Tests', () => {
           createdAt: new Date(),
         };
 
-        mockDatabaseService.client.company.create.mockResolvedValue(mockCompany);
+        mockDatabaseService.client.company.create.mockResolvedValue(
+          mockCompany
+        );
 
         const response = await request(app.getHttpServer())
           .post('/companies')
@@ -222,7 +233,9 @@ describe('API Endpoints Integration Tests', () => {
           },
         ];
 
-        mockDatabaseService.client.company.findMany.mockResolvedValue(mockCompanies);
+        mockDatabaseService.client.company.findMany.mockResolvedValue(
+          mockCompanies
+        );
 
         const response = await request(app.getHttpServer())
           .get('/companies')
@@ -343,7 +356,9 @@ describe('API Endpoints Integration Tests', () => {
           },
         ];
 
-        mockDatabaseService.client.emailTemplate.findMany.mockResolvedValue(mockTemplates);
+        mockDatabaseService.client.emailTemplate.findMany.mockResolvedValue(
+          mockTemplates
+        );
 
         const response = await request(app.getHttpServer())
           .get('/emails/templates')
@@ -372,7 +387,9 @@ describe('API Endpoints Integration Tests', () => {
           createdAt: new Date(),
         };
 
-        mockDatabaseService.client.pipeline.create.mockResolvedValue(mockPipeline);
+        mockDatabaseService.client.pipeline.create.mockResolvedValue(
+          mockPipeline
+        );
 
         const response = await request(app.getHttpServer())
           .post('/pipelines')
@@ -400,7 +417,9 @@ describe('API Endpoints Integration Tests', () => {
           { id: 'exec-2', pipelineId, leadId: 'lead-2', status: 'RUNNING' },
         ];
 
-        mockDatabaseService.client.pipeline.findUnique.mockResolvedValue(mockPipeline);
+        mockDatabaseService.client.pipeline.findUnique.mockResolvedValue(
+          mockPipeline
+        );
         mockDatabaseService.client.pipelineExecution.create
           .mockResolvedValueOnce(mockExecutions[0])
           .mockResolvedValueOnce(mockExecutions[1]);
@@ -484,7 +503,7 @@ describe('API Endpoints Integration Tests', () => {
 
     it('should handle database errors gracefully', async () => {
       mockDatabaseService.client.company.create.mockRejectedValue(
-        new Error('Database connection failed'),
+        new Error('Database connection failed')
       );
 
       const companyData = {

@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -21,7 +21,7 @@ export class EmailsService {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly database: DatabaseService,
+    private readonly database: DatabaseService
   ) {
     const apiKey = this.configService.get<string>('GEMINI_API_KEY');
     this.genAI = new GoogleGenerativeAI(apiKey);
@@ -38,7 +38,7 @@ export class EmailsService {
     }
 
     const prompt = this.buildEmailPrompt(lead, context);
-    
+
     try {
       const model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
       const result = await model.generateContent(prompt);
@@ -47,7 +47,9 @@ export class EmailsService {
 
       return this.parseEmailContent(text);
     } catch (error) {
-      throw new Error(`AI generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `AI generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   }
 
@@ -88,14 +90,16 @@ export class EmailsService {
       if (jsonMatch) {
         return JSON.parse(jsonMatch[0]);
       }
-      
+
       // Fallback: extract subject and content manually
       const subjectMatch = aiResponse.match(/Subject: (.+)/i);
-      const subject = subjectMatch ? subjectMatch[1].trim() : 'Personalized Outreach';
-      
+      const subject = subjectMatch
+        ? subjectMatch[1].trim()
+        : 'Personalized Outreach';
+
       // Remove subject line from content if present
       const content = aiResponse.replace(/Subject: .+/i, '').trim();
-      
+
       return { subject, content };
     } catch (error) {
       return {
@@ -134,7 +138,7 @@ export class EmailsService {
     });
 
     // TODO: Add to email queue for actual sending
-    
+
     return email;
   }
 }

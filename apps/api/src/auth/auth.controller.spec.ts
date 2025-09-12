@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -138,7 +138,9 @@ describe('AuthController', () => {
 
       const result = await controller.getProfile(mockRequest);
 
-      expect(mockAuthService.validateUser).toHaveBeenCalledWith(mockRequest.user.sub);
+      expect(mockAuthService.validateUser).toHaveBeenCalledWith(
+        mockRequest.user.sub
+      );
       expect(result).toEqual(mockUser);
     });
   });

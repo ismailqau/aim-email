@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -75,7 +75,10 @@ describe('PipelinesController', () => {
 
       const result = await controller.createPipeline(mockRequest, pipelineData);
 
-      expect(pipelinesService.createPipeline).toHaveBeenCalledWith('company-1', pipelineData);
+      expect(pipelinesService.createPipeline).toHaveBeenCalledWith(
+        'company-1',
+        pipelineData
+      );
       expect(result).toEqual(mockPipeline);
     });
 
@@ -83,7 +86,9 @@ describe('PipelinesController', () => {
       const error = new Error('Creation failed');
       mockPipelinesService.createPipeline.mockRejectedValue(error);
 
-      await expect(controller.createPipeline(mockRequest, pipelineData)).rejects.toThrow(error);
+      await expect(
+        controller.createPipeline(mockRequest, pipelineData)
+      ).rejects.toThrow(error);
     });
   });
 
@@ -103,9 +108,7 @@ describe('PipelinesController', () => {
         id: 'pipeline-2',
         name: 'Follow-up Series',
         companyId: 'company-1',
-        pipelineSteps: [
-          { id: 'step-3', order: 1, delayHours: 48 },
-        ],
+        pipelineSteps: [{ id: 'step-3', order: 1, delayHours: 48 }],
         createdAt: new Date(),
       },
     ];
@@ -157,14 +160,20 @@ describe('PipelinesController', () => {
 
       const result = await controller.getPipelineById(mockRequest, pipelineId);
 
-      expect(pipelinesService.getPipelineById).toHaveBeenCalledWith('company-1', pipelineId);
+      expect(pipelinesService.getPipelineById).toHaveBeenCalledWith(
+        'company-1',
+        pipelineId
+      );
       expect(result).toEqual(mockPipeline);
     });
 
     it('should return null when pipeline not found', async () => {
       mockPipelinesService.getPipelineById.mockResolvedValue(null);
 
-      const result = await controller.getPipelineById(mockRequest, 'non-existent-id');
+      const result = await controller.getPipelineById(
+        mockRequest,
+        'non-existent-id'
+      );
 
       expect(result).toBeNull();
     });
@@ -187,7 +196,10 @@ describe('PipelinesController', () => {
 
       const result = await controller.startPipeline(pipelineId, data);
 
-      expect(pipelinesService.startPipeline).toHaveBeenCalledWith(pipelineId, data.leadIds);
+      expect(pipelinesService.startPipeline).toHaveBeenCalledWith(
+        pipelineId,
+        data.leadIds
+      );
       expect(result).toEqual(mockStartResponse);
     });
 
@@ -195,7 +207,9 @@ describe('PipelinesController', () => {
       const error = new Error('Pipeline not found or inactive');
       mockPipelinesService.startPipeline.mockRejectedValue(error);
 
-      await expect(controller.startPipeline(pipelineId, data)).rejects.toThrow(error);
+      await expect(controller.startPipeline(pipelineId, data)).rejects.toThrow(
+        error
+      );
     });
 
     it('should handle empty lead array', async () => {
@@ -209,7 +223,10 @@ describe('PipelinesController', () => {
 
       const result = await controller.startPipeline(pipelineId, emptyData);
 
-      expect(pipelinesService.startPipeline).toHaveBeenCalledWith(pipelineId, []);
+      expect(pipelinesService.startPipeline).toHaveBeenCalledWith(
+        pipelineId,
+        []
+      );
       expect(result).toEqual(emptyResponse);
     });
   });
@@ -229,11 +246,21 @@ describe('PipelinesController', () => {
     };
 
     it('should update a pipeline', async () => {
-      mockPipelinesService.updatePipeline.mockResolvedValue(mockUpdatedPipeline);
+      mockPipelinesService.updatePipeline.mockResolvedValue(
+        mockUpdatedPipeline
+      );
 
-      const result = await controller.updatePipeline(mockRequest, pipelineId, updateData);
+      const result = await controller.updatePipeline(
+        mockRequest,
+        pipelineId,
+        updateData
+      );
 
-      expect(pipelinesService.updatePipeline).toHaveBeenCalledWith('company-1', pipelineId, updateData);
+      expect(pipelinesService.updatePipeline).toHaveBeenCalledWith(
+        'company-1',
+        pipelineId,
+        updateData
+      );
       expect(result).toEqual(mockUpdatedPipeline);
     });
 
@@ -241,7 +268,9 @@ describe('PipelinesController', () => {
       const error = new Error('Pipeline not found');
       mockPipelinesService.updatePipeline.mockRejectedValue(error);
 
-      await expect(controller.updatePipeline(mockRequest, pipelineId, updateData)).rejects.toThrow(error);
+      await expect(
+        controller.updatePipeline(mockRequest, pipelineId, updateData)
+      ).rejects.toThrow(error);
     });
   });
 
@@ -254,7 +283,10 @@ describe('PipelinesController', () => {
 
       const result = await controller.deletePipeline(mockRequest, pipelineId);
 
-      expect(pipelinesService.deletePipeline).toHaveBeenCalledWith('company-1', pipelineId);
+      expect(pipelinesService.deletePipeline).toHaveBeenCalledWith(
+        'company-1',
+        pipelineId
+      );
       expect(result).toEqual(mockResponse);
     });
 
@@ -262,7 +294,9 @@ describe('PipelinesController', () => {
       const error = new Error('Pipeline not found');
       mockPipelinesService.deletePipeline.mockRejectedValue(error);
 
-      await expect(controller.deletePipeline(mockRequest, pipelineId)).rejects.toThrow(error);
+      await expect(
+        controller.deletePipeline(mockRequest, pipelineId)
+      ).rejects.toThrow(error);
     });
   });
 });

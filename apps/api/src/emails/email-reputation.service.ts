@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -67,25 +67,29 @@ export class EmailReputationService {
     'bl.spamcop.net',
     'dnsbl.sorbs.net',
     'cbl.abuseat.org',
-    'pbl.spamhaus.org'
+    'pbl.spamhaus.org',
   ];
 
   constructor(
     private readonly configService: ConfigService,
     private readonly database: DatabaseService,
-    private readonly dnsValidationService: DnsValidationService,
+    private readonly dnsValidationService: DnsValidationService
   ) {}
 
-  async getCompanyReputationMetrics(companyId: string): Promise<ReputationMetrics> {
+  async getCompanyReputationMetrics(
+    companyId: string
+  ): Promise<ReputationMetrics> {
     try {
       // Get email settings for the company
-      const emailSettings = await this.database.client.emailSettings.findUnique({
-        where: { companyId },
-        include: {
-          sendgridConfig: true,
-          smtpConfig: true,
-        },
-      });
+      const emailSettings = await this.database.client.emailSettings.findUnique(
+        {
+          where: { companyId },
+          include: {
+            sendgridConfig: true,
+            smtpConfig: true,
+          },
+        }
+      );
 
       if (!emailSettings) {
         throw new Error('No email settings found for company');
@@ -93,21 +97,28 @@ export class EmailReputationService {
 
       // Calculate delivery metrics from email logs
       const deliveryMetrics = await this.calculateDeliveryMetrics(companyId);
-      
-      // Get domain reputation information
-      const fromEmail = emailSettings.provider === 'SENDGRID' 
-        ? emailSettings.sendgridConfig?.fromEmail 
-        : emailSettings.smtpConfig?.fromEmail;
 
-      const domainReputation = fromEmail 
+      // Get domain reputation information
+      const fromEmail =
+        emailSettings.provider === 'SENDGRID'
+          ? emailSettings.sendgridConfig?.fromEmail
+          : emailSettings.smtpConfig?.fromEmail;
+
+      const domainReputation = fromEmail
         ? await this.analyzeDomainReputation(fromEmail)
         : this.getDefaultDomainReputation();
 
       // Calculate overall reputation score
-      const reputationScore = this.calculateReputationScore(deliveryMetrics, domainReputation);
+      const reputationScore = this.calculateReputationScore(
+        deliveryMetrics,
+        domainReputation
+      );
 
       // Generate recommendations and warnings
-      const recommendations = this.generateRecommendations(deliveryMetrics, domainReputation);
+      const recommendations = this.generateRecommendations(
+        deliveryMetrics,
+        domainReputation
+      );
       const warnings = this.generateWarnings(deliveryMetrics, domainReputation);
 
       return {
@@ -118,23 +129,31 @@ export class EmailReputationService {
         warnings,
       };
     } catch (error) {
-      this.logger.error(`Failed to get reputation metrics for company ${companyId}:`, error);
+      this.logger.error(
+        `Failed to get reputation metrics for company ${companyId}:`,
+        error
+      );
       throw error;
     }
   }
 
-  async analyzeDeliveryOptimization(companyId: string): Promise<DeliveryOptimization> {
+  async analyzeDeliveryOptimization(
+    companyId: string
+  ): Promise<DeliveryOptimization> {
     const metrics = await this.getCompanyReputationMetrics(companyId);
-    
+
     // Calculate recommended sending volume based on current reputation
-    const recommendedSendingVolume = this.calculateOptimalSendingVolume(metrics);
-    
+    const recommendedSendingVolume =
+      this.calculateOptimalSendingVolume(metrics);
+
     // Determine optimal sending times based on historical data
     const optimalSendingTimes = await this.getOptimalSendingTimes(companyId);
-    
+
     // Generate domain warmup plan for new domains or low reputation
-    const domainWarmupPlan = this.generateDomainWarmupPlan(metrics.reputationScore);
-    
+    const domainWarmupPlan = this.generateDomainWarmupPlan(
+      metrics.reputationScore
+    );
+
     // Content optimization suggestions
     const contentOptimizations = this.generateContentOptimizations(metrics);
 
@@ -154,9 +173,9 @@ export class EmailReputationService {
       try {
         const reversedIP = await this.getReversedIP(domain);
         const query = `${reversedIP}.${provider}`;
-        
+
         await lookupAsync(query);
-        
+
         // If lookup succeeds, IP is listed
         results.push({
           provider,
@@ -204,8 +223,10 @@ export class EmailReputationService {
 
       // Update reputation metrics cache if needed
       await this.updateReputationCache(emailData.companyId, emailData.status);
-      
-      this.logger.debug(`Email delivery tracked: ${emailData.emailId} - ${emailData.status}`);
+
+      this.logger.debug(
+        `Email delivery tracked: ${emailData.emailId} - ${emailData.status}`
+      );
     } catch (error) {
       this.logger.error(`Failed to track email delivery:`, error);
     }
@@ -237,16 +258,16 @@ export class EmailReputationService {
     }
 
     const totalSent = emails.filter(e => e.status === 'SENT').length;
-    const delivered = emails.filter(e => 
+    const delivered = emails.filter(e =>
       e.emailEvents.some(event => event.eventType === 'DELIVERED')
     ).length;
-    const bounced = emails.filter(e => 
+    const bounced = emails.filter(e =>
       e.emailEvents.some(event => event.eventType === 'BOUNCED')
     ).length;
-    const complained = emails.filter(e => 
+    const complained = emails.filter(e =>
       e.emailEvents.some(event => event.eventType === 'SPAM_REPORT')
     ).length;
-    const unsubscribed = emails.filter(e => 
+    const unsubscribed = emails.filter(e =>
       e.emailEvents.some(event => event.eventType === 'UNSUBSCRIBE')
     ).length;
 
@@ -259,17 +280,19 @@ export class EmailReputationService {
     };
   }
 
-  private async analyzeDomainReputation(fromEmail: string): Promise<DomainReputationInfo> {
+  private async analyzeDomainReputation(
+    fromEmail: string
+  ): Promise<DomainReputationInfo> {
     const domain = fromEmail.split('@')[1];
-    
+
     // Check DNS records
     const spfRecord = await this.dnsValidationService.validateSPF(domain);
     const dmarcRecord = await this.dnsValidationService.validateDMARC(domain);
     const mxRecords = await this.dnsValidationService.validateMX(domain);
-    
+
     // Check blacklist status
     const blacklistStatus = await this.monitorBlacklistStatus(domain);
-    
+
     // Calculate trust score based on various factors
     const trustScore = this.calculateDomainTrustScore({
       hasSPF: spfRecord.isValid,
@@ -312,25 +335,25 @@ export class EmailReputationService {
     const complianceWeight = 0.3;
 
     // Delivery score (0-100)
-    const deliveryScore = Math.max(0, 
-      100 - (deliveryMetrics.bounceRate * 2) - (deliveryMetrics.complaintRate * 5)
+    const deliveryScore = Math.max(
+      0,
+      100 - deliveryMetrics.bounceRate * 2 - deliveryMetrics.complaintRate * 5
     );
 
     // Domain score (0-100)
     const domainScore = domainReputation.trustScore;
 
     // Compliance score (0-100)
-    const complianceScore = (
+    const complianceScore =
       (domainReputation.hasSPF ? 25 : 0) +
       (domainReputation.hasDKIM ? 25 : 0) +
       (domainReputation.hasDMARC ? 25 : 0) +
-      (domainReputation.mxRecords > 0 ? 25 : 0)
-    );
+      (domainReputation.mxRecords > 0 ? 25 : 0);
 
-    const finalScore = 
-      (deliveryScore * deliveryWeight) +
-      (domainScore * domainWeight) +
-      (complianceScore * complianceWeight);
+    const finalScore =
+      deliveryScore * deliveryWeight +
+      domainScore * domainWeight +
+      complianceScore * complianceWeight;
 
     return Math.round(Math.max(0, Math.min(100, finalScore)));
   }
@@ -343,30 +366,44 @@ export class EmailReputationService {
 
     // DNS recommendations
     if (!domainReputation.hasSPF) {
-      recommendations.push('Add SPF record to your domain to improve deliverability');
+      recommendations.push(
+        'Add SPF record to your domain to improve deliverability'
+      );
     }
     if (!domainReputation.hasDKIM) {
       recommendations.push('Configure DKIM signing for email authentication');
     }
     if (!domainReputation.hasDMARC) {
-      recommendations.push('Implement DMARC policy to protect against spoofing');
+      recommendations.push(
+        'Implement DMARC policy to protect against spoofing'
+      );
     }
 
     // Delivery recommendations
     if (deliveryMetrics.bounceRate > 5) {
-      recommendations.push('High bounce rate detected. Clean your email list and validate addresses');
+      recommendations.push(
+        'High bounce rate detected. Clean your email list and validate addresses'
+      );
     }
     if (deliveryMetrics.complaintRate > 0.1) {
-      recommendations.push('High complaint rate. Review email content and targeting');
+      recommendations.push(
+        'High complaint rate. Review email content and targeting'
+      );
     }
     if (deliveryMetrics.deliveryRate < 95) {
-      recommendations.push('Consider implementing email warmup process for better deliverability');
+      recommendations.push(
+        'Consider implementing email warmup process for better deliverability'
+      );
     }
 
     // Blacklist recommendations
-    const listedProviders = domainReputation.blacklistStatus.filter(bl => bl.status === 'listed');
+    const listedProviders = domainReputation.blacklistStatus.filter(
+      bl => bl.status === 'listed'
+    );
     if (listedProviders.length > 0) {
-      recommendations.push(`Remove your IP from blacklists: ${listedProviders.map(p => p.provider).join(', ')}`);
+      recommendations.push(
+        `Remove your IP from blacklists: ${listedProviders.map(p => p.provider).join(', ')}`
+      );
     }
 
     return recommendations;
@@ -379,13 +416,17 @@ export class EmailReputationService {
     const warnings: string[] = [];
 
     if (deliveryMetrics.bounceRate > 10) {
-      warnings.push('Critical bounce rate detected - immediate action required');
+      warnings.push(
+        'Critical bounce rate detected - immediate action required'
+      );
     }
     if (deliveryMetrics.complaintRate > 0.5) {
       warnings.push('High spam complaint rate - risk of provider blocking');
     }
     if (domainReputation.blacklistStatus.some(bl => bl.status === 'listed')) {
-      warnings.push('Domain or IP is blacklisted - emails may not be delivered');
+      warnings.push(
+        'Domain or IP is blacklisted - emails may not be delivered'
+      );
     }
 
     return warnings;
@@ -395,7 +436,7 @@ export class EmailReputationService {
     // Base volume on reputation score
     const baseVolume = 1000;
     const reputationMultiplier = metrics.reputationScore / 100;
-    
+
     return Math.round(baseVolume * reputationMultiplier);
   }
 
@@ -405,7 +446,7 @@ export class EmailReputationService {
     return [
       '09:00-11:00 Tuesday-Thursday',
       '14:00-16:00 Tuesday-Thursday',
-      '10:00-12:00 Monday,Friday'
+      '10:00-12:00 Monday,Friday',
     ];
   }
 
@@ -419,26 +460,26 @@ export class EmailReputationService {
         day: 1,
         maxEmails: 50,
         targetDomains: ['gmail.com', 'outlook.com'],
-        description: 'Start with major providers, low volume'
+        description: 'Start with major providers, low volume',
       },
       {
         day: 3,
         maxEmails: 100,
         targetDomains: ['gmail.com', 'outlook.com', 'yahoo.com'],
-        description: 'Increase volume gradually'
+        description: 'Increase volume gradually',
       },
       {
         day: 7,
         maxEmails: 250,
         targetDomains: ['gmail.com', 'outlook.com', 'yahoo.com', 'hotmail.com'],
-        description: 'Add more providers, maintain engagement'
+        description: 'Add more providers, maintain engagement',
       },
       {
         day: 14,
         maxEmails: 500,
         targetDomains: ['*'],
-        description: 'Full volume to all domains'
-      }
+        description: 'Full volume to all domains',
+      },
     ];
   }
 
@@ -481,7 +522,9 @@ export class EmailReputationService {
     if (factors.mxRecords > 0) score += 20;
 
     // Blacklist status
-    const cleanLists = factors.blacklistStatus.filter(bl => bl.status === 'clean').length;
+    const cleanLists = factors.blacklistStatus.filter(
+      bl => bl.status === 'clean'
+    ).length;
     const totalLists = factors.blacklistStatus.length;
     if (totalLists > 0) {
       score += (cleanLists / totalLists) * 20;
@@ -490,9 +533,14 @@ export class EmailReputationService {
     return Math.round(score);
   }
 
-  private async updateReputationCache(companyId: string, eventType: string): Promise<void> {
+  private async updateReputationCache(
+    companyId: string,
+    eventType: string
+  ): Promise<void> {
     // This would update cached reputation metrics for real-time monitoring
     // Implementation would depend on your caching strategy
-    this.logger.debug(`Updating reputation cache for company ${companyId}: ${eventType}`);
+    this.logger.debug(
+      `Updating reputation cache for company ${companyId}: ${eventType}`
+    );
   }
 }

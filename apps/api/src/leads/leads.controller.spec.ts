@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -76,7 +76,10 @@ describe('LeadsController', () => {
 
       const result = await controller.createLead(mockRequest, leadData);
 
-      expect(leadsService.createLead).toHaveBeenCalledWith('company-1', leadData);
+      expect(leadsService.createLead).toHaveBeenCalledWith(
+        'company-1',
+        leadData
+      );
       expect(result).toEqual(mockLead);
     });
 
@@ -84,7 +87,9 @@ describe('LeadsController', () => {
       const error = new Error('Creation failed');
       mockLeadsService.createLead.mockRejectedValue(error);
 
-      await expect(controller.createLead(mockRequest, leadData)).rejects.toThrow(error);
+      await expect(
+        controller.createLead(mockRequest, leadData)
+      ).rejects.toThrow(error);
     });
   });
 
@@ -161,7 +166,10 @@ describe('LeadsController', () => {
 
       const result = await controller.getLeadById(mockRequest, leadId);
 
-      expect(leadsService.getLeadById).toHaveBeenCalledWith('company-1', leadId);
+      expect(leadsService.getLeadById).toHaveBeenCalledWith(
+        'company-1',
+        leadId
+      );
       expect(result).toEqual(mockLead);
     });
 
@@ -169,7 +177,9 @@ describe('LeadsController', () => {
       const error = new Error('Lead not found');
       mockLeadsService.getLeadById.mockRejectedValue(error);
 
-      await expect(controller.getLeadById(mockRequest, 'non-existent-id')).rejects.toThrow(error);
+      await expect(
+        controller.getLeadById(mockRequest, 'non-existent-id')
+      ).rejects.toThrow(error);
     });
   });
 
@@ -190,9 +200,17 @@ describe('LeadsController', () => {
     it('should update a lead', async () => {
       mockLeadsService.updateLead.mockResolvedValue(mockUpdatedLead);
 
-      const result = await controller.updateLead(mockRequest, leadId, updateData);
+      const result = await controller.updateLead(
+        mockRequest,
+        leadId,
+        updateData
+      );
 
-      expect(leadsService.updateLead).toHaveBeenCalledWith('company-1', leadId, updateData);
+      expect(leadsService.updateLead).toHaveBeenCalledWith(
+        'company-1',
+        leadId,
+        updateData
+      );
       expect(result).toEqual(mockUpdatedLead);
     });
 
@@ -200,7 +218,9 @@ describe('LeadsController', () => {
       const error = new Error('Update failed');
       mockLeadsService.updateLead.mockRejectedValue(error);
 
-      await expect(controller.updateLead(mockRequest, leadId, updateData)).rejects.toThrow(error);
+      await expect(
+        controller.updateLead(mockRequest, leadId, updateData)
+      ).rejects.toThrow(error);
     });
   });
 
@@ -221,7 +241,9 @@ describe('LeadsController', () => {
       const error = new Error('Delete failed');
       mockLeadsService.deleteLead.mockRejectedValue(error);
 
-      await expect(controller.deleteLead(mockRequest, leadId)).rejects.toThrow(error);
+      await expect(controller.deleteLead(mockRequest, leadId)).rejects.toThrow(
+        error
+      );
     });
   });
 
@@ -231,7 +253,9 @@ describe('LeadsController', () => {
       originalname: 'leads.csv',
       encoding: '7bit',
       mimetype: 'text/csv',
-      buffer: Buffer.from('email,firstName,lastName\njohn@example.com,John,Doe'),
+      buffer: Buffer.from(
+        'email,firstName,lastName\njohn@example.com,John,Doe'
+      ),
       size: 100,
     } as Express.Multer.File;
 
@@ -251,7 +275,10 @@ describe('LeadsController', () => {
 
       // Note: The actual CSV parsing is not implemented in the controller yet
       // This test verifies the service is called with the companyId and empty array
-      expect(leadsService.uploadLeadsFromCsv).toHaveBeenCalledWith('company-1', []);
+      expect(leadsService.uploadLeadsFromCsv).toHaveBeenCalledWith(
+        'company-1',
+        []
+      );
       expect(result).toEqual(mockUploadResponse);
     });
 
@@ -259,7 +286,9 @@ describe('LeadsController', () => {
       const error = new Error('Upload failed');
       mockLeadsService.uploadLeadsFromCsv.mockRejectedValue(error);
 
-      await expect(controller.uploadLeads(mockRequest, mockFile)).rejects.toThrow(error);
+      await expect(
+        controller.uploadLeads(mockRequest, mockFile)
+      ).rejects.toThrow(error);
     });
 
     it('should handle missing file', async () => {
@@ -268,7 +297,10 @@ describe('LeadsController', () => {
         errors: [],
       });
 
-      const result = await controller.uploadLeads(mockRequest, undefined as any);
+      const result = await controller.uploadLeads(
+        mockRequest,
+        undefined as any
+      );
 
       expect(result.summary.totalRows).toBe(0);
     });

@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -18,39 +18,37 @@ export class AnalyticsService {
   constructor(private readonly database: DatabaseService) {}
 
   async getDashboardMetrics(companyId: string) {
-    const [
-      totalLeads,
-      activeLeads,
-      emailsSent,
-      emailEvents,
-    ] = await Promise.all([
-      this.database.client.lead.count({
-        where: { companyId },
-      }),
-      this.database.client.lead.count({
-        where: { companyId, status: 'ACTIVE' },
-      }),
-      this.database.client.email.count({
-        where: { 
-          lead: { companyId },
-          status: { in: ['SENT', 'DELIVERED'] },
-        },
-      }),
-      this.database.client.emailEvent.groupBy({
-        by: ['eventType'],
-        where: {
-          email: {
+    const [totalLeads, activeLeads, emailsSent, emailEvents] =
+      await Promise.all([
+        this.database.client.lead.count({
+          where: { companyId },
+        }),
+        this.database.client.lead.count({
+          where: { companyId, status: 'ACTIVE' },
+        }),
+        this.database.client.email.count({
+          where: {
             lead: { companyId },
+            status: { in: ['SENT', 'DELIVERED'] },
           },
-        },
-        _count: true,
-      }),
-    ]);
+        }),
+        this.database.client.emailEvent.groupBy({
+          by: ['eventType'],
+          where: {
+            email: {
+              lead: { companyId },
+            },
+          },
+          _count: true,
+        }),
+      ]);
 
     // Calculate rates
-    const openEvents = emailEvents.find(e => e.eventType === 'OPENED')?._count || 0;
-    const clickEvents = emailEvents.find(e => e.eventType === 'CLICKED')?._count || 0;
-    
+    const openEvents =
+      emailEvents.find(e => e.eventType === 'OPENED')?._count || 0;
+    const clickEvents =
+      emailEvents.find(e => e.eventType === 'CLICKED')?._count || 0;
+
     const openRate = emailsSent > 0 ? (openEvents / emailsSent) * 100 : 0;
     const clickRate = emailsSent > 0 ? (clickEvents / emailsSent) * 100 : 0;
 
@@ -65,7 +63,11 @@ export class AnalyticsService {
     };
   }
 
-  async getPerformanceData(companyId: string, startDate?: string, endDate?: string) {
+  async getPerformanceData(
+    companyId: string,
+    startDate?: string,
+    endDate?: string
+  ) {
     const dateFilter = {
       ...(startDate && { gte: new Date(startDate) }),
       ...(endDate && { lte: new Date(endDate) }),
@@ -83,11 +85,11 @@ export class AnalyticsService {
 
     // Group by date
     const performanceByDate = {};
-    
+
     emails.forEach(email => {
       const date = email.sentAt?.toISOString().split('T')[0];
       if (!date) return;
-      
+
       if (!performanceByDate[date]) {
         performanceByDate[date] = {
           period: date,
@@ -98,9 +100,9 @@ export class AnalyticsService {
           conversions: 0,
         };
       }
-      
+
       performanceByDate[date].emailsSent++;
-      
+
       email.emailEvents.forEach(event => {
         if (event.eventType === 'OPENED') {
           performanceByDate[date].opens++;
@@ -114,7 +116,8 @@ export class AnalyticsService {
     return Object.values(performanceByDate).map((data: any) => ({
       ...data,
       openRate: data.emailsSent > 0 ? (data.opens / data.emailsSent) * 100 : 0,
-      clickRate: data.emailsSent > 0 ? (data.clicks / data.emailsSent) * 100 : 0,
+      clickRate:
+        data.emailsSent > 0 ? (data.clicks / data.emailsSent) * 100 : 0,
       replyRate: 0,
       conversionRate: 0,
     }));
@@ -131,9 +134,13 @@ export class AnalyticsService {
     return pipelines.map(pipeline => {
       const executions = pipeline.pipelineExecutions;
       const totalExecutions = executions.length;
-      const activeExecutions = executions.filter(e => e.status === 'RUNNING').length;
-      const completedExecutions = executions.filter(e => e.status === 'COMPLETED').length;
-      
+      const activeExecutions = executions.filter(
+        e => e.status === 'RUNNING'
+      ).length;
+      const completedExecutions = executions.filter(
+        e => e.status === 'COMPLETED'
+      ).length;
+
       return {
         id: pipeline.id,
         name: pipeline.name,

@@ -3,14 +3,18 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { DatabaseService } from '../common/database/database.service';
 
 @Injectable()
@@ -27,16 +31,20 @@ export class LeadsService {
     }
 
     return this.database.client.lead.create({
-      data: { ...leadData, companyId, priorityScore: leadData.priorityScore || 50 },
+      data: {
+        ...leadData,
+        companyId,
+        priorityScore: leadData.priorityScore || 50,
+      },
     });
   }
 
   async getLeads(companyId: string, query: any = {}) {
     const { page = 1, limit = 50, search, status } = query;
     const skip = (page - 1) * limit;
-    
+
     const where: any = { companyId };
-    
+
     if (search) {
       where.OR = [
         { email: { contains: search, mode: 'insensitive' } },
@@ -44,7 +52,7 @@ export class LeadsService {
         { lastName: { contains: search, mode: 'insensitive' } },
       ];
     }
-    
+
     if (status) {
       where.status = status;
     }
@@ -84,7 +92,7 @@ export class LeadsService {
 
   async updateLead(companyId: string, leadId: string, updateData: any) {
     const lead = await this.getLeadById(companyId, leadId);
-    
+
     return this.database.client.lead.update({
       where: { id: leadId },
       data: updateData,
@@ -93,7 +101,7 @@ export class LeadsService {
 
   async deleteLead(companyId: string, leadId: string) {
     await this.getLeadById(companyId, leadId);
-    
+
     await this.database.client.lead.delete({
       where: { id: leadId },
     });
@@ -108,7 +116,7 @@ export class LeadsService {
     for (let i = 0; i < csvData.length; i++) {
       try {
         const row = csvData[i];
-        
+
         if (!row.email || !this.isValidEmail(row.email)) {
           errors.push(`Row ${i + 1}: Invalid email`);
           continue;
@@ -125,7 +133,9 @@ export class LeadsService {
 
         successCount++;
       } catch (error) {
-        errors.push(`Row ${i + 1}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        errors.push(
+          `Row ${i + 1}: ${error instanceof Error ? error.message : 'Unknown error'}`
+        );
       }
     }
 

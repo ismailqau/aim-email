@@ -5,6 +5,7 @@
 The AI Email Marketing System is a specialized automation platform that leverages artificial intelligence to generate personalized outreach emails. The system manages leads from CSV imports, automates email sequences through pipelines, tracks engagement metrics, and provides data-driven optimization suggestions while maintaining email deliverability best practices.
 
 ### Key Features
+
 - AI-powered personalized email generation using Gemini API
 - Automated email pipeline sequences with scheduling
 - Lead management and CSV import capabilities
@@ -16,6 +17,7 @@ The AI Email Marketing System is a specialized automation platform that leverage
 ## Technology Stack & Dependencies
 
 ### Monorepo Architecture
+
 ```
 /
 ├── apps/
@@ -32,6 +34,7 @@ The AI Email Marketing System is a specialized automation platform that leverage
 ```
 
 ### Core Technologies
+
 - **Frontend**: Next.js with TypeScript (SSR capabilities, routing)
 - **Backend**: Node.js with NestJS (modular architecture, decorators)
 - **Database**: PostgreSQL with Prisma ORM (type-safe database access)
@@ -52,31 +55,31 @@ graph TB
         WEB[Next.js Web App]
         UI[Shared UI Components]
     end
-    
+
     subgraph "API Layer"
         API[NestJS API Server]
         AUTH[Authentication Service]
         WEBHOOK[SendGrid Webhooks]
     end
-    
+
     subgraph "Background Processing"
         QUEUE[BullMQ Queue]
         WORKER[Email Worker Process]
         SCHEDULER[Pipeline Scheduler]
     end
-    
+
     subgraph "Data Layer"
         DB[(PostgreSQL)]
         REDIS[(Redis Cache)]
         BQ[(BigQuery)]
     end
-    
+
     subgraph "External Services"
         GEMINI[Gemini AI API]
         SENDGRID[SendGrid API]
         LOOKER[Looker Studio]
     end
-    
+
     WEB --> API
     API --> DB
     API --> QUEUE
@@ -93,6 +96,7 @@ graph TB
 ### Component Architecture
 
 #### Frontend Components Hierarchy
+
 ```
 App Layout
 ├── Authentication
@@ -138,19 +142,19 @@ erDiagram
     Company ||--o{ Lead : contains
     Company ||--o{ Pipeline : owns
     Company ||--o{ EmailTemplate : creates
-    
+
     Lead ||--o{ LeadActivity : generates
     Lead ||--o{ PipelineExecution : participates_in
-    
+
     Pipeline ||--o{ PipelineStep : contains
     Pipeline ||--o{ PipelineExecution : executes
-    
+
     PipelineStep ||--o{ EmailTemplate : uses
     PipelineStep ||--o{ StepExecution : creates
-    
+
     EmailTemplate ||--o{ Email : generates
     Email ||--o{ EmailEvent : tracks
-    
+
     User {
         string id PK
         string email
@@ -158,7 +162,7 @@ erDiagram
         datetime created_at
         datetime updated_at
     }
-    
+
     Company {
         string id PK
         string user_id FK
@@ -169,7 +173,7 @@ erDiagram
         string industry
         datetime created_at
     }
-    
+
     Lead {
         string id PK
         string company_id FK
@@ -183,7 +187,7 @@ erDiagram
         enum status
         datetime created_at
     }
-    
+
     Pipeline {
         string id PK
         string company_id FK
@@ -193,7 +197,7 @@ erDiagram
         boolean is_active
         datetime created_at
     }
-    
+
     PipelineStep {
         string id PK
         string pipeline_id FK
@@ -203,7 +207,7 @@ erDiagram
         json conditions
         enum step_type
     }
-    
+
     Email {
         string id PK
         string lead_id FK
@@ -214,7 +218,7 @@ erDiagram
         datetime sent_at
         string sendgrid_message_id
     }
-    
+
     EmailEvent {
         string id PK
         string email_id FK
@@ -227,56 +231,63 @@ erDiagram
 ### API Endpoints Reference
 
 #### Authentication Endpoints
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/auth/register` | User registration |
-| POST | `/auth/login` | User authentication |
-| POST | `/auth/logout` | User logout |
-| GET | `/auth/me` | Get current user |
+
+| Method | Endpoint         | Description         |
+| ------ | ---------------- | ------------------- |
+| POST   | `/auth/register` | User registration   |
+| POST   | `/auth/login`    | User authentication |
+| POST   | `/auth/logout`   | User logout         |
+| GET    | `/auth/me`       | Get current user    |
 
 #### Lead Management Endpoints
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/leads/upload` | Upload CSV leads |
-| GET | `/leads` | List leads with pagination |
-| GET | `/leads/:id` | Get lead details |
-| PUT | `/leads/:id` | Update lead information |
-| DELETE | `/leads/:id` | Delete lead |
-| POST | `/leads/bulk-assign` | Assign leads to pipeline |
+
+| Method | Endpoint             | Description                |
+| ------ | -------------------- | -------------------------- |
+| POST   | `/leads/upload`      | Upload CSV leads           |
+| GET    | `/leads`             | List leads with pagination |
+| GET    | `/leads/:id`         | Get lead details           |
+| PUT    | `/leads/:id`         | Update lead information    |
+| DELETE | `/leads/:id`         | Delete lead                |
+| POST   | `/leads/bulk-assign` | Assign leads to pipeline   |
 
 #### Pipeline Management Endpoints
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/pipelines` | List all pipelines |
-| POST | `/pipelines` | Create new pipeline |
-| GET | `/pipelines/:id` | Get pipeline details |
-| PUT | `/pipelines/:id` | Update pipeline |
-| DELETE | `/pipelines/:id` | Delete pipeline |
-| POST | `/pipelines/:id/start` | Start pipeline for leads |
+
+| Method | Endpoint               | Description              |
+| ------ | ---------------------- | ------------------------ |
+| GET    | `/pipelines`           | List all pipelines       |
+| POST   | `/pipelines`           | Create new pipeline      |
+| GET    | `/pipelines/:id`       | Get pipeline details     |
+| PUT    | `/pipelines/:id`       | Update pipeline          |
+| DELETE | `/pipelines/:id`       | Delete pipeline          |
+| POST   | `/pipelines/:id/start` | Start pipeline for leads |
 
 #### Email Generation & Sending Endpoints
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/emails/generate` | Generate AI email content |
-| POST | `/emails/send` | Send individual email |
-| GET | `/emails/templates` | List email templates |
-| POST | `/emails/templates` | Create email template |
+
+| Method | Endpoint            | Description               |
+| ------ | ------------------- | ------------------------- |
+| POST   | `/emails/generate`  | Generate AI email content |
+| POST   | `/emails/send`      | Send individual email     |
+| GET    | `/emails/templates` | List email templates      |
+| POST   | `/emails/templates` | Create email template     |
 
 #### Analytics Endpoints
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/analytics/dashboard` | Get dashboard metrics |
-| GET | `/analytics/performance` | Get performance data |
-| POST | `/analytics/export` | Export analytics data |
+
+| Method | Endpoint                 | Description           |
+| ------ | ------------------------ | --------------------- |
+| GET    | `/analytics/dashboard`   | Get dashboard metrics |
+| GET    | `/analytics/performance` | Get performance data  |
+| POST   | `/analytics/export`      | Export analytics data |
 
 #### Webhook Endpoints
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/webhooks/sendgrid` | Handle SendGrid events |
+
+| Method | Endpoint             | Description            |
+| ------ | -------------------- | ---------------------- |
+| POST   | `/webhooks/sendgrid` | Handle SendGrid events |
 
 ### Business Logic Layer
 
 #### Lead Processing Architecture
+
 ```mermaid
 flowchart TD
     A[CSV Upload] --> B[Data Validation]
@@ -285,7 +296,7 @@ flowchart TD
     D --> E[Lead Scoring]
     E --> F[Database Storage]
     F --> G[Pipeline Assignment]
-    
+
     B --> H[Validation Errors]
     C --> I[Duplicate Handling]
     H --> J[Error Reporting]
@@ -293,6 +304,7 @@ flowchart TD
 ```
 
 #### Email Generation Workflow
+
 ```mermaid
 sequenceDiagram
     participant UI as Frontend
@@ -300,7 +312,7 @@ sequenceDiagram
     participant AI as Gemini API
     participant DB as Database
     participant Queue as BullMQ
-    
+
     UI->>API: Request email generation
     API->>DB: Fetch lead & company data
     DB-->>API: Return profile data
@@ -308,7 +320,7 @@ sequenceDiagram
     AI-->>API: Return email variations
     API->>DB: Save email template
     API-->>UI: Return generated emails
-    
+
     UI->>API: Approve and schedule
     API->>Queue: Add to email queue
     Queue-->>API: Job queued
@@ -316,6 +328,7 @@ sequenceDiagram
 ```
 
 #### Pipeline Execution Engine
+
 ```mermaid
 stateDiagram-v2
     [*] --> PipelineStart
@@ -328,7 +341,7 @@ stateDiagram-v2
     NextStep --> StepExecution
     AlternativeStep --> StepExecution
     PipelineComplete --> [*]
-    
+
     StepExecution --> EmailSend
     EmailSend --> DeliveryTracking
     DeliveryTracking --> EngagementTracking
@@ -339,6 +352,7 @@ stateDiagram-v2
 ### Middleware & Background Processing
 
 #### Queue Management Architecture
+
 ```mermaid
 graph LR
     subgraph "Job Types"
@@ -347,40 +361,42 @@ graph LR
         C[Analytics Processing Jobs]
         D[Data Sync Jobs]
     end
-    
+
     subgraph "Queue Processing"
         E[High Priority Queue]
         F[Standard Queue]
         G[Low Priority Queue]
     end
-    
+
     subgraph "Workers"
         H[Email Worker]
         I[Pipeline Worker]
         J[Analytics Worker]
     end
-    
+
     A --> E
     B --> F
     C --> G
     D --> G
-    
+
     E --> H
     F --> I
     G --> J
 ```
 
 #### Rate Limiting Strategy
-| Service | Limit Type | Rate | Implementation |
-|---------|-----------|------|----------------|
-| SendGrid API | Requests/second | 600/sec | BullMQ rate limiter |
-| Gemini API | Requests/minute | 60/min | Redis-based throttling |
-| CSV Upload | File size | 10MB max | Express middleware |
-| Pipeline Creation | Per user/hour | 50/hour | Redis counter |
+
+| Service           | Limit Type      | Rate     | Implementation         |
+| ----------------- | --------------- | -------- | ---------------------- |
+| SendGrid API      | Requests/second | 600/sec  | BullMQ rate limiter    |
+| Gemini API        | Requests/minute | 60/min   | Redis-based throttling |
+| CSV Upload        | File size       | 10MB max | Express middleware     |
+| Pipeline Creation | Per user/hour   | 50/hour  | Redis counter          |
 
 ### Analytics & Data Pipeline
 
 #### Data Flow Architecture
+
 ```mermaid
 graph TB
     subgraph "Operational Data"
@@ -388,19 +404,19 @@ graph TB
         B[SendGrid Webhooks]
         C[Application Logs]
     end
-    
+
     subgraph "ETL Pipeline"
         D[Cloud Functions ETL]
         E[Data Transformation]
         F[Data Validation]
     end
-    
+
     subgraph "Analytics Layer"
         G[BigQuery Data Warehouse]
         H[Looker Studio Dashboards]
         I[Real-time Metrics API]
     end
-    
+
     A --> D
     B --> D
     C --> D
@@ -412,18 +428,20 @@ graph TB
 ```
 
 #### Key Performance Indicators (KPIs)
-| Metric Category | KPI | Calculation | Source |
-|----------------|-----|-------------|---------|
-| Email Performance | Open Rate | (Opens / Sent) × 100 | SendGrid Events |
-| Email Performance | Click Rate | (Clicks / Sent) × 100 | SendGrid Events |
-| Email Performance | Reply Rate | (Replies / Sent) × 100 | SendGrid Events |
-| Pipeline Performance | Conversion Rate | (Conversions / Pipeline Starts) × 100 | Database |
-| Lead Quality | Engagement Score | Weighted sum of interactions | Calculated |
-| System Performance | Email Delivery Rate | (Delivered / Sent) × 100 | SendGrid Events |
+
+| Metric Category      | KPI                 | Calculation                           | Source          |
+| -------------------- | ------------------- | ------------------------------------- | --------------- |
+| Email Performance    | Open Rate           | (Opens / Sent) × 100                  | SendGrid Events |
+| Email Performance    | Click Rate          | (Clicks / Sent) × 100                 | SendGrid Events |
+| Email Performance    | Reply Rate          | (Replies / Sent) × 100                | SendGrid Events |
+| Pipeline Performance | Conversion Rate     | (Conversions / Pipeline Starts) × 100 | Database        |
+| Lead Quality         | Engagement Score    | Weighted sum of interactions          | Calculated      |
+| System Performance   | Email Delivery Rate | (Delivered / Sent) × 100              | SendGrid Events |
 
 ### Testing Strategy
 
 #### Testing Pyramid
+
 ```mermaid
 graph TB
     subgraph "Testing Levels"
@@ -431,7 +449,7 @@ graph TB
         B[Integration Tests<br/>Jest + Supertest]
         C[Unit Tests<br/>Jest + Testing Library]
     end
-    
+
     subgraph "Test Coverage Areas"
         D[Email Generation Logic]
         E[Pipeline Execution]
@@ -440,7 +458,7 @@ graph TB
         H[UI Components]
         I[Background Jobs]
     end
-    
+
     C --> D
     C --> E
     C --> F
@@ -450,6 +468,7 @@ graph TB
 ```
 
 #### Test Data Management
+
 - **Mock Services**: Mock Gemini API and SendGrid for testing
 - **Test Database**: Separate PostgreSQL instance with test data
 - **Fixture Management**: JSON fixtures for consistent test data
@@ -458,6 +477,7 @@ graph TB
 ### Security & Authentication
 
 #### Authentication Flow
+
 ```mermaid
 sequenceDiagram
     participant U as User
@@ -465,7 +485,7 @@ sequenceDiagram
     participant A as Auth Service
     participant API as Backend API
     participant DB as Database
-    
+
     U->>F: Login Request
     F->>A: Authenticate
     A->>DB: Verify Credentials
@@ -478,6 +498,7 @@ sequenceDiagram
 ```
 
 #### Security Measures
+
 - **JWT Token Authentication** with refresh token rotation
 - **Role-Based Access Control (RBAC)** for multi-user companies
 - **API Rate Limiting** to prevent abuse
@@ -489,30 +510,31 @@ sequenceDiagram
 ### Deployment & Infrastructure
 
 #### Cloud Infrastructure (GCP)
+
 ```mermaid
 graph TB
     subgraph "Frontend"
         A[Next.js App<br/>Cloud Run]
         B[CDN<br/>Cloud CDN]
     end
-    
+
     subgraph "Backend Services"
         C[NestJS API<br/>Cloud Run]
         D[Background Workers<br/>Cloud Run Jobs]
     end
-    
+
     subgraph "Data Storage"
         E[PostgreSQL<br/>Cloud SQL]
         F[Redis<br/>Memorystore]
         G[BigQuery<br/>Data Warehouse]
     end
-    
+
     subgraph "External Services"
         H[SendGrid<br/>Email Service]
         I[Gemini API<br/>AI Service]
         J[Looker Studio<br/>Analytics]
     end
-    
+
     A --> C
     C --> E
     C --> F
@@ -524,6 +546,7 @@ graph TB
 ```
 
 #### Container Strategy
+
 - **Docker Images**: Multi-stage builds for optimized production images
 - **Artifact Registry**: Store and version container images
 - **Health Checks**: Configure proper health check endpoints
@@ -531,6 +554,7 @@ graph TB
 - **Auto-scaling**: Configure based on CPU/memory usage and queue depth
 
 #### CI/CD Pipeline
+
 ```mermaid
 graph LR
     A[Git Push] --> B[GitHub Actions]
@@ -540,11 +564,11 @@ graph LR
     E --> F[Deploy Staging]
     F --> G[Integration Tests]
     G --> H[Deploy Production]
-    
+
     C --> I[Test Failed]
     E --> J[Security Issues]
     G --> K[Integration Failed]
-    
+
     I --> L[Notify Team]
     J --> L
     K --> L
@@ -553,6 +577,7 @@ graph LR
 ### Phase Implementation Strategy
 
 #### Phase 1: Core MVP (Weeks 1-4)
+
 - User authentication and company profile setup
 - Basic lead upload and management
 - AI email generation (single emails)
@@ -560,6 +585,7 @@ graph LR
 - Basic email tracking
 
 #### Phase 2: Automation & Pipelines (Weeks 5-8)
+
 - Pipeline builder UI with drag-and-drop interface
 - BullMQ job queue setup for background processing
 - Automated email scheduling and sending
@@ -567,6 +593,7 @@ graph LR
 - Template management system
 
 #### Phase 3: Analytics & Intelligence (Weeks 9-12)
+
 - SendGrid webhook integration for real-time events
 - BigQuery data pipeline setup
 - Looker Studio dashboard creation
@@ -574,6 +601,7 @@ graph LR
 - Performance analytics and reporting
 
 #### Phase 4: Scaling & Optimization (Weeks 13-16)
+
 - Advanced rate limiting and throttling
 - Email warm-up scheduling features
 - Deliverability health monitoring
@@ -583,6 +611,7 @@ graph LR
 ### Error Handling & Monitoring
 
 #### Error Handling Strategy
+
 - **Global Exception Filters** for consistent error responses
 - **Validation Pipes** for request data validation
 - **Retry Mechanisms** for external API failures
@@ -590,6 +619,7 @@ graph LR
 - **Dead Letter Queues** for failed background jobs
 
 #### Monitoring & Observability
+
 - **Application Metrics**: Response times, error rates, throughput
 - **Business Metrics**: Email delivery rates, engagement metrics
 - **Infrastructure Metrics**: CPU, memory, database performance

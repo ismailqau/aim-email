@@ -3,14 +3,22 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
-import { Controller, Get, Post, Query, Body, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Query,
+  Body,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { AnalyticsService } from './analytics.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -47,6 +55,10 @@ export class AnalyticsController {
   @Post('export')
   @ApiOperation({ summary: 'Export analytics data' })
   async exportData(@Request() req, @Body() params: any) {
-    return this.analyticsService.exportData(req.user.companyId, params.type, params);
+    return this.analyticsService.exportData(
+      req.user.companyId,
+      params.type,
+      params
+    );
   }
 }

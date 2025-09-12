@@ -3,14 +3,24 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
-import { Controller, Post, Get, Put, Body, Param, UseGuards, Request, Query } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Put,
+  Body,
+  Param,
+  UseGuards,
+  Request,
+  Query,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { EmailsService } from './emails.service';
 import { EmailDeliveryService } from './email-delivery.service';
@@ -29,7 +39,7 @@ export class EmailsController {
     private readonly emailDeliveryService: EmailDeliveryService,
     private readonly emailProviderService: EmailProviderService,
     private readonly dnsValidationService: DnsValidationService,
-    private readonly emailReputationService: EmailReputationService,
+    private readonly emailReputationService: EmailReputationService
   ) {}
 
   @Post('generate')
@@ -101,7 +111,10 @@ export class EmailsController {
   // DNS and Domain Validation
   @Get('dns/validate/:domain')
   @ApiOperation({ summary: 'Validate DNS setup for domain' })
-  async validateDNS(@Param('domain') domain: string, @Query('smtpHost') smtpHost?: string) {
+  async validateDNS(
+    @Param('domain') domain: string,
+    @Query('smtpHost') smtpHost?: string
+  ) {
     return this.dnsValidationService.validateDomainSetup(domain, smtpHost);
   }
 
@@ -116,7 +129,10 @@ export class EmailsController {
   @ApiOperation({ summary: 'Get email delivery statistics' })
   async getDeliveryStats(@Request() req, @Query('days') days?: string) {
     const period = days ? parseInt(days, 10) : 30;
-    return this.emailProviderService.getDeliveryStats(req.user.companyId, period);
+    return this.emailProviderService.getDeliveryStats(
+      req.user.companyId,
+      period
+    );
   }
 
   @Get('templates')
@@ -128,20 +144,27 @@ export class EmailsController {
   @Post('templates')
   @ApiOperation({ summary: 'Create email template' })
   async createTemplate(@Request() req, @Body() templateData: any) {
-    return this.emailsService.createEmailTemplate(req.user.companyId, templateData);
+    return this.emailsService.createEmailTemplate(
+      req.user.companyId,
+      templateData
+    );
   }
 
   // Email Reputation Monitoring
   @Get('reputation/metrics')
   @ApiOperation({ summary: 'Get email reputation metrics' })
   async getReputationMetrics(@Request() req) {
-    return this.emailReputationService.getCompanyReputationMetrics(req.user.companyId);
+    return this.emailReputationService.getCompanyReputationMetrics(
+      req.user.companyId
+    );
   }
 
   @Get('reputation/optimization')
   @ApiOperation({ summary: 'Get delivery optimization recommendations' })
   async getDeliveryOptimization(@Request() req) {
-    return this.emailReputationService.analyzeDeliveryOptimization(req.user.companyId);
+    return this.emailReputationService.analyzeDeliveryOptimization(
+      req.user.companyId
+    );
   }
 
   @Get('reputation/blacklist/:domain')

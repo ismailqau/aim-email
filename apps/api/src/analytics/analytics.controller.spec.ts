@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -66,11 +66,15 @@ describe('AnalyticsController', () => {
     };
 
     it('should return dashboard metrics', async () => {
-      mockAnalyticsService.getDashboardMetrics.mockResolvedValue(mockDashboardMetrics);
+      mockAnalyticsService.getDashboardMetrics.mockResolvedValue(
+        mockDashboardMetrics
+      );
 
       const result = await controller.getDashboard(mockRequest);
 
-      expect(analyticsService.getDashboardMetrics).toHaveBeenCalledWith('company-1');
+      expect(analyticsService.getDashboardMetrics).toHaveBeenCalledWith(
+        'company-1'
+      );
       expect(result).toEqual(mockDashboardMetrics);
     });
 
@@ -116,14 +120,16 @@ describe('AnalyticsController', () => {
         endDate: '2023-01-31',
       };
 
-      mockAnalyticsService.getPerformanceData.mockResolvedValue(mockPerformanceData);
+      mockAnalyticsService.getPerformanceData.mockResolvedValue(
+        mockPerformanceData
+      );
 
       const result = await controller.getPerformance(mockRequest, params);
 
       expect(analyticsService.getPerformanceData).toHaveBeenCalledWith(
         'company-1',
         '2023-01-01',
-        '2023-01-31',
+        '2023-01-31'
       );
       expect(result).toEqual(mockPerformanceData);
     });
@@ -131,14 +137,16 @@ describe('AnalyticsController', () => {
     it('should return performance data without date filters', async () => {
       const params = {};
 
-      mockAnalyticsService.getPerformanceData.mockResolvedValue(mockPerformanceData);
+      mockAnalyticsService.getPerformanceData.mockResolvedValue(
+        mockPerformanceData
+      );
 
       const result = await controller.getPerformance(mockRequest, params);
 
       expect(analyticsService.getPerformanceData).toHaveBeenCalledWith(
         'company-1',
         undefined,
-        undefined,
+        undefined
       );
       expect(result).toEqual(mockPerformanceData);
     });
@@ -156,7 +164,7 @@ describe('AnalyticsController', () => {
       expect(analyticsService.getPerformanceData).toHaveBeenCalledWith(
         'company-1',
         '2023-06-01',
-        '2023-06-30',
+        '2023-06-30'
       );
       expect(result).toEqual([]);
     });
@@ -165,7 +173,9 @@ describe('AnalyticsController', () => {
       const error = new Error('Failed to fetch performance data');
       mockAnalyticsService.getPerformanceData.mockRejectedValue(error);
 
-      await expect(controller.getPerformance(mockRequest, {})).rejects.toThrow(error);
+      await expect(controller.getPerformance(mockRequest, {})).rejects.toThrow(
+        error
+      );
     });
   });
 
@@ -192,11 +202,15 @@ describe('AnalyticsController', () => {
     ];
 
     it('should return pipeline metrics', async () => {
-      mockAnalyticsService.getPipelineMetrics.mockResolvedValue(mockPipelineMetrics);
+      mockAnalyticsService.getPipelineMetrics.mockResolvedValue(
+        mockPipelineMetrics
+      );
 
       const result = await controller.getPipelineMetrics(mockRequest);
 
-      expect(analyticsService.getPipelineMetrics).toHaveBeenCalledWith('company-1');
+      expect(analyticsService.getPipelineMetrics).toHaveBeenCalledWith(
+        'company-1'
+      );
       expect(result).toEqual(mockPipelineMetrics);
     });
 
@@ -212,7 +226,9 @@ describe('AnalyticsController', () => {
       const error = new Error('Failed to fetch pipeline metrics');
       mockAnalyticsService.getPipelineMetrics.mockRejectedValue(error);
 
-      await expect(controller.getPipelineMetrics(mockRequest)).rejects.toThrow(error);
+      await expect(controller.getPipelineMetrics(mockRequest)).rejects.toThrow(
+        error
+      );
     });
   });
 
@@ -232,7 +248,11 @@ describe('AnalyticsController', () => {
 
       const result = await controller.exportData(mockRequest, params);
 
-      expect(analyticsService.exportData).toHaveBeenCalledWith('company-1', 'analytics', params);
+      expect(analyticsService.exportData).toHaveBeenCalledWith(
+        'company-1',
+        'analytics',
+        params
+      );
       expect(result).toEqual(mockExportResponse);
     });
 
@@ -253,7 +273,11 @@ describe('AnalyticsController', () => {
 
       const result = await controller.exportData(mockRequest, params);
 
-      expect(analyticsService.exportData).toHaveBeenCalledWith('company-1', 'performance', params);
+      expect(analyticsService.exportData).toHaveBeenCalledWith(
+        'company-1',
+        'performance',
+        params
+      );
       expect(result).toEqual(customExportResponse);
     });
 
@@ -272,7 +296,11 @@ describe('AnalyticsController', () => {
 
       const result = await controller.exportData(mockRequest, params);
 
-      expect(analyticsService.exportData).toHaveBeenCalledWith('company-1', 'pipelines', params);
+      expect(analyticsService.exportData).toHaveBeenCalledWith(
+        'company-1',
+        'pipelines',
+        params
+      );
       expect(result).toEqual(pipelineExportResponse);
     });
 
@@ -286,7 +314,11 @@ describe('AnalyticsController', () => {
 
       const result = await controller.exportData(mockRequest, params);
 
-      expect(analyticsService.exportData).toHaveBeenCalledWith('company-1', undefined, params);
+      expect(analyticsService.exportData).toHaveBeenCalledWith(
+        'company-1',
+        undefined,
+        params
+      );
       expect(result).toEqual(mockExportResponse);
     });
 
@@ -299,7 +331,9 @@ describe('AnalyticsController', () => {
       const error = new Error('Export generation failed');
       mockAnalyticsService.exportData.mockRejectedValue(error);
 
-      await expect(controller.exportData(mockRequest, params)).rejects.toThrow(error);
+      await expect(controller.exportData(mockRequest, params)).rejects.toThrow(
+        error
+      );
     });
   });
 });

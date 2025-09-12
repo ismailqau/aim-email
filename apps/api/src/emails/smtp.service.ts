@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -22,7 +22,7 @@ export class SmtpService {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly database: DatabaseService,
+    private readonly database: DatabaseService
   ) {
     this.initializeTransporter();
   }
@@ -35,7 +35,9 @@ export class SmtpService {
     const smtpPass = this.configService.get<string>('SMTP_PASS');
 
     if (!smtpHost || !smtpUser || !smtpPass) {
-      this.logger.warn('SMTP configuration is incomplete. SMTP service will not be available.');
+      this.logger.warn(
+        'SMTP configuration is incomplete. SMTP service will not be available.'
+      );
       return;
     }
 
@@ -53,7 +55,9 @@ export class SmtpService {
         },
       });
 
-      this.logger.log(`SMTP transporter initialized for ${smtpHost}:${smtpPort}`);
+      this.logger.log(
+        `SMTP transporter initialized for ${smtpHost}:${smtpPort}`
+      );
     } catch (error) {
       this.logger.error('Failed to initialize SMTP transporter:', error);
     }
@@ -86,9 +90,12 @@ export class SmtpService {
       };
     }
 
-    const fromEmail = this.configService.get<string>('SMTP_FROM_EMAIL') || 
-                      this.configService.get<string>('SMTP_USER');
-    const fromName = this.configService.get<string>('SMTP_FROM_NAME') || 'AI Email Marketing System';
+    const fromEmail =
+      this.configService.get<string>('SMTP_FROM_EMAIL') ||
+      this.configService.get<string>('SMTP_USER');
+    const fromName =
+      this.configService.get<string>('SMTP_FROM_NAME') ||
+      'AI Email Marketing System';
 
     const mailOptions = {
       from: {
@@ -102,7 +109,7 @@ export class SmtpService {
 
     try {
       const info = await this.transporter.sendMail(mailOptions);
-      
+
       // Update email record if leadId provided
       if (emailData.leadId) {
         await this.database.client.email.updateMany({
@@ -115,15 +122,17 @@ export class SmtpService {
         });
       }
 
-      this.logger.log(`Email sent successfully via SMTP to ${emailData.to}. MessageId: ${info.messageId}`);
-      
+      this.logger.log(
+        `Email sent successfully via SMTP to ${emailData.to}. MessageId: ${info.messageId}`
+      );
+
       return {
         success: true,
         messageId: info.messageId,
       };
     } catch (error) {
       this.logger.error('SMTP email sending failed:', error);
-      
+
       // Update email record as failed
       if (emailData.leadId) {
         await this.database.client.email.updateMany({

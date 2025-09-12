@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -18,7 +18,7 @@ async function main() {
 
   // Create demo user
   const hashedPassword = await hashPassword('password123');
-  
+
   const user = await prisma.user.upsert({
     where: { email: 'demo@example.com' },
     update: {},
@@ -203,7 +203,7 @@ async function main() {
 }
 
 main()
-  .catch((e) => {
+  .catch(e => {
     console.error('❌ Seed failed:', e);
     process.exit(1);
   })

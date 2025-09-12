@@ -1,56 +1,155 @@
+# AI Email Marketing System - Docker Compose
+# Production-ready multi-service setup
+#
+# Copyright (c) 2024 Muhammad Ismail
+# Email: quaid@live.com
+# Founder: AimNovo.com | AimNexus.ai
+# Licensed under MIT License
+
 version: '3.8'
 
 services:
-  # Database
+  # PostgreSQL Database
   postgres:
-    image: postgres:15
+    image: postgres:15-alpine
+    container_name: email-marketing-db
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: email_marketing_system
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-    ports:
-      - "5432:5432"
+      POSTGRES_DB: ${DATABASE_NAME:-email_marketing}
+      POSTGRES_USER: ${DATABASE_USER:-postgres}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-postgres}
+      POSTGRES_INITDB_ARGS: '--encoding=UTF8 --locale=C'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    ports:
+      - '${DATABASE_PORT:-5432}:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DATABASE_USER:-postgres}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - email-marketing-network
 
-  # Redis for queues
+  # Redis Cache
   redis:
     image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    command: redis-server --appendonly yes
+    container_name: email-marketing-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-}
     volumes:
       - redis_data:/data
+    ports:
+      - '${REDIS_PORT:-6379}:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - email-marketing-network
 
-  # API Server
+  # Backend API
   api:
     build:
       context: .
-      dockerfile: apps/api/Dockerfile
-    ports:
-      - "3001:3001"
-    environment:
-      - DATABASE_URL=postgresql://postgres:password@postgres:5432/email_marketing_system
-      - REDIS_URL=redis://redis:6379
-      - JWT_SECRET=your-super-secret-jwt-key
-      - SENDGRID_API_KEY=your-sendgrid-api-key
-      - GEMINI_API_KEY=your-gemini-api-key
+      dockerfile: Dockerfile
+      target: api-production
+    container_name: email-marketing-api
+    restart: unless-stopped
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DATABASE_URL: postgresql://${DATABASE_USER:-postgres}:${DATABASE_PASSWORD:-postgres}@postgres:5432/${DATABASE_NAME:-email_marketing}
+      REDIS_URL: redis://:${REDIS_PASSWORD:-}@redis:6379
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
+      SENDGRID_FROM_EMAIL: ${SENDGRID_FROM_EMAIL}
+      SENDGRID_FROM_NAME: ${SENDGRID_FROM_NAME:-AI Email Marketing System}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+    ports:
+      - '${API_PORT:-3001}:3001'
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3001/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - email-marketing-network
 
-  # Web Frontend
+  # Frontend Web Application
   web:
     build:
       context: .
-      dockerfile: apps/web/Dockerfile
-    ports:
-      - "3000:3000"
-    environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:3001/api/v1
+      dockerfile: Dockerfile
+      target: web-production
+    container_name: email-marketing-web
+    restart: unless-stopped
     depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001/api/v1}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-${JWT_SECRET}}
+    ports:
+      - '${WEB_PORT:-3000}:3000'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/api/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - email-marketing-network
+
+  # Nginx Reverse Proxy (Optional)
+  nginx:
+    image: nginx:alpine
+    container_name: email-marketing-nginx
+    restart: unless-stopped
+    depends_on:
+      - web
       - api
+    ports:
+      - '${NGINX_HTTP_PORT:-80}:80'
+      - '${NGINX_HTTPS_PORT:-443}:443'
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./logs/nginx:/var/log/nginx
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - email-marketing-network
+    profiles:
+      - production
 
 volumes:
   postgres_data:
+    driver: local
   redis_data:
+    driver: local
+
+networks:
+  email-marketing-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

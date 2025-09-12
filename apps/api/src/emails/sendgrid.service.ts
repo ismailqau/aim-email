@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -32,7 +32,7 @@ enum EmailEventType {
 export class SendGridService {
   constructor(
     private readonly configService: ConfigService,
-    private readonly database: DatabaseService,
+    private readonly database: DatabaseService
   ) {
     const apiKey = this.configService.get<string>('SENDGRID_API_KEY');
     sgMail.setApiKey(apiKey);
@@ -63,7 +63,7 @@ export class SendGridService {
 
     try {
       const [response] = await sgMail.send(msg);
-      
+
       // Update email record if leadId provided
       if (emailData.leadId) {
         await this.database.client.email.updateMany({
@@ -82,7 +82,7 @@ export class SendGridService {
       };
     } catch (error) {
       console.error('SendGrid error:', error);
-      
+
       // Update email record as failed
       if (emailData.leadId) {
         await this.database.client.email.updateMany({
@@ -91,7 +91,9 @@ export class SendGridService {
         });
       }
 
-      throw new Error(`Email sending failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Email sending failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   }
 

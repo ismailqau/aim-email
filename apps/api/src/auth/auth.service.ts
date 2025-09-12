@@ -3,14 +3,18 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { DatabaseService } from '../common/database/database.service';
 import { hashPassword, verifyPassword } from '@email-system/db';
@@ -20,7 +24,7 @@ import { RegisterDto, LoginDto } from './dto/auth.dto';
 export class AuthService {
   constructor(
     private readonly database: DatabaseService,
-    private readonly jwtService: JwtService,
+    private readonly jwtService: JwtService
   ) {}
 
   async register(userData: RegisterDto) {
@@ -64,7 +68,10 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const isPasswordValid = await verifyPassword(credentials.password, user.password);
+    const isPasswordValid = await verifyPassword(
+      credentials.password,
+      user.password
+    );
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');

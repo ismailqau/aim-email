@@ -3,14 +3,24 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { CompaniesService } from './companies.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -42,7 +52,11 @@ export class CompaniesController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Update company' })
-  async updateCompany(@Request() req, @Param('id') id: string, @Body() updateData: any) {
+  async updateCompany(
+    @Request() req,
+    @Param('id') id: string,
+    @Body() updateData: any
+  ) {
     return this.companiesService.updateCompany(req.user.sub, id, updateData);
   }
 

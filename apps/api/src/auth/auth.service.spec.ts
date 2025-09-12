@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -126,7 +126,7 @@ describe('AuthService', () => {
       mockDatabaseService.client.user.findUnique.mockResolvedValue(mockUser);
 
       await expect(service.register(registerDto)).rejects.toThrow(
-        new ConflictException('User with this email already exists'),
+        new ConflictException('User with this email already exists')
       );
 
       expect(mockDatabaseService.client.user.create).not.toHaveBeenCalled();
@@ -158,7 +158,10 @@ describe('AuthService', () => {
       expect(mockDatabaseService.client.user.findUnique).toHaveBeenCalledWith({
         where: { email: loginDto.email },
       });
-      expect(verifyPassword).toHaveBeenCalledWith(loginDto.password, mockUser.password);
+      expect(verifyPassword).toHaveBeenCalledWith(
+        loginDto.password,
+        mockUser.password
+      );
       expect(mockJwtService.sign).toHaveBeenCalledWith({
         sub: mockUser.id,
         email: mockUser.email,
@@ -178,7 +181,7 @@ describe('AuthService', () => {
       mockDatabaseService.client.user.findUnique.mockResolvedValue(null);
 
       await expect(service.login(loginDto)).rejects.toThrow(
-        new UnauthorizedException('Invalid credentials'),
+        new UnauthorizedException('Invalid credentials')
       );
 
       expect(verifyPassword).not.toHaveBeenCalled();
@@ -190,10 +193,13 @@ describe('AuthService', () => {
       (verifyPassword as jest.Mock).mockResolvedValue(false);
 
       await expect(service.login(loginDto)).rejects.toThrow(
-        new UnauthorizedException('Invalid credentials'),
+        new UnauthorizedException('Invalid credentials')
       );
 
-      expect(verifyPassword).toHaveBeenCalledWith(loginDto.password, mockUser.password);
+      expect(verifyPassword).toHaveBeenCalledWith(
+        loginDto.password,
+        mockUser.password
+      );
       expect(mockJwtService.sign).not.toHaveBeenCalled();
     });
   });
@@ -228,7 +234,7 @@ describe('AuthService', () => {
       mockDatabaseService.client.user.findUnique.mockResolvedValue(null);
 
       await expect(service.validateUser(userId)).rejects.toThrow(
-        new UnauthorizedException('User not found'),
+        new UnauthorizedException('User not found')
       );
     });
   });
@@ -250,7 +256,7 @@ describe('AuthService', () => {
       });
 
       await expect(service.verifyToken('invalid-token')).rejects.toThrow(
-        new UnauthorizedException('Invalid token'),
+        new UnauthorizedException('Invalid token')
       );
     });
   });

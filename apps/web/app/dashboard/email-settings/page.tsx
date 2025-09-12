@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -59,9 +59,14 @@ interface ReputationMetrics {
 }
 
 export default function EmailSettingsPage() {
-  const [emailSettings, setEmailSettings] = useState<EmailSettings | null>(null);
-  const [reputationMetrics, setReputationMetrics] = useState<ReputationMetrics | null>(null);
-  const [activeTab, setActiveTab] = useState<'provider' | 'smtp' | 'reputation' | 'testing'>('provider');
+  const [emailSettings, setEmailSettings] = useState<EmailSettings | null>(
+    null
+  );
+  const [reputationMetrics, setReputationMetrics] =
+    useState<ReputationMetrics | null>(null);
+  const [activeTab, setActiveTab] = useState<
+    'provider' | 'smtp' | 'reputation' | 'testing'
+  >('provider');
   const [loading, setLoading] = useState(false);
   const [testEmail, setTestEmail] = useState('');
   const [testResult, setTestResult] = useState<any>(null);
@@ -126,7 +131,7 @@ export default function EmailSettingsPage() {
   };
 
   const handleProviderChange = (provider: 'SENDGRID' | 'SMTP') => {
-    setEmailSettings(prev => prev ? { ...prev, provider } : null);
+    setEmailSettings(prev => (prev ? { ...prev, provider } : null));
   };
 
   const handleSaveSettings = async () => {
@@ -148,7 +153,7 @@ export default function EmailSettingsPage() {
       alert('Please enter a test email address');
       return;
     }
-    
+
     setLoading(true);
     try {
       // TODO: Implement API call to test configuration
@@ -170,23 +175,28 @@ export default function EmailSettingsPage() {
   };
 
   const renderProviderTab = () => (
-    <div className="space-y-6">
+    <div className='space-y-6'>
       <div>
-        <h3 className="text-lg font-medium mb-4">Email Provider Selection</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Card 
+        <h3 className='text-lg font-medium mb-4'>Email Provider Selection</h3>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <Card
             className={`cursor-pointer border-2 ${emailSettings?.provider === 'SENDGRID' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}
             onClick={() => handleProviderChange('SENDGRID')}
           >
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
+              <CardTitle className='flex items-center space-x-2'>
                 <span>SendGrid</span>
-                {emailSettings?.provider === 'SENDGRID' && <span className="text-blue-500">✓</span>}
+                {emailSettings?.provider === 'SENDGRID' && (
+                  <span className='text-blue-500'>✓</span>
+                )}
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-gray-600">Professional email delivery service with built-in analytics and deliverability optimization.</p>
-              <ul className="mt-2 text-xs text-gray-500 space-y-1">
+              <p className='text-sm text-gray-600'>
+                Professional email delivery service with built-in analytics and
+                deliverability optimization.
+              </p>
+              <ul className='mt-2 text-xs text-gray-500 space-y-1'>
                 <li>• Enterprise-grade deliverability</li>
                 <li>• Built-in analytics and reporting</li>
                 <li>• Automatic IP warming</li>
@@ -195,19 +205,24 @@ export default function EmailSettingsPage() {
             </CardContent>
           </Card>
 
-          <Card 
+          <Card
             className={`cursor-pointer border-2 ${emailSettings?.provider === 'SMTP' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}
             onClick={() => handleProviderChange('SMTP')}
           >
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
+              <CardTitle className='flex items-center space-x-2'>
                 <span>Custom SMTP</span>
-                {emailSettings?.provider === 'SMTP' && <span className="text-blue-500">✓</span>}
+                {emailSettings?.provider === 'SMTP' && (
+                  <span className='text-blue-500'>✓</span>
+                )}
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-gray-600">Full control with advanced anti-blacklisting features, DKIM signing, and reputation monitoring.</p>
-              <ul className="mt-2 text-xs text-gray-500 space-y-1">
+              <p className='text-sm text-gray-600'>
+                Full control with advanced anti-blacklisting features, DKIM
+                signing, and reputation monitoring.
+              </p>
+              <ul className='mt-2 text-xs text-gray-500 space-y-1'>
                 <li>• Complete customization</li>
                 <li>• Advanced anti-blacklisting</li>
                 <li>• DKIM/SPF/DMARC support</li>
@@ -223,45 +238,78 @@ export default function EmailSettingsPage() {
           <CardHeader>
             <CardTitle>SendGrid Configuration</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className='space-y-4'>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">API Key</label>
+              <label className='block text-sm font-medium text-gray-700 mb-1'>
+                API Key
+              </label>
               <input
-                type="password"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="SG.your-api-key"
+                type='password'
+                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+                placeholder='SG.your-api-key'
                 value={emailSettings.sendgridConfig?.apiKey || ''}
-                onChange={(e) => setEmailSettings(prev => prev ? {
-                  ...prev,
-                  sendgridConfig: { ...prev.sendgridConfig!, apiKey: e.target.value }
-                } : null)}
+                onChange={e =>
+                  setEmailSettings(prev =>
+                    prev
+                      ? {
+                          ...prev,
+                          sendgridConfig: {
+                            ...prev.sendgridConfig!,
+                            apiKey: e.target.value,
+                          },
+                        }
+                      : null
+                  )
+                }
               />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">From Email</label>
+                <label className='block text-sm font-medium text-gray-700 mb-1'>
+                  From Email
+                </label>
                 <input
-                  type="email"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="noreply@yourdomain.com"
+                  type='email'
+                  className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  placeholder='noreply@yourdomain.com'
                   value={emailSettings.sendgridConfig?.fromEmail || ''}
-                  onChange={(e) => setEmailSettings(prev => prev ? {
-                    ...prev,
-                    sendgridConfig: { ...prev.sendgridConfig!, fromEmail: e.target.value }
-                  } : null)}
+                  onChange={e =>
+                    setEmailSettings(prev =>
+                      prev
+                        ? {
+                            ...prev,
+                            sendgridConfig: {
+                              ...prev.sendgridConfig!,
+                              fromEmail: e.target.value,
+                            },
+                          }
+                        : null
+                    )
+                  }
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">From Name</label>
+                <label className='block text-sm font-medium text-gray-700 mb-1'>
+                  From Name
+                </label>
                 <input
-                  type="text"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Your Company"
+                  type='text'
+                  className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  placeholder='Your Company'
                   value={emailSettings.sendgridConfig?.fromName || ''}
-                  onChange={(e) => setEmailSettings(prev => prev ? {
-                    ...prev,
-                    sendgridConfig: { ...prev.sendgridConfig!, fromName: e.target.value }
-                  } : null)}
+                  onChange={e =>
+                    setEmailSettings(prev =>
+                      prev
+                        ? {
+                            ...prev,
+                            sendgridConfig: {
+                              ...prev.sendgridConfig!,
+                              fromName: e.target.value,
+                            },
+                          }
+                        : null
+                    )
+                  }
                 />
               </div>
             </div>
@@ -272,107 +320,187 @@ export default function EmailSettingsPage() {
   );
 
   const renderSMTPTab = () => (
-    <div className="space-y-6">
+    <div className='space-y-6'>
       <Card>
         <CardHeader>
           <CardTitle>SMTP Server Configuration</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <CardContent className='space-y-4'>
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">SMTP Host</label>
+              <label className='block text-sm font-medium text-gray-700 mb-1'>
+                SMTP Host
+              </label>
               <input
-                type="text"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="smtp.gmail.com"
+                type='text'
+                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+                placeholder='smtp.gmail.com'
                 value={emailSettings?.smtpConfig?.host || ''}
-                onChange={(e) => setEmailSettings(prev => prev ? {
-                  ...prev,
-                  smtpConfig: { ...prev.smtpConfig!, host: e.target.value }
-                } : null)}
+                onChange={e =>
+                  setEmailSettings(prev =>
+                    prev
+                      ? {
+                          ...prev,
+                          smtpConfig: {
+                            ...prev.smtpConfig!,
+                            host: e.target.value,
+                          },
+                        }
+                      : null
+                  )
+                }
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Port</label>
+              <label className='block text-sm font-medium text-gray-700 mb-1'>
+                Port
+              </label>
               <input
-                type="number"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="587"
+                type='number'
+                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+                placeholder='587'
                 value={emailSettings?.smtpConfig?.port || ''}
-                onChange={(e) => setEmailSettings(prev => prev ? {
-                  ...prev,
-                  smtpConfig: { ...prev.smtpConfig!, port: parseInt(e.target.value) }
-                } : null)}
+                onChange={e =>
+                  setEmailSettings(prev =>
+                    prev
+                      ? {
+                          ...prev,
+                          smtpConfig: {
+                            ...prev.smtpConfig!,
+                            port: parseInt(e.target.value),
+                          },
+                        }
+                      : null
+                  )
+                }
               />
             </div>
-            <div className="flex items-center space-x-2 pt-6">
+            <div className='flex items-center space-x-2 pt-6'>
               <input
-                type="checkbox"
-                id="secure"
+                type='checkbox'
+                id='secure'
                 checked={emailSettings?.smtpConfig?.secure || false}
-                onChange={(e) => setEmailSettings(prev => prev ? {
-                  ...prev,
-                  smtpConfig: { ...prev.smtpConfig!, secure: e.target.checked }
-                } : null)}
+                onChange={e =>
+                  setEmailSettings(prev =>
+                    prev
+                      ? {
+                          ...prev,
+                          smtpConfig: {
+                            ...prev.smtpConfig!,
+                            secure: e.target.checked,
+                          },
+                        }
+                      : null
+                  )
+                }
               />
-              <label htmlFor="secure" className="text-sm font-medium text-gray-700">SSL/TLS</label>
+              <label
+                htmlFor='secure'
+                className='text-sm font-medium text-gray-700'
+              >
+                SSL/TLS
+              </label>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+              <label className='block text-sm font-medium text-gray-700 mb-1'>
+                Username
+              </label>
               <input
-                type="text"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="your-email@gmail.com"
+                type='text'
+                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+                placeholder='your-email@gmail.com'
                 value={emailSettings?.smtpConfig?.username || ''}
-                onChange={(e) => setEmailSettings(prev => prev ? {
-                  ...prev,
-                  smtpConfig: { ...prev.smtpConfig!, username: e.target.value }
-                } : null)}
+                onChange={e =>
+                  setEmailSettings(prev =>
+                    prev
+                      ? {
+                          ...prev,
+                          smtpConfig: {
+                            ...prev.smtpConfig!,
+                            username: e.target.value,
+                          },
+                        }
+                      : null
+                  )
+                }
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <label className='block text-sm font-medium text-gray-700 mb-1'>
+                Password
+              </label>
               <input
-                type="password"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Your password or app password"
+                type='password'
+                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+                placeholder='Your password or app password'
                 value={emailSettings?.smtpConfig?.password || ''}
-                onChange={(e) => setEmailSettings(prev => prev ? {
-                  ...prev,
-                  smtpConfig: { ...prev.smtpConfig!, password: e.target.value }
-                } : null)}
+                onChange={e =>
+                  setEmailSettings(prev =>
+                    prev
+                      ? {
+                          ...prev,
+                          smtpConfig: {
+                            ...prev.smtpConfig!,
+                            password: e.target.value,
+                          },
+                        }
+                      : null
+                  )
+                }
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">From Email</label>
+              <label className='block text-sm font-medium text-gray-700 mb-1'>
+                From Email
+              </label>
               <input
-                type="email"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="noreply@yourdomain.com"
+                type='email'
+                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+                placeholder='noreply@yourdomain.com'
                 value={emailSettings?.smtpConfig?.fromEmail || ''}
-                onChange={(e) => setEmailSettings(prev => prev ? {
-                  ...prev,
-                  smtpConfig: { ...prev.smtpConfig!, fromEmail: e.target.value }
-                } : null)}
+                onChange={e =>
+                  setEmailSettings(prev =>
+                    prev
+                      ? {
+                          ...prev,
+                          smtpConfig: {
+                            ...prev.smtpConfig!,
+                            fromEmail: e.target.value,
+                          },
+                        }
+                      : null
+                  )
+                }
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">From Name</label>
+              <label className='block text-sm font-medium text-gray-700 mb-1'>
+                From Name
+              </label>
               <input
-                type="text"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Your Company"
+                type='text'
+                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+                placeholder='Your Company'
                 value={emailSettings?.smtpConfig?.fromName || ''}
-                onChange={(e) => setEmailSettings(prev => prev ? {
-                  ...prev,
-                  smtpConfig: { ...prev.smtpConfig!, fromName: e.target.value }
-                } : null)}
+                onChange={e =>
+                  setEmailSettings(prev =>
+                    prev
+                      ? {
+                          ...prev,
+                          smtpConfig: {
+                            ...prev.smtpConfig!,
+                            fromName: e.target.value,
+                          },
+                        }
+                      : null
+                  )
+                }
               />
             </div>
           </div>
@@ -384,46 +512,82 @@ export default function EmailSettingsPage() {
         <CardHeader>
           <CardTitle>DKIM Authentication</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center space-x-2">
+        <CardContent className='space-y-4'>
+          <div className='flex items-center space-x-2'>
             <input
-              type="checkbox"
-              id="enableDkim"
+              type='checkbox'
+              id='enableDkim'
               checked={emailSettings?.smtpConfig?.enableDkim || false}
-              onChange={(e) => setEmailSettings(prev => prev ? {
-                ...prev,
-                smtpConfig: { ...prev.smtpConfig!, enableDkim: e.target.checked }
-              } : null)}
+              onChange={e =>
+                setEmailSettings(prev =>
+                  prev
+                    ? {
+                        ...prev,
+                        smtpConfig: {
+                          ...prev.smtpConfig!,
+                          enableDkim: e.target.checked,
+                        },
+                      }
+                    : null
+                )
+              }
             />
-            <label htmlFor="enableDkim" className="text-sm font-medium text-gray-700">Enable DKIM Signing</label>
+            <label
+              htmlFor='enableDkim'
+              className='text-sm font-medium text-gray-700'
+            >
+              Enable DKIM Signing
+            </label>
           </div>
 
           {emailSettings?.smtpConfig?.enableDkim && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">DKIM Selector</label>
+                <label className='block text-sm font-medium text-gray-700 mb-1'>
+                  DKIM Selector
+                </label>
                 <input
-                  type="text"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="default"
+                  type='text'
+                  className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  placeholder='default'
                   value={emailSettings?.smtpConfig?.dkimSelector || ''}
-                  onChange={(e) => setEmailSettings(prev => prev ? {
-                    ...prev,
-                    smtpConfig: { ...prev.smtpConfig!, dkimSelector: e.target.value }
-                  } : null)}
+                  onChange={e =>
+                    setEmailSettings(prev =>
+                      prev
+                        ? {
+                            ...prev,
+                            smtpConfig: {
+                              ...prev.smtpConfig!,
+                              dkimSelector: e.target.value,
+                            },
+                          }
+                        : null
+                    )
+                  }
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">DKIM Domain</label>
+                <label className='block text-sm font-medium text-gray-700 mb-1'>
+                  DKIM Domain
+                </label>
                 <input
-                  type="text"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="yourdomain.com"
+                  type='text'
+                  className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  placeholder='yourdomain.com'
                   value={emailSettings?.smtpConfig?.dkimDomain || ''}
-                  onChange={(e) => setEmailSettings(prev => prev ? {
-                    ...prev,
-                    smtpConfig: { ...prev.smtpConfig!, dkimDomain: e.target.value }
-                  } : null)}
+                  onChange={e =>
+                    setEmailSettings(prev =>
+                      prev
+                        ? {
+                            ...prev,
+                            smtpConfig: {
+                              ...prev.smtpConfig!,
+                              dkimDomain: e.target.value,
+                            },
+                          }
+                        : null
+                    )
+                  }
                 />
               </div>
             </div>
@@ -436,58 +600,105 @@ export default function EmailSettingsPage() {
         <CardHeader>
           <CardTitle>Advanced Configuration</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <CardContent className='space-y-4'>
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Max Connections</label>
+              <label className='block text-sm font-medium text-gray-700 mb-1'>
+                Max Connections
+              </label>
               <input
-                type="number"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type='number'
+                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
                 value={emailSettings?.smtpConfig?.maxConnections || 5}
-                onChange={(e) => setEmailSettings(prev => prev ? {
-                  ...prev,
-                  smtpConfig: { ...prev.smtpConfig!, maxConnections: parseInt(e.target.value) }
-                } : null)}
+                onChange={e =>
+                  setEmailSettings(prev =>
+                    prev
+                      ? {
+                          ...prev,
+                          smtpConfig: {
+                            ...prev.smtpConfig!,
+                            maxConnections: parseInt(e.target.value),
+                          },
+                        }
+                      : null
+                  )
+                }
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Rate Limit (per minute)</label>
+              <label className='block text-sm font-medium text-gray-700 mb-1'>
+                Rate Limit (per minute)
+              </label>
               <input
-                type="number"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type='number'
+                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
                 value={emailSettings?.smtpConfig?.rateLimit || 10}
-                onChange={(e) => setEmailSettings(prev => prev ? {
-                  ...prev,
-                  smtpConfig: { ...prev.smtpConfig!, rateLimit: parseInt(e.target.value) }
-                } : null)}
+                onChange={e =>
+                  setEmailSettings(prev =>
+                    prev
+                      ? {
+                          ...prev,
+                          smtpConfig: {
+                            ...prev.smtpConfig!,
+                            rateLimit: parseInt(e.target.value),
+                          },
+                        }
+                      : null
+                  )
+                }
               />
             </div>
-            <div className="flex items-center space-x-2 pt-6">
+            <div className='flex items-center space-x-2 pt-6'>
               <input
-                type="checkbox"
-                id="useStaticIp"
+                type='checkbox'
+                id='useStaticIp'
                 checked={emailSettings?.smtpConfig?.useStaticIp || false}
-                onChange={(e) => setEmailSettings(prev => prev ? {
-                  ...prev,
-                  smtpConfig: { ...prev.smtpConfig!, useStaticIp: e.target.checked }
-                } : null)}
+                onChange={e =>
+                  setEmailSettings(prev =>
+                    prev
+                      ? {
+                          ...prev,
+                          smtpConfig: {
+                            ...prev.smtpConfig!,
+                            useStaticIp: e.target.checked,
+                          },
+                        }
+                      : null
+                  )
+                }
               />
-              <label htmlFor="useStaticIp" className="text-sm font-medium text-gray-700">Use Static IP</label>
+              <label
+                htmlFor='useStaticIp'
+                className='text-sm font-medium text-gray-700'
+              >
+                Use Static IP
+              </label>
             </div>
           </div>
 
           {emailSettings?.smtpConfig?.useStaticIp && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Static IP Address</label>
+              <label className='block text-sm font-medium text-gray-700 mb-1'>
+                Static IP Address
+              </label>
               <input
-                type="text"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="192.168.1.100"
+                type='text'
+                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+                placeholder='192.168.1.100'
                 value={emailSettings?.smtpConfig?.staticIpAddress || ''}
-                onChange={(e) => setEmailSettings(prev => prev ? {
-                  ...prev,
-                  smtpConfig: { ...prev.smtpConfig!, staticIpAddress: e.target.value }
-                } : null)}
+                onChange={e =>
+                  setEmailSettings(prev =>
+                    prev
+                      ? {
+                          ...prev,
+                          smtpConfig: {
+                            ...prev.smtpConfig!,
+                            staticIpAddress: e.target.value,
+                          },
+                        }
+                      : null
+                  )
+                }
               />
             </div>
           )}
@@ -497,40 +708,56 @@ export default function EmailSettingsPage() {
   );
 
   const renderReputationTab = () => (
-    <div className="space-y-6">
+    <div className='space-y-6'>
       {reputationMetrics && (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
             <Card>
               <CardHeader>
-                <CardTitle className="text-sm text-gray-600">Delivery Rate</CardTitle>
+                <CardTitle className='text-sm text-gray-600'>
+                  Delivery Rate
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold text-green-600">{reputationMetrics.deliveryRate}%</p>
+                <p className='text-2xl font-bold text-green-600'>
+                  {reputationMetrics.deliveryRate}%
+                </p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle className="text-sm text-gray-600">Bounce Rate</CardTitle>
+                <CardTitle className='text-sm text-gray-600'>
+                  Bounce Rate
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold text-orange-600">{reputationMetrics.bounceRate}%</p>
+                <p className='text-2xl font-bold text-orange-600'>
+                  {reputationMetrics.bounceRate}%
+                </p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle className="text-sm text-gray-600">Complaint Rate</CardTitle>
+                <CardTitle className='text-sm text-gray-600'>
+                  Complaint Rate
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold text-red-600">{reputationMetrics.complaintRate}%</p>
+                <p className='text-2xl font-bold text-red-600'>
+                  {reputationMetrics.complaintRate}%
+                </p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle className="text-sm text-gray-600">Reputation Score</CardTitle>
+                <CardTitle className='text-sm text-gray-600'>
+                  Reputation Score
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold text-blue-600">{reputationMetrics.reputationScore}</p>
+                <p className='text-2xl font-bold text-blue-600'>
+                  {reputationMetrics.reputationScore}
+                </p>
               </CardContent>
             </Card>
           </div>
@@ -541,11 +768,11 @@ export default function EmailSettingsPage() {
                 <CardTitle>Recommendations</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-2">
+                <ul className='space-y-2'>
                   {reputationMetrics.recommendations.map((rec, index) => (
-                    <li key={index} className="flex items-start space-x-2">
-                      <span className="text-blue-500 mt-1">•</span>
-                      <span className="text-sm">{rec}</span>
+                    <li key={index} className='flex items-start space-x-2'>
+                      <span className='text-blue-500 mt-1'>•</span>
+                      <span className='text-sm'>{rec}</span>
                     </li>
                   ))}
                 </ul>
@@ -558,26 +785,28 @@ export default function EmailSettingsPage() {
   );
 
   const renderTestingTab = () => (
-    <div className="space-y-6">
+    <div className='space-y-6'>
       <Card>
         <CardHeader>
           <CardTitle>Test Email Configuration</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className='space-y-4'>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Test Email Address</label>
+            <label className='block text-sm font-medium text-gray-700 mb-1'>
+              Test Email Address
+            </label>
             <input
-              type="email"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="test@example.com"
+              type='email'
+              className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+              placeholder='test@example.com'
               value={testEmail}
-              onChange={(e) => setTestEmail(e.target.value)}
+              onChange={e => setTestEmail(e.target.value)}
             />
           </div>
           <button
             onClick={handleTestConfiguration}
             disabled={loading}
-            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50"
+            className='bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50'
           >
             {loading ? 'Sending...' : 'Send Test Email'}
           </button>
@@ -591,15 +820,21 @@ export default function EmailSettingsPage() {
           </CardHeader>
           <CardContent>
             {testResult.success ? (
-              <div className="space-y-2">
-                <p className="text-green-600 font-medium">✓ Test email sent successfully!</p>
-                <p className="text-sm text-gray-600">Message ID: {testResult.messageId}</p>
-                <p className="text-sm text-gray-600">Delivery Time: {testResult.deliveryTime}ms</p>
+              <div className='space-y-2'>
+                <p className='text-green-600 font-medium'>
+                  ✓ Test email sent successfully!
+                </p>
+                <p className='text-sm text-gray-600'>
+                  Message ID: {testResult.messageId}
+                </p>
+                <p className='text-sm text-gray-600'>
+                  Delivery Time: {testResult.deliveryTime}ms
+                </p>
               </div>
             ) : (
               <div>
-                <p className="text-red-600 font-medium">✗ Test failed</p>
-                <p className="text-sm text-gray-600">{testResult.error}</p>
+                <p className='text-red-600 font-medium'>✗ Test failed</p>
+                <p className='text-sm text-gray-600'>{testResult.error}</p>
               </div>
             )}
           </CardContent>
@@ -609,26 +844,34 @@ export default function EmailSettingsPage() {
   );
 
   if (!emailSettings) {
-    return <div className="flex justify-center items-center h-64">Loading...</div>;
+    return (
+      <div className='flex justify-center items-center h-64'>Loading...</div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Email Settings</h1>
-          <p className="text-gray-600">Configure your email provider and manage deliverability</p>
+    <div className='min-h-screen bg-gray-50'>
+      <div className='container mx-auto px-4 py-8'>
+        <div className='mb-8'>
+          <h1 className='text-3xl font-bold text-gray-900'>Email Settings</h1>
+          <p className='text-gray-600'>
+            Configure your email provider and manage deliverability
+          </p>
         </div>
 
         {/* Tab Navigation */}
-        <div className="border-b border-gray-200 mb-6">
-          <nav className="-mb-px flex space-x-8">
+        <div className='border-b border-gray-200 mb-6'>
+          <nav className='-mb-px flex space-x-8'>
             {[
               { id: 'provider', label: 'Provider' },
-              { id: 'smtp', label: 'SMTP Config', disabled: emailSettings.provider !== 'SMTP' },
+              {
+                id: 'smtp',
+                label: 'SMTP Config',
+                disabled: emailSettings.provider !== 'SMTP',
+              },
               { id: 'reputation', label: 'Reputation' },
               { id: 'testing', label: 'Testing' },
-            ].map((tab) => (
+            ].map(tab => (
               <button
                 key={tab.id}
                 onClick={() => !tab.disabled && setActiveTab(tab.id as any)}
@@ -636,8 +879,8 @@ export default function EmailSettingsPage() {
                   activeTab === tab.id
                     ? 'border-blue-500 text-blue-600'
                     : tab.disabled
-                    ? 'border-transparent text-gray-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      ? 'border-transparent text-gray-400'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
                 disabled={tab.disabled}
               >
@@ -648,7 +891,7 @@ export default function EmailSettingsPage() {
         </div>
 
         {/* Tab Content */}
-        <div className="mb-6">
+        <div className='mb-6'>
           {activeTab === 'provider' && renderProviderTab()}
           {activeTab === 'smtp' && renderSMTPTab()}
           {activeTab === 'reputation' && renderReputationTab()}
@@ -657,11 +900,11 @@ export default function EmailSettingsPage() {
 
         {/* Save Button */}
         {(activeTab === 'provider' || activeTab === 'smtp') && (
-          <div className="flex justify-end">
+          <div className='flex justify-end'>
             <button
               onClick={handleSaveSettings}
               disabled={loading}
-              className="bg-green-600 text-white py-2 px-6 rounded-md hover:bg-green-700 disabled:opacity-50"
+              className='bg-green-600 text-white py-2 px-6 rounded-md hover:bg-green-700 disabled:opacity-50'
             >
               {loading ? 'Saving...' : 'Save Settings'}
             </button>

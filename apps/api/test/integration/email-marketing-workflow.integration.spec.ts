@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -222,7 +222,9 @@ describe('Email Marketing Workflow Integration Tests', () => {
         },
       };
 
-      mockDatabaseService.client.lead.findUnique.mockResolvedValue(mockLeadWithCompany);
+      mockDatabaseService.client.lead.findUnique.mockResolvedValue(
+        mockLeadWithCompany
+      );
 
       // Mock AI response
       const mockAIContent = {
@@ -252,9 +254,14 @@ describe('Email Marketing Workflow Integration Tests', () => {
         createdAt: new Date(),
       };
 
-      mockDatabaseService.client.emailTemplate.create.mockResolvedValue(mockTemplate);
+      mockDatabaseService.client.emailTemplate.create.mockResolvedValue(
+        mockTemplate
+      );
 
-      const templateResult = await emailsService.createEmailTemplate(companyId, templateData);
+      const templateResult = await emailsService.createEmailTemplate(
+        companyId,
+        templateData
+      );
 
       expect(templateResult.id).toBe('template-id');
       expect(templateResult.aiGenerated).toBe(true);
@@ -281,9 +288,14 @@ describe('Email Marketing Workflow Integration Tests', () => {
         ],
       };
 
-      mockDatabaseService.client.pipeline.create.mockResolvedValue(mockPipeline);
+      mockDatabaseService.client.pipeline.create.mockResolvedValue(
+        mockPipeline
+      );
 
-      const pipelineResult = await pipelinesService.createPipeline(companyId, pipelineData);
+      const pipelineResult = await pipelinesService.createPipeline(
+        companyId,
+        pipelineData
+      );
 
       expect(pipelineResult.id).toBe('pipeline-id');
       expect(pipelineResult.name).toBe(pipelineData.name);
@@ -308,10 +320,17 @@ describe('Email Marketing Workflow Integration Tests', () => {
         startedAt: new Date(),
       };
 
-      mockDatabaseService.client.pipeline.findUnique.mockResolvedValue(mockPipelineWithSteps);
-      mockDatabaseService.client.pipelineExecution.create.mockResolvedValue(mockExecution);
+      mockDatabaseService.client.pipeline.findUnique.mockResolvedValue(
+        mockPipelineWithSteps
+      );
+      mockDatabaseService.client.pipelineExecution.create.mockResolvedValue(
+        mockExecution
+      );
 
-      const executionResult = await pipelinesService.startPipeline('pipeline-id', ['lead-id']);
+      const executionResult = await pipelinesService.startPipeline(
+        'pipeline-id',
+        ['lead-id']
+      );
 
       expect(executionResult.message).toContain('Pipeline started for 1 leads');
       expect(executionResult.executions).toHaveLength(1);
@@ -354,7 +373,9 @@ describe('Email Marketing Workflow Integration Tests', () => {
         }),
       });
 
-      expect(mockDatabaseService.client.emailTemplate.create).toHaveBeenCalledWith({
+      expect(
+        mockDatabaseService.client.emailTemplate.create
+      ).toHaveBeenCalledWith({
         data: expect.objectContaining({
           name: templateData.name,
           aiGenerated: true,
@@ -369,7 +390,9 @@ describe('Email Marketing Workflow Integration Tests', () => {
         }),
       });
 
-      expect(mockDatabaseService.client.pipelineExecution.create).toHaveBeenCalledWith({
+      expect(
+        mockDatabaseService.client.pipelineExecution.create
+      ).toHaveBeenCalledWith({
         data: expect.objectContaining({
           pipelineId: 'pipeline-id',
           leadId: 'lead-id',
@@ -461,7 +484,9 @@ describe('Email Marketing Workflow Integration Tests', () => {
   describe('Error Handling Integration', () => {
     it('should handle database connection failures gracefully', async () => {
       // Mock database failure
-      mockDatabaseService.client.user.create.mockRejectedValue(new Error('Database connection failed'));
+      mockDatabaseService.client.user.create.mockRejectedValue(
+        new Error('Database connection failed')
+      );
 
       const userData = {
         name: 'John Doe',
@@ -469,12 +494,14 @@ describe('Email Marketing Workflow Integration Tests', () => {
         password: 'password123',
       };
 
-      await expect(authService.register(userData)).rejects.toThrow('Database connection failed');
+      await expect(authService.register(userData)).rejects.toThrow(
+        'Database connection failed'
+      );
     });
 
     it('should handle AI service failures with fallback', async () => {
       const leadId = 'test-lead-id';
-      
+
       mockDatabaseService.client.lead.findUnique.mockResolvedValue({
         id: leadId,
         firstName: 'John',

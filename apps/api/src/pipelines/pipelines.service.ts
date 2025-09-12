@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -19,7 +19,7 @@ import { DatabaseService } from '../common/database/database.service';
 export class PipelinesService {
   constructor(
     private readonly database: DatabaseService,
-    @InjectQueue('email-pipeline') private pipelineQueue: Queue,
+    @InjectQueue('email-pipeline') private pipelineQueue: Queue
   ) {}
 
   async createPipeline(companyId: string, pipelineData: any) {
@@ -129,14 +129,14 @@ export class PipelinesService {
     }
 
     const step = execution.pipeline.pipelineSteps[stepIndex];
-    
+
     // Create step execution
     const stepExecution = await this.database.client.stepExecution.create({
       data: {
         pipelineExecutionId: executionId,
         stepId: step.id,
         status: 'SCHEDULED',
-        scheduledAt: new Date(Date.now() + (step.delayHours * 60 * 60 * 1000)),
+        scheduledAt: new Date(Date.now() + step.delayHours * 60 * 60 * 1000),
       },
     });
 

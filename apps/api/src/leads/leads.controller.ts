@@ -3,14 +3,27 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Request, UseInterceptors, UploadedFile } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+  Request,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { LeadsService } from './leads.service';
@@ -43,7 +56,11 @@ export class LeadsController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Update lead' })
-  async updateLead(@Request() req, @Param('id') id: string, @Body() updateData: any) {
+  async updateLead(
+    @Request() req,
+    @Param('id') id: string,
+    @Body() updateData: any
+  ) {
     return this.leadsService.updateLead(req.user.companyId, id, updateData);
   }
 

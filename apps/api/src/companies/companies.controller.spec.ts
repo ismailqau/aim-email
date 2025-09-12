@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -73,7 +73,10 @@ describe('CompaniesController', () => {
 
       const result = await controller.createCompany(mockRequest, companyData);
 
-      expect(companiesService.createCompany).toHaveBeenCalledWith('user-1', companyData);
+      expect(companiesService.createCompany).toHaveBeenCalledWith(
+        'user-1',
+        companyData
+      );
       expect(result).toEqual(mockCompany);
     });
 
@@ -81,7 +84,9 @@ describe('CompaniesController', () => {
       const error = new Error('Creation failed');
       mockCompaniesService.createCompany.mockRejectedValue(error);
 
-      await expect(controller.createCompany(mockRequest, companyData)).rejects.toThrow(error);
+      await expect(
+        controller.createCompany(mockRequest, companyData)
+      ).rejects.toThrow(error);
     });
   });
 
@@ -135,14 +140,20 @@ describe('CompaniesController', () => {
 
       const result = await controller.getCompanyById(mockRequest, companyId);
 
-      expect(companiesService.getCompanyById).toHaveBeenCalledWith('user-1', companyId);
+      expect(companiesService.getCompanyById).toHaveBeenCalledWith(
+        'user-1',
+        companyId
+      );
       expect(result).toEqual(mockCompany);
     });
 
     it('should return null when company not found', async () => {
       mockCompaniesService.getCompanyById.mockResolvedValue(null);
 
-      const result = await controller.getCompanyById(mockRequest, 'non-existent-id');
+      const result = await controller.getCompanyById(
+        mockRequest,
+        'non-existent-id'
+      );
 
       expect(result).toBeNull();
     });
@@ -165,9 +176,17 @@ describe('CompaniesController', () => {
     it('should update a company', async () => {
       mockCompaniesService.updateCompany.mockResolvedValue(mockUpdatedCompany);
 
-      const result = await controller.updateCompany(mockRequest, companyId, updateData);
+      const result = await controller.updateCompany(
+        mockRequest,
+        companyId,
+        updateData
+      );
 
-      expect(companiesService.updateCompany).toHaveBeenCalledWith('user-1', companyId, updateData);
+      expect(companiesService.updateCompany).toHaveBeenCalledWith(
+        'user-1',
+        companyId,
+        updateData
+      );
       expect(result).toEqual(mockUpdatedCompany);
     });
 
@@ -175,7 +194,9 @@ describe('CompaniesController', () => {
       const error = new Error('Update failed');
       mockCompaniesService.updateCompany.mockRejectedValue(error);
 
-      await expect(controller.updateCompany(mockRequest, companyId, updateData)).rejects.toThrow(error);
+      await expect(
+        controller.updateCompany(mockRequest, companyId, updateData)
+      ).rejects.toThrow(error);
     });
   });
 
@@ -188,7 +209,10 @@ describe('CompaniesController', () => {
 
       const result = await controller.deleteCompany(mockRequest, companyId);
 
-      expect(companiesService.deleteCompany).toHaveBeenCalledWith('user-1', companyId);
+      expect(companiesService.deleteCompany).toHaveBeenCalledWith(
+        'user-1',
+        companyId
+      );
       expect(result).toEqual(mockResponse);
     });
 
@@ -196,7 +220,9 @@ describe('CompaniesController', () => {
       const error = new Error('Delete failed');
       mockCompaniesService.deleteCompany.mockRejectedValue(error);
 
-      await expect(controller.deleteCompany(mockRequest, companyId)).rejects.toThrow(error);
+      await expect(
+        controller.deleteCompany(mockRequest, companyId)
+      ).rejects.toThrow(error);
     });
   });
 });

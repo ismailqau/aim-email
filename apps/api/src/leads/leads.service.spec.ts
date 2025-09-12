@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -89,7 +89,10 @@ describe('LeadsService', () => {
     it('should use custom priority score when provided', async () => {
       const leadWithPriority = { ...leadData, priorityScore: 80 };
       mockDatabaseService.client.lead.findFirst.mockResolvedValue(null);
-      mockDatabaseService.client.lead.create.mockResolvedValue({ ...mockLead, priorityScore: 80 });
+      mockDatabaseService.client.lead.create.mockResolvedValue({
+        ...mockLead,
+        priorityScore: 80,
+      });
 
       await service.createLead(companyId, leadWithPriority);
 
@@ -102,7 +105,7 @@ describe('LeadsService', () => {
       mockDatabaseService.client.lead.findFirst.mockResolvedValue(mockLead);
 
       await expect(service.createLead(companyId, leadData)).rejects.toThrow(
-        new BadRequestException('Lead with this email already exists'),
+        new BadRequestException('Lead with this email already exists')
       );
 
       expect(mockDatabaseService.client.lead.create).not.toHaveBeenCalled();
@@ -173,7 +176,9 @@ describe('LeadsService', () => {
 
     it('should handle search query', async () => {
       const query = { search: 'john' };
-      mockDatabaseService.client.lead.findMany.mockResolvedValue([mockLeads[0]]);
+      mockDatabaseService.client.lead.findMany.mockResolvedValue([
+        mockLeads[0],
+      ]);
       mockDatabaseService.client.lead.count.mockResolvedValue(1);
 
       await service.getLeads(companyId, query);
@@ -234,9 +239,9 @@ describe('LeadsService', () => {
     it('should throw NotFoundException when lead not found', async () => {
       mockDatabaseService.client.lead.findFirst.mockResolvedValue(null);
 
-      await expect(service.getLeadById(companyId, 'non-existent-id')).rejects.toThrow(
-        new NotFoundException('Lead not found'),
-      );
+      await expect(
+        service.getLeadById(companyId, 'non-existent-id')
+      ).rejects.toThrow(new NotFoundException('Lead not found'));
     });
   });
 
@@ -277,9 +282,9 @@ describe('LeadsService', () => {
     it('should throw NotFoundException when lead not found', async () => {
       mockDatabaseService.client.lead.findFirst.mockResolvedValue(null);
 
-      await expect(service.updateLead(companyId, 'non-existent-id', updateData)).rejects.toThrow(
-        new NotFoundException('Lead not found'),
-      );
+      await expect(
+        service.updateLead(companyId, 'non-existent-id', updateData)
+      ).rejects.toThrow(new NotFoundException('Lead not found'));
     });
   });
 
@@ -308,9 +313,9 @@ describe('LeadsService', () => {
     it('should throw NotFoundException when lead not found', async () => {
       mockDatabaseService.client.lead.findFirst.mockResolvedValue(null);
 
-      await expect(service.deleteLead(companyId, 'non-existent-id')).rejects.toThrow(
-        new NotFoundException('Lead not found'),
-      );
+      await expect(
+        service.deleteLead(companyId, 'non-existent-id')
+      ).rejects.toThrow(new NotFoundException('Lead not found'));
     });
   });
 
@@ -361,7 +366,9 @@ describe('LeadsService', () => {
       ];
 
       mockDatabaseService.client.lead.findFirst.mockResolvedValue(null);
-      mockDatabaseService.client.lead.create.mockResolvedValue({ id: 'lead-1' });
+      mockDatabaseService.client.lead.create.mockResolvedValue({
+        id: 'lead-1',
+      });
 
       const result = await service.uploadLeadsFromCsv(companyId, csvData);
 
@@ -374,11 +381,11 @@ describe('LeadsService', () => {
     });
 
     it('should handle duplicate leads', async () => {
-      const csvData = [
-        { email: 'existing@example.com', firstName: 'John' },
-      ];
+      const csvData = [{ email: 'existing@example.com', firstName: 'John' }];
 
-      mockDatabaseService.client.lead.findFirst.mockResolvedValue({ id: 'existing-lead' });
+      mockDatabaseService.client.lead.findFirst.mockResolvedValue({
+        id: 'existing-lead',
+      });
 
       const result = await service.uploadLeadsFromCsv(companyId, csvData);
 
@@ -387,7 +394,9 @@ describe('LeadsService', () => {
         successfulImports: 0,
         failedImports: 1,
       });
-      expect(result.errors).toContain('Row 1: Lead with this email already exists');
+      expect(result.errors).toContain(
+        'Row 1: Lead with this email already exists'
+      );
     });
 
     it('should limit error messages to 20', async () => {

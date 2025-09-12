@@ -3,10 +3,10 @@
  * Copyright (c) 2024 Muhammad Ismail
  * Email: quaid@live.com
  * Founder: AimNovo.com | AimNexus.ai
- * 
+ *
  * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
- * 
+ *
  * For commercial use, please maintain proper attribution.
  */
 
@@ -73,7 +73,9 @@ describe('AnalyticsService', () => {
 
       mockDatabaseService.client.email.count.mockResolvedValue(200); // emails sent
 
-      mockDatabaseService.client.emailEvent.groupBy.mockResolvedValue(mockEmailEvents);
+      mockDatabaseService.client.emailEvent.groupBy.mockResolvedValue(
+        mockEmailEvents
+      );
     });
 
     it('should return dashboard metrics with calculated rates', async () => {
@@ -94,7 +96,9 @@ describe('AnalyticsService', () => {
         },
       });
 
-      expect(mockDatabaseService.client.emailEvent.groupBy).toHaveBeenCalledWith({
+      expect(
+        mockDatabaseService.client.emailEvent.groupBy
+      ).toHaveBeenCalledWith({
         by: ['eventType'],
         where: {
           email: {
@@ -141,7 +145,9 @@ describe('AnalyticsService', () => {
         { eventType: 'OPENED', _count: 2 }, // 2/7 = 28.571428...%
         { eventType: 'CLICKED', _count: 1 }, // 1/7 = 14.285714...%
       ];
-      mockDatabaseService.client.emailEvent.groupBy.mockResolvedValue(fractionalEvents);
+      mockDatabaseService.client.emailEvent.groupBy.mockResolvedValue(
+        fractionalEvents
+      );
 
       const result = await service.getDashboardMetrics(companyId);
 
@@ -159,17 +165,12 @@ describe('AnalyticsService', () => {
       {
         id: 'email-1',
         sentAt: new Date('2023-01-15T10:00:00Z'),
-        emailEvents: [
-          { eventType: 'OPENED' },
-          { eventType: 'CLICKED' },
-        ],
+        emailEvents: [{ eventType: 'OPENED' }, { eventType: 'CLICKED' }],
       },
       {
         id: 'email-2',
         sentAt: new Date('2023-01-15T11:00:00Z'),
-        emailEvents: [
-          { eventType: 'OPENED' },
-        ],
+        emailEvents: [{ eventType: 'OPENED' }],
       },
       {
         id: 'email-3',
@@ -181,7 +182,11 @@ describe('AnalyticsService', () => {
     it('should return performance data grouped by date', async () => {
       mockDatabaseService.client.email.findMany.mockResolvedValue(mockEmails);
 
-      const result = await service.getPerformanceData(companyId, startDate, endDate);
+      const result = await service.getPerformanceData(
+        companyId,
+        startDate,
+        endDate
+      );
 
       expect(mockDatabaseService.client.email.findMany).toHaveBeenCalledWith({
         where: {
@@ -250,7 +255,9 @@ describe('AnalyticsService', () => {
         ...mockEmails,
       ];
 
-      mockDatabaseService.client.email.findMany.mockResolvedValue(emailsWithNullDate);
+      mockDatabaseService.client.email.findMany.mockResolvedValue(
+        emailsWithNullDate
+      );
 
       const result = await service.getPerformanceData(companyId);
 
@@ -296,16 +303,20 @@ describe('AnalyticsService', () => {
     ];
 
     it('should return pipeline metrics with execution counts', async () => {
-      mockDatabaseService.client.pipeline.findMany.mockResolvedValue(mockPipelines);
+      mockDatabaseService.client.pipeline.findMany.mockResolvedValue(
+        mockPipelines
+      );
 
       const result = await service.getPipelineMetrics(companyId);
 
-      expect(mockDatabaseService.client.pipeline.findMany).toHaveBeenCalledWith({
-        where: { companyId },
-        include: {
-          pipelineExecutions: true,
-        },
-      });
+      expect(mockDatabaseService.client.pipeline.findMany).toHaveBeenCalledWith(
+        {
+          where: { companyId },
+          include: {
+            pipelineExecutions: true,
+          },
+        }
+      );
 
       expect(result).toEqual([
         {
@@ -352,7 +363,9 @@ describe('AnalyticsService', () => {
         },
       ];
 
-      mockDatabaseService.client.pipeline.findMany.mockResolvedValue(pipelineWithMixedStatuses);
+      mockDatabaseService.client.pipeline.findMany.mockResolvedValue(
+        pipelineWithMixedStatuses
+      );
 
       const result = await service.getPipelineMetrics(companyId);
 
@@ -380,7 +393,9 @@ describe('AnalyticsService', () => {
     const companyId = 'company-1';
 
     it('should return export information for analytics data', async () => {
-      const result = await service.exportData(companyId, 'analytics', { format: 'csv' });
+      const result = await service.exportData(companyId, 'analytics', {
+        format: 'csv',
+      });
 
       expect(result).toEqual({
         message: 'Exporting analytics data',
@@ -389,7 +404,9 @@ describe('AnalyticsService', () => {
     });
 
     it('should handle different export types', async () => {
-      const result = await service.exportData(companyId, 'performance', { format: 'xlsx' });
+      const result = await service.exportData(companyId, 'performance', {
+        format: 'xlsx',
+      });
 
       expect(result).toEqual({
         message: 'Exporting performance data',
