@@ -2,6 +2,12 @@
   "name": "@email-system/db",
   "version": "1.0.0",
   "description": "Database utilities and Prisma schema for the AI Email Marketing System",
+  "author": {
+    "name": "Muhammad Ismail",
+    "email": "quaid@live.com",
+    "url": "https://aimnovo.com"
+  },
+  "license": "MIT",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

@@ -2,6 +2,16 @@
   "name": "ai-email-marketing-system",
   "version": "1.0.0",
   "description": "AI-powered email marketing automation platform",
+  "author": {
+    "name": "Muhammad Ismail",
+    "email": "quaid@live.com",
+    "url": "https://aimnovo.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "Contact quaid@live.com for repository access"
+  },
   "private": true,
   "workspaces": [
     "apps/*",

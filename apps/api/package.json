@@ -2,9 +2,13 @@
   "name": "api",
   "version": "1.0.0",
   "description": "AI Email Marketing System - Backend API",
-  "author": "AI Email Marketing Team",
+  "author": {
+    "name": "Muhammad Ismail",
+    "email": "quaid@live.com",
+    "url": "https://aimnovo.com"
+  },
+  "license": "MIT",
   "private": true,
-  "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

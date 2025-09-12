@@ -2,6 +2,12 @@
   "name": "web",
   "version": "1.0.0",
   "description": "AI Email Marketing System - Frontend Web Application",
+  "author": {
+    "name": "Muhammad Ismail",
+    "email": "quaid@live.com",
+    "url": "https://aimnovo.com"
+  },
+  "license": "MIT",
   "private": true,
   "scripts": {
     "build": "next build",

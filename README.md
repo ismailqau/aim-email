@@ -365,7 +365,33 @@ lsof -ti:3001 | xargs kill -9
 
 ## 📄 License
 
-This project is proprietary and confidential.
+### MIT License
+
+Copyright (c) 2024 Muhammad Ismail (quaid@live.com)  
+Founder: AimNovo.com | AimNexus.ai
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+### Commercial Use Guidelines
+
+This software is available for **commercial use** under the MIT License. When using this software commercially, please:
+
+1. **Maintain Attribution**: Keep the copyright notice and license text in your project
+2. **Credit the Author**: Include attribution to Muhammad Ismail and references to AimNovo.com and AimNexus.ai
+3. **Share Improvements**: While not required, consider contributing improvements back to the community
+
+### Contact Information
+
+- **Author**: Muhammad Ismail
+- **Email**: quaid@live.com
+- **Website**: [AimNovo.com](https://aimnovo.com)
+- **AI Platform**: [AimNexus.ai](https://aimnexus.ai)
+
+For commercial licensing inquiries, custom development, or enterprise support, please contact: quaid@live.com
 
 ---
 

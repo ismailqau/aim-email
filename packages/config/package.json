@@ -2,6 +2,12 @@
   "name": "@email-system/config",
   "version": "1.0.0",
   "description": "Shared configuration files for the AI Email Marketing System",
+  "author": {
+    "name": "Muhammad Ismail",
+    "email": "quaid@live.com",
+    "url": "https://aimnovo.com"
+  },
+  "license": "MIT",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
