@@ -130,6 +130,7 @@ npm run dev
 ```
 
 This will start:
+
 - **Backend API**: http://localhost:3001
 - **Frontend Web**: http://localhost:3000
 - **API Documentation**: http://localhost:3001/api/docs
@@ -183,24 +184,28 @@ docker-compose exec api npm run db:seed
 ## 📊 Verification Checklist
 
 ✅ **Database Connection**
+
 ```bash
 npm run db:studio
 # Should open Prisma Studio at http://localhost:5555
 ```
 
 ✅ **API Health Check**
+
 ```bash
 curl http://localhost:3001/api/v1/auth/me
 # Should return 401 (unauthorized) if not logged in
 ```
 
 ✅ **Redis Connection**
+
 ```bash
 redis-cli ping
 # Should return PONG
 ```
 
 ✅ **Frontend Build**
+
 ```bash
 npm run build
 # Should build successfully without errors
@@ -209,6 +214,7 @@ npm run build
 ## 🛠️ Development Commands
 
 ### Project Management
+
 ```bash
 npm run dev          # Start development servers
 npm run build        # Build all applications
@@ -219,6 +225,7 @@ npm run type-check   # TypeScript type checking
 ```
 
 ### Database Operations
+
 ```bash
 npm run db:generate  # Generate Prisma client
 npm run db:push      # Push schema changes
@@ -228,6 +235,7 @@ npm run db:seed      # Seed database with sample data
 ```
 
 ### Individual Apps
+
 ```bash
 # API only
 npm run dev --filter=api
@@ -241,20 +249,22 @@ npm run build --filter=web
 ## 🔐 Environment Variables Reference
 
 ### Required Variables
-| Variable | Description | Example |
-|----------|-------------|----------|
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql://postgres:password@localhost:5432/email_marketing_system` |
-| `SENDGRID_API_KEY` | SendGrid API key for emails | `SG.xxxxxxxxxxxxxxxxx` |
-| `GEMINI_API_KEY` | Google Gemini API key | `AIzaSyxxxxxxxxxxxxxxxxx` |
-| `JWT_SECRET` | Secret for JWT tokens | `your-super-secret-key` |
+
+| Variable           | Description                  | Example                                                                |
+| ------------------ | ---------------------------- | ---------------------------------------------------------------------- |
+| `DATABASE_URL`     | PostgreSQL connection string | `postgresql://postgres:password@localhost:5432/email_marketing_system` |
+| `SENDGRID_API_KEY` | SendGrid API key for emails  | `SG.xxxxxxxxxxxxxxxxx`                                                 |
+| `GEMINI_API_KEY`   | Google Gemini API key        | `AIzaSyxxxxxxxxxxxxxxxxx`                                              |
+| `JWT_SECRET`       | Secret for JWT tokens        | `your-super-secret-key`                                                |
 
 ### Optional Variables
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `REDIS_URL` | Redis connection string | `redis://localhost:6379` |
-| `PORT` | API server port | `3001` |
-| `NODE_ENV` | Environment mode | `development` |
-| `FRONTEND_URL` | Frontend URL for CORS | `http://localhost:3000` |
+
+| Variable       | Description             | Default                  |
+| -------------- | ----------------------- | ------------------------ |
+| `REDIS_URL`    | Redis connection string | `redis://localhost:6379` |
+| `PORT`         | API server port         | `3001`                   |
+| `NODE_ENV`     | Environment mode        | `development`            |
+| `FRONTEND_URL` | Frontend URL for CORS   | `http://localhost:3000`  |
 
 ## 🏗️ Architecture Overview
 
@@ -288,6 +298,7 @@ This is a monorepo built with Turborepo containing:
 ### Common Issues
 
 **1. Database Connection Failed**
+
 ```bash
 # Check PostgreSQL is running
 pg_isready -h localhost -p 5432
@@ -297,6 +308,7 @@ psql -h localhost -U postgres -l
 ```
 
 **2. Redis Connection Failed**
+
 ```bash
 # Check Redis is running
 redis-cli ping
@@ -306,11 +318,13 @@ redis-server
 ```
 
 **3. API Keys Not Working**
+
 - Verify SendGrid API key has correct permissions
 - Check Gemini API key is active and has quota
 - Ensure `.env` file is in the root directory
 
 **4. Build Errors**
+
 ```bash
 # Clear caches and reinstall
 npm run clean
@@ -319,6 +333,7 @@ npm install
 ```
 
 **5. Port Already in Use**
+
 ```bash
 # Find and kill process using port 3000 or 3001
 lsof -ti:3000 | xargs kill -9
@@ -345,12 +360,14 @@ lsof -ti:3001 | xargs kill -9
 ## 📚 Tech Stack
 
 ### Frontend
+
 - **Next.js 14** - React framework with App Router
 - **TypeScript** - Type-safe JavaScript
 - **Tailwind CSS** - Utility-first CSS framework
 - **Axios** - HTTP client for API calls
 
 ### Backend
+
 - **NestJS** - Node.js framework with decorators
 - **Prisma** - Type-safe database ORM
 - **PostgreSQL** - Relational database
@@ -359,9 +376,260 @@ lsof -ti:3001 | xargs kill -9
 - **Redis** - Caching and queues
 
 ### External Services
+
 - **SendGrid** - Email delivery service
 - **Gemini API** - AI content generation
 - **Google Cloud** - Cloud infrastructure (for production)
+
+## 🔧 Code Quality & Development Tools
+
+### Pre-commit Hooks
+
+This project uses **Husky** and **lint-staged** to automatically validate code quality before commits:
+
+```bash
+# Pre-commit hooks automatically run:
+✅ ESLint with auto-fix
+✅ Prettier formatting
+✅ TypeScript type checking
+✅ Only on staged files (fast!)
+```
+
+### Code Quality Commands
+
+```bash
+# Validate everything (no changes)
+npm run validate
+
+# Auto-fix issues where possible
+npm run validate:fix
+
+# Individual operations
+npm run lint              # Check linting
+npm run lint:fix          # Auto-fix linting issues
+npm run format            # Format all files
+npm run format:check      # Check formatting
+npm run type-check        # TypeScript compilation
+
+# Git setup for new contributors
+npm run setup:git         # Configure Git with project settings
+```
+
+### Development Workflow
+
+1. **Make changes** to your code
+2. **Stage files**: `git add .`
+3. **Commit**: `git commit -m "your message"`
+4. **Pre-commit hooks run automatically** ✨
+5. **Commit succeeds** if all checks pass
+
+### Code Standards
+
+- **TypeScript**: Strict type checking enabled
+- **ESLint**: Enforces code quality and consistency
+- **Prettier**: Automatic code formatting
+- **License Headers**: All source files include copyright notices
+- **No E2E Tests**: Focus on unit and integration tests only
+
+## 🤝 Contributing
+
+### Getting Started
+
+1. **Fork the repository**
+2. **Clone your fork**:
+   ```bash
+   git clone https://github.com/your-username/email-marketing-system.git
+   cd email-marketing-system
+   ```
+3. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+4. **Set up Git configuration**:
+   ```bash
+   npm run setup:git
+   ```
+5. **Set up environment** (follow setup guide above)
+6. **Create a feature branch**:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+### Development Guidelines
+
+#### Code Style
+
+- Follow existing code patterns and conventions
+- Use TypeScript for all new code
+- Include JSDoc comments for public APIs
+- Maintain license headers in all source files
+
+#### Testing Requirements
+
+- Write unit tests for new features
+- Update existing tests when modifying code
+- Ensure all tests pass: `npm run test`
+- No end-to-end (E2E) tests required
+
+#### Pull Request Process
+
+1. **Ensure code quality**:
+
+   ```bash
+   npm run validate  # Must pass!
+   ```
+
+2. **Run tests**:
+
+   ```bash
+   npm run test
+   ```
+
+3. **Update documentation** if needed
+
+4. **Create Pull Request** with:
+   - Clear title and description
+   - Reference related issues
+   - Include screenshots for UI changes
+
+5. **Code Review Process**:
+   - At least one approval required
+   - All CI checks must pass
+   - Address review feedback
+
+### Commit Message Convention
+
+We follow **Conventional Commits** specification:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+#### Commit Types
+
+- **feat**: A new feature
+- **fix**: A bug fix
+- **docs**: Documentation only changes
+- **style**: Code style changes (formatting, etc.)
+- **refactor**: Code changes that neither fix bugs nor add features
+- **perf**: Performance improvements
+- **test**: Adding or updating tests
+- **chore**: Build process or auxiliary tool changes
+- **ci**: CI configuration changes
+
+#### Examples
+
+```bash
+# Good commit messages
+git commit -m "feat(auth): add JWT token refresh functionality"
+git commit -m "fix(emails): resolve SendGrid API timeout issue"
+git commit -m "docs: update README with new installation steps"
+git commit -m "test(leads): add unit tests for CSV import"
+git commit -m "chore: update dependencies to latest versions"
+
+# Bad commit messages
+git commit -m "fix stuff"           # Too vague
+git commit -m "Update README.md"    # Not descriptive
+git commit -m "WIP"                # Work in progress
+```
+
+#### Scope Guidelines
+
+Use these scopes to indicate which part of the system is affected:
+
+- **auth**: Authentication and authorization
+- **emails**: Email sending and templates
+- **leads**: Lead management
+- **pipelines**: Email automation pipelines
+- **analytics**: Analytics and reporting
+- **ui**: User interface components
+- **api**: Backend API changes
+- **db**: Database schema or queries
+- **config**: Configuration changes
+
+### Branch Naming Convention
+
+```bash
+# Feature branches
+feature/add-email-templates
+feature/improve-dashboard-ui
+
+# Bug fix branches
+fix/sendgrid-connection-error
+fix/csv-import-validation
+
+# Documentation branches
+docs/update-api-documentation
+docs/add-deployment-guide
+
+# Chore branches
+chore/update-dependencies
+chore/improve-build-process
+```
+
+### Issue Reporting
+
+When reporting issues, please include:
+
+1. **Environment details**:
+   - OS version
+   - Node.js version
+   - npm version
+
+2. **Steps to reproduce**
+3. **Expected behavior**
+4. **Actual behavior**
+5. **Error messages** (if any)
+6. **Screenshots** (for UI issues)
+
+### Feature Requests
+
+For new features:
+
+1. **Check existing issues** to avoid duplicates
+2. **Describe the problem** the feature would solve
+3. **Propose a solution** or approach
+4. **Consider alternatives** that were considered
+5. **Provide use cases** and examples
+
+## 🚀 Release Process
+
+### Version Numbering
+
+We follow [Semantic Versioning](https://semver.org/):
+
+- **MAJOR**: Breaking changes
+- **MINOR**: New features (backward compatible)
+- **PATCH**: Bug fixes (backward compatible)
+
+### Release Checklist
+
+- [ ] All tests pass
+- [ ] Documentation updated
+- [ ] Version bumped in package.json
+- [ ] Changelog updated
+- [ ] Git tag created
+- [ ] Release notes published
+
+## 🛡️ Security
+
+### Reporting Security Issues
+
+**Please do not report security vulnerabilities through public GitHub issues.**
+
+Instead, please email security concerns to: **quaid@live.com**
+
+### Security Guidelines
+
+- Keep dependencies updated
+- Use environment variables for secrets
+- Follow OWASP security practices
+- Validate all user inputs
+- Use HTTPS in production
 
 ## 📄 License
 

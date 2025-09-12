@@ -1,0 +1,49 @@
+# AI Email Marketing System - Commit Message Template
+# Copyright (c) 2024 Muhammad Ismail (quaid@live.com)
+# Founder: AimNovo.com | AimNexus.ai
+# Licensed under the MIT License
+#
+# <type>[optional scope]: <description>
+#
+# [optional body]
+#
+# [optional footer(s)]
+#
+# --- COMMIT MESSAGE GUIDELINES ---
+#
+# Types:
+#   feat:     A new feature
+#   fix:      A bug fix
+#   docs:     Documentation only changes
+#   style:    Changes that do not affect the meaning of the code (white-space, formatting, etc)
+#   refactor: A code change that neither fixes a bug nor adds a feature
+#   perf:     A code change that improves performance
+#   test:     Adding missing tests or correcting existing tests
+#   chore:    Changes to the build process or auxiliary tools and libraries
+#   ci:       Changes to CI configuration files and scripts
+#
+# Scopes:
+#   auth:      Authentication & authorization
+#   emails:    Email sending & templates
+#   leads:     Lead management
+#   pipelines: Email automation
+#   analytics: Reporting & metrics
+#   ui:        User interface
+#   api:       Backend API
+#   db:        Database changes
+#   config:    Configuration
+#
+# Examples:
+#   feat(auth): add OAuth2 integration
+#   fix(emails): resolve template rendering issue
+#   docs: update API documentation
+#   test(leads): add unit tests for CSV import
+#   chore: update dependencies
+#
+# Rules:
+#   - Use the imperative mood in the subject line
+#   - Do not end the subject line with a period
+#   - Capitalize the subject line
+#   - Limit the subject line to 50 characters
+#   - Wrap the body at 72 characters
+#   - Use the body to explain what and why vs. how
