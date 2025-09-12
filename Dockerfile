@@ -5,7 +5,7 @@
 FROM node:20-alpine AS base
 WORKDIR /app
 RUN apk add --no-cache libc6-compat openssl
-RUN npm install -g turbo
+RUN npm install -g turbo typescript
 
 # Dependencies stage
 FROM base AS deps

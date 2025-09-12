@@ -1,10 +1,15 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
-  "tasks": {
+  "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "inputs": ["src/**", "package.json", "tsconfig.json"]
+    },
+    "@email-system/config#build": {
+      "cache": true,
+      "outputs": []
     },
     "dev": {
       "cache": false,
