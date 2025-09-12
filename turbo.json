@@ -18,6 +18,17 @@
       "cache": false,
       "persistent": true
     },
+    "test:coverage": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "test:report": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**", "reports/**"]
+    },
+    "docs:api": {
+      "dependsOn": ["^build"]
+    },
     "lint": {
       "dependsOn": ["^build"]
     },

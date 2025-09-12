@@ -18,6 +18,10 @@
   "scripts": {
     "build": "echo 'No build needed for config package'",
     "dev": "echo 'No dev script needed for config package'",
+    "test": "echo 'No tests for config package'",
+    "test:watch": "echo 'No tests for config package'",
+    "test:coverage": "echo 'No tests for config package'",
+    "test:report": "echo 'No tests for config package'",
     "lint": "echo 'No lint needed for config package'",
     "type-check": "echo 'No type-check needed for config package'",
     "clean": "echo 'No clean needed for config package'"

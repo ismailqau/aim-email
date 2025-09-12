@@ -19,6 +19,11 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
+    "test": "echo 'No tests for db package'",
+    "test:watch": "echo 'No tests for db package'",
+    "test:coverage": "echo 'No tests for db package'",
+    "test:report": "echo 'No tests for db package'",
+    "docs:api": "echo 'No API docs for db package'",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "type-check": "tsc --noEmit",
