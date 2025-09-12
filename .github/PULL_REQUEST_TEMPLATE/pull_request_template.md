@@ -191,5 +191,5 @@ assignees: []
 ### Attribution
 
 Created by: <!-- Your name and contact -->
-For: AI Email Marketing System by Muhammad Ismail (quaid@live.com)
+For: AI Email Marketing System by Muhammad Ismail (ismail@aimnovo.com)
 Company: AimNovo.com | AimNexus.ai

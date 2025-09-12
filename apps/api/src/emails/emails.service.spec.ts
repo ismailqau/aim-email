@@ -1,7 +1,7 @@
 /**
  * AI Email Marketing System
  * Copyright (c) 2024 Muhammad Ismail
- * Email: quaid@live.com
+ * Email: ismail@aimnovo.com
  * Founder: AimNovo.com | AimNexus.ai
  *
  * Licensed under the MIT License.
@@ -34,8 +34,6 @@ jest.mock('@google/generative-ai', () => ({
 
 describe('EmailsService', () => {
   let service: EmailsService;
-  let databaseService: DatabaseService;
-  let configService: ConfigService;
 
   const mockDatabaseService = {
     client: {
@@ -72,8 +70,6 @@ describe('EmailsService', () => {
     }).compile();
 
     service = module.get<EmailsService>(EmailsService);
-    databaseService = module.get<DatabaseService>(DatabaseService);
-    configService = module.get<ConfigService>(ConfigService);
 
     // Setup default config mock
     mockConfigService.get.mockReturnValue('mock-api-key');

@@ -1,7 +1,7 @@
 /**
  * AI Email Marketing System
  * Copyright (c) 2024 Muhammad Ismail
- * Email: quaid@live.com
+ * Email: ismail@aimnovo.com
  * Founder: AimNovo.com | AimNexus.ai
  *
  * Licensed under the MIT License.
@@ -14,12 +14,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getQueueToken } from '@nestjs/bullmq';
 import { PipelinesService } from './pipelines.service';
 import { DatabaseService } from '../common/database/database.service';
-import { Queue } from 'bullmq';
 
 describe('PipelinesService', () => {
   let service: PipelinesService;
-  let databaseService: DatabaseService;
-  let pipelineQueue: Queue;
 
   const mockDatabaseService = {
     client: {
@@ -62,8 +59,6 @@ describe('PipelinesService', () => {
     }).compile();
 
     service = module.get<PipelinesService>(PipelinesService);
-    databaseService = module.get<DatabaseService>(DatabaseService);
-    pipelineQueue = module.get<Queue>(getQueueToken('email-pipeline'));
 
     jest.clearAllMocks();
   });

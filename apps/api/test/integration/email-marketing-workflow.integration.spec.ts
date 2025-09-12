@@ -1,7 +1,7 @@
 /**
  * AI Email Marketing System
  * Copyright (c) 2024 Muhammad Ismail
- * Email: quaid@live.com
+ * Email: ismail@aimnovo.com
  * Founder: AimNovo.com | AimNexus.ai
  *
  * Licensed under the MIT License.
@@ -12,7 +12,6 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import * as request from 'supertest';
 import { AuthService } from '../src/auth/auth.service';
 import { LeadsService } from '../src/leads/leads.service';
 import { EmailsService } from '../src/emails/emails.service';
@@ -32,8 +31,6 @@ describe('Email Marketing Workflow Integration Tests', () => {
   let leadsService: LeadsService;
   let emailsService: EmailsService;
   let pipelinesService: PipelinesService;
-  let databaseService: DatabaseService;
-  let authToken: string;
   let userId: string;
   let companyId: string;
 
@@ -122,14 +119,12 @@ describe('Email Marketing Workflow Integration Tests', () => {
     leadsService = moduleFixture.get<LeadsService>(LeadsService);
     emailsService = moduleFixture.get<EmailsService>(EmailsService);
     pipelinesService = moduleFixture.get<PipelinesService>(PipelinesService);
-    databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
 
     await app.init();
 
     // Setup test data
     userId = 'test-user-id';
     companyId = 'test-company-id';
-    authToken = 'test-jwt-token';
   });
 
   afterAll(async () => {

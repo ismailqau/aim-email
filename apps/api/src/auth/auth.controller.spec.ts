@@ -1,7 +1,7 @@
 /**
  * AI Email Marketing System
  * Copyright (c) 2024 Muhammad Ismail
- * Email: quaid@live.com
+ * Email: ismail@aimnovo.com
  * Founder: AimNovo.com | AimNexus.ai
  *
  * Licensed under the MIT License.
@@ -11,7 +11,6 @@
  */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { Response } from 'express';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { RegisterDto, LoginDto } from './dto/auth.dto';
@@ -96,10 +95,6 @@ describe('AuthController', () => {
       },
       token: 'jwt-token',
     };
-
-    const mockRes = {
-      cookie: jest.fn(),
-    } as unknown as Response;
 
     it('should login a user successfully', async () => {
       mockAuthService.login.mockResolvedValue(mockResponse);

@@ -1,7 +1,7 @@
 /**
  * AI Email Marketing System
  * Copyright (c) 2024 Muhammad Ismail
- * Email: quaid@live.com
+ * Email: ismail@aimnovo.com
  * Founder: AimNovo.com | AimNexus.ai
  *
  * Licensed under the MIT License.
@@ -387,7 +387,7 @@ export class EmailProviderService {
 
   private async sendViaConfiguredSendGrid(
     request: EmailSendRequest,
-    sendgridConfig: any
+    _sendgridConfig: any
   ): Promise<any> {
     // This would use the configured SendGrid credentials
     // For now, using the existing SendGrid service

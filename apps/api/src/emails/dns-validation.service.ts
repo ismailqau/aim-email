@@ -1,7 +1,7 @@
 /**
  * AI Email Marketing System
  * Copyright (c) 2024 Muhammad Ismail
- * Email: quaid@live.com
+ * Email: ismail@aimnovo.com
  * Founder: AimNovo.com | AimNexus.ai
  *
  * Licensed under the MIT License.
@@ -195,7 +195,7 @@ export class DnsValidationService {
           validation.issues.push('DMARC record missing policy (p= parameter)');
         } else if (dmarcRecord.includes('p=none')) {
           validation.issues.push(
-            'DMARC policy is set to \"none\" - consider using \"quarantine\" or \"reject\"'
+            'DMARC policy is set to "none" - consider using "quarantine" or "reject"'
           );
         }
       }
@@ -285,12 +285,6 @@ export class DnsValidationService {
 
   private generateSPFRecord(domain: string, smtpHost?: string): string {
     let spf = 'v=spf1';
-
-    // Include common email services
-    const commonIncludes = [
-      'include:_spf.google.com', // Google Workspace
-      'include:spf.protection.outlook.com', // Microsoft 365
-    ];
 
     // Add SMTP host if provided
     if (smtpHost) {
@@ -411,7 +405,7 @@ export class DnsValidationService {
       instructions.push('Value: 10 mail.your-provider.com');
       instructions.push('TTL: 3600');
       instructions.push(
-        'Note: Replace \"mail.your-provider.com\" with your actual mail server.'
+        'Note: Replace "mail.your-provider.com" with your actual mail server.'
       );
       instructions.push('');
     }
@@ -453,7 +447,7 @@ export class DnsValidationService {
             const publicKeyForDNS = publicKey
               .replace(/-----BEGIN PUBLIC KEY-----/, '')
               .replace(/-----END PUBLIC KEY-----/, '')
-              .replace(/\\s/g, '');
+              .replace(/\s/g, '');
 
             const selector = `sel${Date.now()}`;
 

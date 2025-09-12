@@ -197,7 +197,7 @@ This document summarizes the comprehensive GitHub Pages setup for the AI Email M
 
 ### MIT License Compliance
 
-- **Proper attribution** to Muhammad Ismail (quaid@live.com)
+- **Proper attribution** to Muhammad Ismail (ismail@aimnovo.com)
 - **Commercial use** explicitly allowed
 - **Clear licensing** in all source files
 - **Contact information** for commercial inquiries

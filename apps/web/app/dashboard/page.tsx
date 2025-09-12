@@ -1,7 +1,7 @@
 /**
  * AI Email Marketing System
  * Copyright (c) 2024 Muhammad Ismail
- * Email: quaid@live.com
+ * Email: ismail@aimnovo.com
  * Founder: AimNovo.com | AimNexus.ai
  *
  * Licensed under the MIT License.
@@ -178,13 +178,15 @@ export default function DashboardPage() {
                 <div className='flex items-center space-x-3'>
                   <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
                   <p className='text-sm'>
-                    Email campaign "Q4 Outreach" started
+                    Email campaign &quot;Q4 Outreach&quot; started
                   </p>
                   <span className='text-xs text-gray-500'>4 hours ago</span>
                 </div>
                 <div className='flex items-center space-x-3'>
                   <div className='w-2 h-2 bg-purple-500 rounded-full'></div>
-                  <p className='text-sm'>Pipeline "Welcome Series" updated</p>
+                  <p className='text-sm'>
+                    Pipeline &quot;Welcome Series&quot; updated
+                  </p>
                   <span className='text-xs text-gray-500'>1 day ago</span>
                 </div>
               </div>

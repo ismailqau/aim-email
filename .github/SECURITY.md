@@ -21,7 +21,7 @@ Please **DO NOT** create public GitHub issues for security vulnerabilities. This
 
 Send your security report directly to our security team:
 
-**Email:** quaid@live.com  
+**Email:** ismail@aimnovo.com  
 **Subject:** [SECURITY] AI Email Marketing System Vulnerability Report
 
 ### 3. 📋 Include the Following Information
@@ -135,7 +135,7 @@ Our platform includes several built-in security features:
 ### Security Team
 
 - **Primary Contact:** Muhammad Ismail
-- **Email:** quaid@live.com
+- **Email:** ismail@aimnovo.com
 - **Company:** AimNovo.com | AimNexus.ai
 
 ### Business Hours
@@ -179,6 +179,6 @@ We thank the following security researchers who have responsibly disclosed vulne
 
 **Last Updated:** December 2024  
 **Version:** 1.0  
-**Contact:** quaid@live.com
+**Contact:** ismail@aimnovo.com
 
 Thank you for helping us keep the AI Email Marketing System secure! 🔒

@@ -2,7 +2,7 @@
 
 # AI Email Marketing System - Git Setup Script
 # Copyright (c) 2024 Muhammad Ismail
-# Email: quaid@live.com
+# Email: ismail@aimnovo.com
 # Founder: AimNovo.com | AimNexus.ai
 # 
 # Licensed under the MIT License.

@@ -1,7 +1,7 @@
 /**
  * AI Email Marketing System
  * Copyright (c) 2024 Muhammad Ismail
- * Email: quaid@live.com
+ * Email: ismail@aimnovo.com
  * Founder: AimNovo.com | AimNexus.ai
  *
  * Licensed under the MIT License.
@@ -11,7 +11,7 @@
  */
 
 import apiClient from './api-client';
-import type { User, Company, Lead, Pipeline, Email } from '@email-system/types';
+import type { User, Company, Lead, Pipeline } from '@email-system/types';
 
 export const authApi = {
   register: (userData: { name: string; email: string; password: string }) =>

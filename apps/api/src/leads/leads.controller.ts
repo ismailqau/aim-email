@@ -1,7 +1,7 @@
 /**
  * AI Email Marketing System
  * Copyright (c) 2024 Muhammad Ismail
- * Email: quaid@live.com
+ * Email: ismail@aimnovo.com
  * Founder: AimNovo.com | AimNexus.ai
  *
  * Licensed under the MIT License.
@@ -24,6 +24,7 @@ import {
   UseInterceptors,
   UploadedFile,
 } from '@nestjs/common';
+import { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { LeadsService } from './leads.service';
@@ -73,7 +74,10 @@ export class LeadsController {
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({ summary: 'Upload leads from CSV file' })
-  async uploadLeads(@Request() req, @UploadedFile() file: Express.Multer.File) {
+  async uploadLeads(
+    @Request() req,
+    @UploadedFile() _file: Express.Multer.File
+  ) {
     // Parse CSV data here and pass to service
     const csvData = []; // TODO: Parse CSV file
     return this.leadsService.uploadLeadsFromCsv(req.user.companyId, csvData);

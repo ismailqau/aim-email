@@ -1,7 +1,7 @@
 /**
  * AI Email Marketing System - GitHub Pages
  * Copyright (c) 2024 Muhammad Ismail
- * Email: quaid@live.com
+ * Email: ismail@aimnovo.com
  * Founder: AimNovo.com | AimNexus.ai
  *
  * Licensed under the MIT License.
@@ -244,7 +244,7 @@ class GitHubPagesApp {
 }
 
 // Copy to clipboard functionality
-function copyToClipboard() {
+function _copyToClipboard() {
   const code = document.getElementById('install-command').textContent;
   const cleanCode = code.replace(/<br>/g, '\n');
 
@@ -302,10 +302,10 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
       .register('./sw.js')
-      .then(registration => {
+      .then(_registration => {
         console.log('ServiceWorker registration successful');
       })
-      .catch(error => {
+      .catch(_error => {
         console.log('ServiceWorker registration failed');
       });
   });

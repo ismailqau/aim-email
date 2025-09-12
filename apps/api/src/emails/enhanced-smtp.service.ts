@@ -1,7 +1,7 @@
 /**
  * AI Email Marketing System
  * Copyright (c) 2024 Muhammad Ismail
- * Email: quaid@live.com
+ * Email: ismail@aimnovo.com
  * Founder: AimNovo.com | AimNexus.ai
  *
  * Licensed under the MIT License.
@@ -382,7 +382,7 @@ export class EnhancedSmtpService {
     }
   }
 
-  private async validateSmtpHost(host: string, port: number): Promise<void> {
+  private async validateSmtpHost(_host: string, _port: number): Promise<void> {
     // Implementation would check if SMTP host is reachable
     // This is a placeholder for the actual network connectivity check
   }

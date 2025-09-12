@@ -1,7 +1,7 @@
 /**
  * AI Email Marketing System
  * Copyright (c) 2024 Muhammad Ismail
- * Email: quaid@live.com
+ * Email: ismail@aimnovo.com
  * Founder: AimNovo.com | AimNexus.ai
  *
  * Licensed under the MIT License.
@@ -30,8 +30,6 @@ import { hashPassword, verifyPassword } from '@email-system/db';
 
 describe('AuthService', () => {
   let service: AuthService;
-  let databaseService: DatabaseService;
-  let jwtService: JwtService;
 
   const mockDatabaseService = {
     client: {
@@ -63,8 +61,6 @@ describe('AuthService', () => {
     }).compile();
 
     service = module.get<AuthService>(AuthService);
-    databaseService = module.get<DatabaseService>(DatabaseService);
-    jwtService = module.get<JwtService>(JwtService);
 
     // Clear all mocks before each test
     jest.clearAllMocks();

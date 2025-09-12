@@ -1,7 +1,7 @@
 /**
  * AI Email Marketing System
  * Copyright (c) 2024 Muhammad Ismail
- * Email: quaid@live.com
+ * Email: ismail@aimnovo.com
  * Founder: AimNovo.com | AimNexus.ai
  *
  * Licensed under the MIT License.
@@ -440,7 +440,7 @@ export class EmailReputationService {
     return Math.round(baseVolume * reputationMultiplier);
   }
 
-  private async getOptimalSendingTimes(companyId: string): Promise<string[]> {
+  private async getOptimalSendingTimes(_companyId: string): Promise<string[]> {
     // This would analyze historical open/click data to determine optimal times
     // For now, return standard business hours
     return [
@@ -500,7 +500,7 @@ export class EmailReputationService {
     return optimizations;
   }
 
-  private async getReversedIP(domain: string): Promise<string> {
+  private async getReversedIP(_domain: string): Promise<string> {
     // This would get the actual IP address of the domain and reverse it
     // For now, return a placeholder
     return '127.0.0.1'.split('.').reverse().join('.');

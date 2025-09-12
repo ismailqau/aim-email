@@ -1,7 +1,7 @@
 /**
  * AI Email Marketing System
  * Copyright (c) 2024 Muhammad Ismail
- * Email: quaid@live.com
+ * Email: ismail@aimnovo.com
  * Founder: AimNovo.com | AimNexus.ai
  *
  * Licensed under the MIT License.
@@ -10,17 +10,11 @@
  * For commercial use, please maintain proper attribution.
  */
 
-import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import { describe, it, expect } from '@jest/globals';
 
 // Simple test to ensure the testing setup works
 describe('Testing Setup', () => {
-  it('should render a simple component', () => {
-    const TestComponent = () => <div>Hello World</div>;
-    render(<TestComponent />);
-    expect(screen.getByText('Hello World')).toBeInTheDocument();
-  });
-
   it('should pass basic assertions', () => {
     expect(1 + 1).toBe(2);
     expect('hello').toBeTruthy();

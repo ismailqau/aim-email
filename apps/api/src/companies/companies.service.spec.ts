@@ -1,7 +1,7 @@
 /**
  * AI Email Marketing System
  * Copyright (c) 2024 Muhammad Ismail
- * Email: quaid@live.com
+ * Email: ismail@aimnovo.com
  * Founder: AimNovo.com | AimNexus.ai
  *
  * Licensed under the MIT License.
@@ -16,7 +16,6 @@ import { DatabaseService } from '../common/database/database.service';
 
 describe('CompaniesService', () => {
   let service: CompaniesService;
-  let databaseService: DatabaseService;
 
   const mockDatabaseService = {
     client: {
@@ -42,7 +41,6 @@ describe('CompaniesService', () => {
     }).compile();
 
     service = module.get<CompaniesService>(CompaniesService);
-    databaseService = module.get<DatabaseService>(DatabaseService);
 
     jest.clearAllMocks();
   });

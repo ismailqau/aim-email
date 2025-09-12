@@ -621,7 +621,7 @@ We follow [Semantic Versioning](https://semver.org/):
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
-Instead, please email security concerns to: **quaid@live.com**
+Instead, please email security concerns to: **ismail@aimnovo.com**
 
 ### Security Guidelines
 
@@ -635,7 +635,7 @@ Instead, please email security concerns to: **quaid@live.com**
 
 ### MIT License
 
-Copyright (c) 2024 Muhammad Ismail (quaid@live.com)  
+Copyright (c) 2024 Muhammad Ismail (ismail@aimnovo.com)  
 Founder: AimNovo.com | AimNexus.ai
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -655,11 +655,11 @@ This software is available for **commercial use** under the MIT License. When us
 ### Contact Information
 
 - **Author**: Muhammad Ismail
-- **Email**: quaid@live.com
+- **Email**: ismail@aimnovo.com
 - **Website**: [AimNovo.com](https://aimnovo.com)
 - **AI Platform**: [AimNexus.ai](https://aimnexus.ai)
 
-For commercial licensing inquiries, custom development, or enterprise support, please contact: quaid@live.com
+For commercial licensing inquiries, custom development, or enterprise support, please contact: ismail@aimnovo.com
 
 ---
 

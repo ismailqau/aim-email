@@ -1,7 +1,7 @@
 <!--
 AI Email Marketing System
 Copyright (c) 2024 Muhammad Ismail
-Email: quaid@live.com
+Email: ismail@aimnovo.com
 Founder: AimNovo.com | AimNexus.ai
 
 Licensed under the MIT License.
@@ -502,7 +502,7 @@ We follow [Semantic Versioning](https://semver.org/):
 
 - **GitHub Issues**: For bugs and feature requests
 - **Discussions**: For questions and general discussion
-- **Email**: quaid@live.com for security issues
+- **Email**: ismail@aimnovo.com for security issues
 
 ### Response Times
 

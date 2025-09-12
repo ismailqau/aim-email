@@ -1,7 +1,7 @@
 /**
  * AI Email Marketing System
  * Copyright (c) 2024 Muhammad Ismail
- * Email: quaid@live.com
+ * Email: ismail@aimnovo.com
  * Founder: AimNovo.com | AimNexus.ai
  *
  * Licensed under the MIT License.
@@ -91,7 +91,7 @@ export class LeadsService {
   }
 
   async updateLead(companyId: string, leadId: string, updateData: any) {
-    const lead = await this.getLeadById(companyId, leadId);
+    await this.getLeadById(companyId, leadId);
 
     return this.database.client.lead.update({
       where: { id: leadId },

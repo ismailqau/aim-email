@@ -1,7 +1,7 @@
 /**
  * AI Email Marketing System
  * Copyright (c) 2024 Muhammad Ismail
- * Email: quaid@live.com
+ * Email: ismail@aimnovo.com
  * Founder: AimNovo.com | AimNexus.ai
  *
  * Licensed under the MIT License.
@@ -11,6 +11,7 @@
  */
 
 import { Test, TestingModule } from '@nestjs/testing';
+import { Express } from 'express';
 import { LeadsController } from './leads.controller';
 import { LeadsService } from './leads.service';
 

@@ -1,7 +1,7 @@
 /**
  * AI Email Marketing System
  * Copyright (c) 2024 Muhammad Ismail
- * Email: quaid@live.com
+ * Email: ismail@aimnovo.com
  * Founder: AimNovo.com | AimNexus.ai
  *
  * Licensed under the MIT License.
@@ -153,7 +153,7 @@ export class AnalyticsService {
     });
   }
 
-  async exportData(companyId: string, type: string, params: any) {
+  async exportData(companyId: string, type: string, _params: any) {
     // TODO: Implement data export functionality
     return {
       message: `Exporting ${type} data`,

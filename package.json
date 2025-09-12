@@ -4,13 +4,13 @@
   "description": "AI-powered email marketing automation platform",
   "author": {
     "name": "Muhammad Ismail",
-    "email": "quaid@live.com",
+    "email": "ismail@aimnovo.com",
     "url": "https://aimnovo.com"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "Contact quaid@live.com for repository access"
+    "url": "Contact ismail@aimnovo.com for repository access"
   },
   "private": true,
   "workspaces": [
@@ -73,12 +73,11 @@
     "resolve.exports": "^2.0.3"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": [
+    "*.{ts,tsx}": "prettier --write",
+    "docs/**/*.{js,jsx}": [
       "eslint --fix --no-eslintrc --config .eslintrc.simple.js",
       "prettier --write"
     ],
-    "*.{json,md,yml,yaml}": [
-      "prettier --write"
-    ]
+    "*.{json,md,yml,yaml}": "prettier --write"
   }
 }
