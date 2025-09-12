@@ -114,26 +114,29 @@ jobs:
 
       - name: Create Release
         id: create-release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.version.outputs.version }}
-          release_name: AI Email Marketing System ${{ steps.version.outputs.version }}
+          name: AI Email Marketing System ${{ steps.version.outputs.version }}
           body_path: CHANGELOG.md
           draft: false
           prerelease: false
 
+      - name: Create build archive
+        run: |
+          tar -czf dist.tar.gz apps/*/dist 2>/dev/null || echo "No dist directories found"
+
       - name: Upload build artifacts
-        uses: actions/upload-release-asset@v1
+        if: steps.create-release.outputs.upload_url != ''
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: ./dist.tar.gz
-          asset_name: ai-email-marketing-${{ steps.version.outputs.version }}.tar.gz
-          asset_content_type: application/gzip
-        continue-on-error: true
+          tag_name: ${{ steps.version.outputs.version }}
+          files: |
+            dist.tar.gz
 
   build-docker:
     name: Build and Push Docker Images

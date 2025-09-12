@@ -4,7 +4,7 @@
 # Base stage with Node.js
 FROM node:18-alpine AS base
 WORKDIR /app
-RUN apk add --no-cache libc6-compat openssl1.1-compat
+RUN apk add --no-cache libc6-compat openssl
 RUN npm install -g turbo
 
 # Dependencies stage
@@ -24,6 +24,9 @@ RUN turbo run build
 # API Production stage
 FROM node:18-alpine AS api-production
 WORKDIR /app
+
+# Install curl for health checks
+RUN apk add --no-cache curl
 
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs
@@ -46,6 +49,9 @@ CMD ["npm", "run", "start:prod"]
 # Web Production stage  
 FROM node:18-alpine AS web-production
 WORKDIR /app
+
+# Install curl for health checks
+RUN apk add --no-cache curl
 
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs

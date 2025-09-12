@@ -97,7 +97,7 @@ jobs:
           CI: true
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: ./coverage/lcov.info
           fail_ci_if_error: false
@@ -111,7 +111,7 @@ jobs:
 
       - name: Archive test results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results-${{ matrix.node-version }}
           path: |
@@ -121,7 +121,7 @@ jobs:
 
       - name: Cache build outputs
         if: matrix.node-version == 18
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             .turbo
@@ -163,7 +163,7 @@ jobs:
 
       - name: Upload Snyk results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: security-scan-results
           path: snyk-results.json
@@ -201,7 +201,7 @@ jobs:
           echo "Complexity analysis complete"
 
       - name: Upload quality reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: code-quality-reports
           path: reports/complexity/
@@ -282,7 +282,7 @@ jobs:
 
       - name: Upload E2E test results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: e2e-test-results
           path: |
@@ -321,7 +321,7 @@ jobs:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
       - name: Upload performance reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: performance-reports
           path: .lighthouseci/
@@ -412,7 +412,7 @@ jobs:
           EOF
 
       - name: Upload deployment artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: deployment-artifacts
           path: deployment/
