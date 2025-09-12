@@ -8,8 +8,8 @@
       ],
       "numberOfRuns": 3,
       "startServerCommand": "npm run start:web",
-      "startServerReadyPattern": "ready on",
-      "startServerReadyTimeout": 30000
+      "startServerReadyPattern": "ready on|Ready on|started server on",
+      "startServerReadyTimeout": 60000
     },
     "assert": {
       "assertions": {

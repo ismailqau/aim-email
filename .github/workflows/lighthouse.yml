@@ -45,20 +45,53 @@ jobs:
           echo "JWT_SECRET=lighthouse-test-secret" >> .env
           echo "SENDGRID_API_KEY=SG.test-key" >> .env
           echo "GEMINI_API_KEY=test-gemini-key" >> .env
+          echo "NEXTAUTH_URL=http://localhost:3000" >> .env
+          echo "NEXTAUTH_SECRET=lighthouse-test-secret" >> .env
+          echo "NEXT_PUBLIC_API_URL=http://localhost:3001/api/v1" >> .env
+          echo "NEXT_PUBLIC_APP_URL=http://localhost:3000" >> .env
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/email_marketing_lighthouse
+          JWT_SECRET: lighthouse-test-secret
+          SENDGRID_API_KEY: SG.test-key
+          GEMINI_API_KEY: test-gemini-key
+          NEXTAUTH_URL: http://localhost:3000
+          NEXTAUTH_SECRET: lighthouse-test-secret
+          NEXT_PUBLIC_API_URL: http://localhost:3001/api/v1
+          NEXT_PUBLIC_APP_URL: http://localhost:3000
 
       - name: Generate Prisma Client
         run: npm run db:generate
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/email_marketing_lighthouse
+
+      - name: Setup database
+        run: |
+          # For CI, we can use either migrate deploy or db push
+          # Using db push for CI as it's more robust for fresh databases
+          npm run db:push
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/email_marketing_lighthouse
 
       - name: Build applications
         run: npm run build
-
-      - name: Start application
-        run: |
-          npm run start:web &
-          sleep 30
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/email_marketing_lighthouse
+          NEXTAUTH_URL: http://localhost:3000
+          NEXTAUTH_SECRET: lighthouse-test-secret
+          NEXT_PUBLIC_API_URL: http://localhost:3001/api/v1
+          NEXT_PUBLIC_APP_URL: http://localhost:3000
 
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v10
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/email_marketing_lighthouse
+          JWT_SECRET: lighthouse-test-secret
+          SENDGRID_API_KEY: SG.test-key
+          GEMINI_API_KEY: test-gemini-key
+          NEXTAUTH_URL: http://localhost:3000
+          NEXTAUTH_SECRET: lighthouse-test-secret
+          NEXT_PUBLIC_API_URL: http://localhost:3001/api/v1
+          NEXT_PUBLIC_APP_URL: http://localhost:3000
         with:
           configPath: './lighthouserc.json'
           uploadArtifacts: true
