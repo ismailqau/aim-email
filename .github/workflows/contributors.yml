@@ -26,7 +26,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
@@ -39,17 +39,20 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cat > generate-stats.js << 'EOF'
-          const { Octokit } = require("@octokit/rest");
+          // Use dynamic import for ESM module
           const fs = require('fs');
 
-          const octokit = new Octokit({
-            auth: process.env.GITHUB_TOKEN,
-          });
-
-          const owner = '${{ github.repository_owner }}';
-          const repo = '${{ github.event.repository.name }}';
-
           async function generateStats() {
+            // Load ESM dependencies dynamically
+            const { Octokit } = await import('@octokit/rest');
+            
+            const octokit = new Octokit({
+              auth: process.env.GITHUB_TOKEN,
+            });
+
+            const owner = '${{ github.repository_owner }}';
+            const repo = '${{ github.event.repository.name }}';
+
             try {
               // Get repository information
               const { data: repoData } = await octokit.rest.repos.get({
@@ -64,11 +67,23 @@ jobs:
                 per_page: 100,
               });
               
-              // Get commit statistics
-              const { data: commitActivity } = await octokit.rest.repos.getCommitActivityStats({
-                owner,
-                repo,
-              });
+              // Get commit statistics using listCommits endpoint
+              let allCommits = [];
+              let page = 1;
+              let commits;
+              
+              do {
+                commits = await octokit.rest.repos.listCommits({
+                  owner,
+                  repo,
+                  per_page: 100,
+                  page: page
+                });
+                allCommits = allCommits.concat(commits.data);
+                page++;
+              } while (commits.data.length === 100 && page <= 10); // Limit to 1000 commits to avoid rate limits
+              
+              const totalCommits = allCommits.length;
               
               // Get latest releases
               let releases = [];
@@ -82,10 +97,6 @@ jobs:
               } catch (e) {
                 console.log('No releases found');
               }
-              
-              // Calculate total commits from all weeks
-              const totalCommits = commitActivity ? 
-                commitActivity.reduce((sum, week) => sum + week.total, 0) : 0;
               
               const stats = {
                 lastUpdated: new Date().toISOString(),
@@ -123,7 +134,7 @@ jobs:
                   prerelease: release.prerelease,
                   draft: release.draft,
                 })),
-                commitActivity: commitActivity || [],
+                commitActivity: [], // We're not using this anymore
               };
               
               // Ensure docs directory exists
@@ -338,8 +349,27 @@ jobs:
                   
                   <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                       <div class="bg-white rounded-lg shadow-lg p-6">
-                          <h2 class="text-xl font-semibold mb-4">Commit Activity</h2>
-                          <canvas id="commitChart" width="400" height="200"></canvas>
+                          <h2 class="text-xl font-semibold mb-4">Repository Information</h2>
+                          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              <div>
+                                  <h3 class="font-semibold text-gray-700 mb-2">Details</h3>
+                                  <ul class="space-y-2 text-gray-600">
+                                      <li><strong>Name:</strong> ${stats.repository.name}</li>
+                                      <li><strong>Language:</strong> ${stats.repository.language || 'Multiple'}</li>
+                                      <li><strong>Size:</strong> ${(stats.repository.size / 1024).toFixed(1)} MB</li>
+                                      <li><strong>Created:</strong> ${new Date(stats.repository.createdAt).toLocaleDateString()}</li>
+                                  </ul>
+                              </div>
+                              <div>
+                                  <h3 class="font-semibold text-gray-700 mb-2">Activity</h3>
+                                  <ul class="space-y-2 text-gray-600">
+                                      <li><strong>Open Issues:</strong> ${stats.repository.openIssues}</li>
+                                      <li><strong>Watchers:</strong> ${stats.repository.watchers}</li>
+                                      <li><strong>Releases:</strong> ${stats.statistics.totalReleases}</li>
+                                      <li><strong>Last Updated:</strong> ${new Date(stats.repository.updatedAt).toLocaleDateString()}</li>
+                                  </ul>
+                              </div>
+                          </div>
                       </div>
                       
                       <div class="bg-white rounded-lg shadow-lg p-6">
@@ -347,58 +377,9 @@ jobs:
                           <canvas id="contributorChart" width="400" height="200"></canvas>
                       </div>
                   </div>
-                  
-                  <div class="bg-white rounded-lg shadow-lg p-6">
-                      <h2 class="text-xl font-semibold mb-4">Repository Information</h2>
-                      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <div>
-                              <h3 class="font-semibold text-gray-700 mb-2">Details</h3>
-                              <ul class="space-y-2 text-gray-600">
-                                  <li><strong>Name:</strong> ${stats.repository.name}</li>
-                                  <li><strong>Language:</strong> ${stats.repository.language || 'Multiple'}</li>
-                                  <li><strong>Size:</strong> ${(stats.repository.size / 1024).toFixed(1)} MB</li>
-                                  <li><strong>Created:</strong> ${new Date(stats.repository.createdAt).toLocaleDateString()}</li>
-                              </ul>
-                          </div>
-                          <div>
-                              <h3 class="font-semibold text-gray-700 mb-2">Activity</h3>
-                              <ul class="space-y-2 text-gray-600">
-                                  <li><strong>Open Issues:</strong> ${stats.repository.openIssues}</li>
-                                  <li><strong>Watchers:</strong> ${stats.repository.watchers}</li>
-                                  <li><strong>Releases:</strong> ${stats.statistics.totalReleases}</li>
-                                  <li><strong>Last Updated:</strong> ${new Date(stats.repository.updatedAt).toLocaleDateString()}</li>
-                              </ul>
-                          </div>
-                      </div>
-                  </div>
               </div>
               
               <script>
-                  // Commit Activity Chart
-                  const commitData = ${JSON.stringify(stats.commitActivity)};
-                  const ctx1 = document.getElementById('commitChart').getContext('2d');
-                  new Chart(ctx1, {
-                      type: 'line',
-                      data: {
-                          labels: commitData.slice(-12).map(week => new Date(week.week * 1000).toLocaleDateString()),
-                          datasets: [{
-                              label: 'Commits',
-                              data: commitData.slice(-12).map(week => week.total),
-                              borderColor: 'rgb(59, 130, 246)',
-                              backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                              tension: 0.1
-                          }]
-                      },
-                      options: {
-                          responsive: true,
-                          scales: {
-                              y: {
-                                  beginAtZero: true
-                              }
-                          }
-                      }
-                  });
-                  
                   // Contributor Chart
                   const contributorData = ${JSON.stringify(stats.contributors.slice(0, 10))};
                   const ctx2 = document.getElementById('contributorChart').getContext('2d');
@@ -423,7 +404,11 @@ jobs:
           </html>`;
           }
 
-          generateStats();
+          // Call the async function
+          generateStats().catch(error => {
+            console.error('Error in generateStats:', error);
+            process.exit(1);
+          });
           EOF
 
           node generate-stats.js
@@ -439,7 +424,7 @@ jobs:
           FORKS=$(jq -r '.repository.forks' docs/stats/repository.json)
 
           # Generate badge URLs
-          cat > docs/badges/README.md << EOF
+          cat > docs/badges/README.md << 'EOF'
           # Project Badges
 
           ![Contributors](https://img.shields.io/badge/contributors-${CONTRIBUTORS}-blue)
@@ -451,12 +436,12 @@ jobs:
 
           ## Usage in README
 
-          \`\`\`markdown
+          ```markdown
           ![Contributors](https://img.shields.io/badge/contributors-${CONTRIBUTORS}-blue)
           ![Commits](https://img.shields.io/badge/commits-${COMMITS}-green)
           ![Stars](https://img.shields.io/badge/stars-${STARS}-yellow)
           ![Forks](https://img.shields.io/badge/forks-${FORKS}-red)
-          \`\`\`
+          ```
           EOF
 
       - name: Update main index.html with latest stats
