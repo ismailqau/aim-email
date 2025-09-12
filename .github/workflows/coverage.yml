@@ -102,14 +102,13 @@ jobs:
             }
           ")
 
-          COLOR="red"
-          if (( $(echo "$COVERAGE >= 80" | bc -l) )); then
-            COLOR="brightgreen"
-          elif (( $(echo "$COVERAGE >= 60" | bc -l) )); then
-            COLOR="yellow"
-          elif (( $(echo "$COVERAGE >= 40" | bc -l) )); then
-            COLOR="orange"
-          fi
+          COLOR=$(node -e "
+            const coverage = parseFloat(process.env.COVERAGE);
+            if (coverage >= 80) console.log('brightgreen');
+            else if (coverage >= 60) console.log('yellow');
+            else if (coverage >= 40) console.log('orange');
+            else console.log('red');
+          ")
 
           curl -s "https://img.shields.io/badge/coverage-${COVERAGE}%25-${COLOR}" > coverage/badges/coverage.svg
 

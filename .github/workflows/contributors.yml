@@ -32,19 +32,17 @@ jobs:
       - name: Install dependencies
         run: |
           npm init -y
-          npm install @octokit/rest
+          npm install @octokit/rest --save
 
       - name: Generate contributor statistics
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cat > generate-stats.js << 'EOF'
-          // Use dynamic import for ESM module
           const fs = require('fs');
+          const { Octokit } = require('@octokit/rest');
 
           async function generateStats() {
-            // Load ESM dependencies dynamically
-            const { Octokit } = await import('@octokit/rest');
             
             const octokit = new Octokit({
               auth: process.env.GITHUB_TOKEN,
