@@ -42,7 +42,9 @@
     "validate:fix": "npm run type-check && npm run lint:fix && npm run format",
     "pre-commit": "lint-staged",
     "setup:git": "./scripts/setup-git.sh",
-    "prepare": "husky"
+    "prepare": "husky",
+    "check:pipelines": "node scripts/check-pipelines.js",
+    "check:pipelines:shell": "bash scripts/check-pipelines.sh"
   },
   "devDependencies": {
     "@jest/types": "^29.6.3",
