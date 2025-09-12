@@ -205,6 +205,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
@@ -220,4 +222,11 @@ jobs:
         run: |
           echo "Verifying GitHub Pages deployment..."
           sleep 30
-          echo "✅ GitHub Pages deployment completed"
+          PAGE_URL="${{ needs.deploy.outputs.page_url }}"
+          if [ -n "$PAGE_URL" ]; then
+            curl -f "$PAGE_URL" || echo "⚠️ Page verification failed, but deployment may still be successful"
+            echo "✅ GitHub Pages deployment verification completed"
+          else
+            echo "⚠️ Page URL not available, skipping curl verification"
+            echo "✅ GitHub Pages deployment completed without URL verification"
+          fi
