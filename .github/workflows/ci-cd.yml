@@ -75,12 +75,25 @@ jobs:
           echo "JWT_SECRET=test-secret-key-for-ci" >> .env
           echo "SENDGRID_API_KEY=SG.test-key" >> .env
           echo "GEMINI_API_KEY=test-gemini-key" >> .env
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/email_marketing_test
+          REDIS_URL: redis://localhost:6379
+          JWT_SECRET: test-secret-key-for-ci
+          SENDGRID_API_KEY: SG.test-key
+          GEMINI_API_KEY: test-gemini-key
 
       - name: Generate Prisma Client
         run: npm run db:generate
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/email_marketing_test
 
       - name: Run database migrations
-        run: npm run db:migrate
+        run: |
+          # For CI, we can use either migrate deploy or db push
+          # Using db push for CI as it's more robust for fresh databases
+          npm run db:push
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/email_marketing_test
 
       - name: Lint code
         run: npm run lint
@@ -95,6 +108,11 @@ jobs:
         run: npm run test:coverage
         env:
           CI: true
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/email_marketing_test
+          REDIS_URL: redis://localhost:6379
+          JWT_SECRET: test-secret-key-for-ci
+          SENDGRID_API_KEY: SG.test-key
+          GEMINI_API_KEY: test-gemini-key
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -258,12 +276,25 @@ jobs:
           echo "JWT_SECRET=test-secret-key-for-e2e" >> .env
           echo "SENDGRID_API_KEY=SG.test-key" >> .env
           echo "GEMINI_API_KEY=test-gemini-key" >> .env
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/email_marketing_e2e
+          REDIS_URL: redis://localhost:6379
+          JWT_SECRET: test-secret-key-for-e2e
+          SENDGRID_API_KEY: SG.test-key
+          GEMINI_API_KEY: test-gemini-key
 
       - name: Generate Prisma Client
         run: npm run db:generate
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/email_marketing_e2e
 
       - name: Run database migrations
-        run: npm run db:migrate
+        run: |
+          # For CI, we can use either migrate deploy or db push
+          # Using db push for CI as it's more robust for fresh databases
+          npm run db:push
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/email_marketing_e2e
 
       - name: Build applications
         run: npm run build
