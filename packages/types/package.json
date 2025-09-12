@@ -22,10 +22,18 @@
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "type-check": "tsc --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "validate": "npm run type-check && npm run lint && npm run format:check",
+    "validate:fix": "npm run type-check && npm run lint:fix && npm run format"
   },
   "devDependencies": {
-    "typescript": "^5.1.6",
-    "eslint": "^8.45.0"
+    "@typescript-eslint/eslint-plugin": "^8.43.0",
+    "@typescript-eslint/parser": "^8.43.0",
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.6.2",
+    "typescript": "^5.1.6"
   }
 }

@@ -32,7 +32,11 @@
     "db:push": "turbo run db:push",
     "db:migrate": "turbo run db:migrate",
     "db:studio": "turbo run db:studio",
-    "start": "turbo run start"
+    "start": "turbo run start",
+    "validate": "npm run type-check && npm run lint && npm run format:check",
+    "validate:fix": "npm run type-check && npm run lint:fix && npm run format",
+    "pre-commit": "lint-staged",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@turbo/gen": "^1.10.7",
@@ -40,6 +44,8 @@
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.8.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
     "prettier": "^3.0.0",
     "turbo": "^1.10.7",
     "typescript": "^5.1.6"
@@ -51,5 +57,14 @@
   },
   "dependencies": {
     "resolve.exports": "^2.0.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   }
 }
