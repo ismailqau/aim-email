@@ -1,8 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as sgMail from '@sendgrid/mail';
-import { EmailEventType } from '@prisma/client';
 import { DatabaseService } from '../common/database/database.service';
+
+// Define the enum locally since it's not being exported properly from Prisma
+enum EmailEventType {
+  DELIVERED = 'DELIVERED',
+  OPENED = 'OPENED',
+  CLICKED = 'CLICKED',
+  BOUNCED = 'BOUNCED',
+  SPAM_REPORT = 'SPAM_REPORT',
+  UNSUBSCRIBE = 'UNSUBSCRIBE',
+  DROPPED = 'DROPPED',
+  DEFERRED = 'DEFERRED',
+  PROCESSED = 'PROCESSED',
+}
 
 @Injectable()
 export class SendGridService {
@@ -119,17 +131,17 @@ export class SendGridService {
 
   private mapEventType(sgEventType: string): EmailEventType {
     const eventMapping: Record<string, EmailEventType> = {
-      delivered: 'DELIVERED',
-      open: 'OPENED',
-      click: 'CLICKED',
-      bounce: 'BOUNCED',
-      dropped: 'DROPPED',
-      spamreport: 'SPAM_REPORT',
-      unsubscribe: 'UNSUBSCRIBE',
-      deferred: 'DEFERRED',
-      processed: 'PROCESSED',
+      delivered: EmailEventType.DELIVERED,
+      open: EmailEventType.OPENED,
+      click: EmailEventType.CLICKED,
+      bounce: EmailEventType.BOUNCED,
+      dropped: EmailEventType.DROPPED,
+      spamreport: EmailEventType.SPAM_REPORT,
+      unsubscribe: EmailEventType.UNSUBSCRIBE,
+      deferred: EmailEventType.DEFERRED,
+      processed: EmailEventType.PROCESSED,
     };
 
-    return eventMapping[sgEventType] || 'PROCESSED';
+    return eventMapping[sgEventType] || EmailEventType.PROCESSED;
   }
 }

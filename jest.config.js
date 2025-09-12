@@ -16,10 +16,11 @@ module.exports = {
     '!**/dist/**',
     '!**/.next/**',
   ],
-  moduleNameMapping: {
-    '^@email-system/(.*)$': '<rootDir>/packages/$1/src',
+  moduleNameMapper: {
+    '^@email-system/db$': '<rootDir>/apps/api/src/__mocks__/@email-system/db.ts',
+    '^@email-system/(.*)$': '<rootDir>/packages/$1/src/index.ts',
     '^@/(.*)$': '<rootDir>/apps/web/$1',
   },
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  modulePathIgnorePatterns: ['<rootDir>/packages/.*/dist/'],
   testTimeout: 10000,
-};
+};;;
