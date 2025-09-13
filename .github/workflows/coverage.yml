@@ -254,10 +254,17 @@ jobs:
           name: coverage-report
           path: |
             coverage/
+            apps/api/coverage/
           retention-days: 30
 
-      - name: Publish coverage to GitHub Pages
+      - name: Trigger Pages Deployment
         if: github.ref == 'refs/heads/main'
-        run: |
-          # This will be handled by the deploy-pages workflow
-          echo "Coverage report will be published to GitHub Pages"
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'deploy-pages.yml',
+              ref: 'main'
+            })
