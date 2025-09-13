@@ -38,13 +38,18 @@ import { appConfig } from './common/config/app.config';
     }),
     BullModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        connection: {
-          host: configService.get('REDIS_HOST') || 'localhost',
-          port: configService.get('REDIS_PORT') || 6379,
-          password: configService.get('REDIS_PASSWORD'),
-        },
-      }),
+      useFactory: async (configService: ConfigService) => {
+        const redisUrl =
+          configService.get('REDIS_URL') || 'redis://localhost:6379';
+        const url = new URL(redisUrl);
+        return {
+          connection: {
+            host: url.hostname,
+            port: parseInt(url.port) || 6379,
+            password: url.password || configService.get('REDIS_PASSWORD'),
+          },
+        };
+      },
       inject: [ConfigService],
     }),
     DatabaseModule,

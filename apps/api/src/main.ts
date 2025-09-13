@@ -14,9 +14,9 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
-import helmet from 'helmet';
-import compression from 'compression';
-import cookieParser from 'cookie-parser';
+import * as helmet from 'helmet';
+import * as compression from 'compression';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -28,7 +28,7 @@ async function bootstrap() {
     configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
 
   // Security
-  app.use(helmet());
+  app.use(helmet.default());
   app.use(compression());
   app.use(cookieParser());
 

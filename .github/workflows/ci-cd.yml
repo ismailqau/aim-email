@@ -363,6 +363,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-test
 
+    strategy:
+      matrix:
+        service: [api, web]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -378,33 +382,121 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata
+      - name: Extract metadata for ${{ matrix.service }}
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository }}
+          images: ghcr.io/${{ github.repository }}-${{ matrix.service }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
             type=sha,prefix={{branch}}-
             type=raw,value=latest,enable={{is_default_branch}}
 
-      - name: Build and push Docker image
+      - name: Build and push ${{ matrix.service }} Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: ./apps/${{ matrix.service }}/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}
 
-  # Job 7: Deployment Preparation
+      - name: Test ${{ matrix.service }} container
+        run: |
+          docker run --rm --name test-${{ matrix.service }} -d \
+            -p ${{ matrix.service == 'api' && '3001:3001' || '3000:3000' }} \
+            ghcr.io/${{ github.repository }}-${{ matrix.service }}:${{ github.ref_name }}-${{ github.sha }}
+
+          # Wait for container to start
+          sleep 30
+
+          # Test health endpoint for API
+          if [ "${{ matrix.service }}" = "api" ]; then
+            curl -f http://localhost:3001/api/v1/health || exit 1
+          fi
+
+          # Test web endpoint
+          if [ "${{ matrix.service }}" = "web" ]; then
+            curl -f http://localhost:3000 || exit 1
+          fi
+
+          # Clean up
+          docker stop test-${{ matrix.service }}
+
+  # Job 7: Docker Compose Integration Test
+  docker-compose-test:
+    name: Docker Compose Integration Test
+    runs-on: ubuntu-latest
+    needs: docker-build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create test environment file
+        run: |
+          cp .env.example .env
+          echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/email_marketing" >> .env
+          echo "REDIS_URL=redis://localhost:6379" >> .env
+          echo "JWT_SECRET=test-secret-key-for-docker" >> .env
+          echo "SENDGRID_API_KEY=SG.test-key" >> .env
+          echo "GEMINI_API_KEY=test-gemini-key" >> .env
+          echo "FRONTEND_URL=http://localhost:3000" >> .env
+
+      - name: Start services with Docker Compose
+        run: docker-compose up -d
+
+      - name: Wait for services to be healthy
+        run: |
+          echo "Waiting for services to start..."
+          timeout 300 bash -c 'until docker-compose ps | grep -q "(healthy)"; do sleep 5; done'
+          docker-compose ps
+
+      - name: Test API health endpoint
+        run: |
+          curl -f http://localhost:3001/api/v1/health
+          echo "API health check passed"
+
+      - name: Test web application
+        run: |
+          curl -f http://localhost:3000
+          echo "Web application check passed"
+
+      - name: Run integration tests against Docker services
+        run: |
+          # Add any integration tests here
+          echo "Integration tests would run here"
+
+      - name: Collect service logs
+        if: always()
+        run: |
+          mkdir -p logs
+          docker-compose logs api > logs/api.log
+          docker-compose logs web > logs/web.log
+          docker-compose logs postgres > logs/postgres.log
+          docker-compose logs redis > logs/redis.log
+
+      - name: Upload service logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-compose-logs
+          path: logs/
+
+      - name: Cleanup
+        if: always()
+        run: docker-compose down -v
+
+  # Job 8: Deployment Preparation
   prepare-deployment:
     name: Prepare Deployment
     runs-on: ubuntu-latest
-    needs: [build-and-test, security-scan, code-quality]
+    needs: [build-and-test, security-scan, code-quality, docker-compose-test]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     outputs:
@@ -448,11 +540,18 @@ jobs:
           name: deployment-artifacts
           path: deployment/
 
-  # Job 8: Notify
+  # Job 9: Notify
   notify:
     name: Notify Results
     runs-on: ubuntu-latest
-    needs: [build-and-test, security-scan, code-quality, docker-build]
+    needs:
+      [
+        build-and-test,
+        security-scan,
+        code-quality,
+        docker-build,
+        docker-compose-test,
+      ]
     if: always()
 
     steps:
