@@ -97,7 +97,7 @@ jobs:
           NEXT_PUBLIC_APP_URL: http://localhost:3000
         with:
           configPath: './lighthouserc.json'
-          uploadArtifacts: true
+          uploadArtifacts: false
           temporaryPublicStorage: true
 
       - name: Upload Lighthouse reports
