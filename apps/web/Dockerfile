@@ -25,6 +25,11 @@ COPY apps/web ./apps/web
 COPY packages ./packages
 COPY tsconfig.json ./
 
+# Build packages first
+RUN npm run build --workspace=packages/db
+RUN npm run build --workspace=packages/types
+RUN npm run build --workspace=packages/ui
+
 # Build the application
 RUN npm run build --filter=web
 

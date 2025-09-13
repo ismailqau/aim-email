@@ -17,10 +17,16 @@ RUN npm install --ignore-scripts
 # Copy source code
 COPY ../../apps/api ./
 COPY ../../packages ../../packages
+COPY ../../tsconfig.json ../../tsconfig.json
 
 # Generate Prisma client
 WORKDIR /app
 RUN npm run db:generate --workspace=packages/db
+
+# Build packages
+RUN npm run build --workspace=packages/db
+RUN npm run build --workspace=packages/types
+
 WORKDIR /app/apps/api
 
 # Build the application
@@ -46,6 +52,8 @@ COPY --from=builder /app/apps/api/dist ./apps/api/dist
 COPY --from=builder /app/apps/api/package.json ./apps/api/package.json
 COPY --from=builder /app/packages/db/dist ./packages/db/dist
 COPY --from=builder /app/packages/db/package.json ./packages/db/package.json
+COPY --from=builder /app/packages/types/dist ./packages/types/dist
+COPY --from=builder /app/packages/types/package.json ./packages/types/package.json
 COPY --from=builder /app/node_modules ./node_modules
 
 CMD ["node", "apps/api/dist/apps/api/src/main.js"]
