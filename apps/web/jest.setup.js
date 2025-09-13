@@ -10,35 +10,35 @@
  * For commercial use, please maintain proper attribution.
  */
 
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom';
 
 // Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
   constructor() {}
   observe() {
-    return null
+    return null;
   }
   disconnect() {
-    return null
+    return null;
   }
   unobserve() {
-    return null
+    return null;
   }
-}
+};
 
 // Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {
   constructor() {}
   observe() {
-    return null
+    return null;
   }
   disconnect() {
-    return null
+    return null;
   }
   unobserve() {
-    return null
+    return null;
   }
-}
+};
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
@@ -53,14 +53,14 @@ Object.defineProperty(window, 'matchMedia', {
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
   })),
-})
+});
 
 // Mock window.scrollTo
 Object.defineProperty(window, 'scrollTo', {
   writable: true,
   value: jest.fn(),
-})
+});
 
 // Suppress console warnings in tests
-console.warn = jest.fn()
-console.error = jest.fn()
+console.warn = jest.fn();
+console.error = jest.fn();

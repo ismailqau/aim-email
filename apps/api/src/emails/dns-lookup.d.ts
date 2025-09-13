@@ -1,5 +1,6 @@
 declare module 'dns-lookup' {
   import { MxRecord as DnsMxRecord } from 'dns';
+  /// <reference types="node" />
 
   interface MxRecord extends DnsMxRecord {}
 

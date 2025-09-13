@@ -31,9 +31,9 @@ function generateTestToken() {
   const payload = {
     userId: 'test-user-id',
     companyId: 'test-company-id',
-    email: 'test@example.com'
+    email: 'test@example.com',
   };
-  
+
   return jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
 }
 
@@ -43,12 +43,12 @@ async function makeRequest(endpoint, options = {}) {
   const defaultOptions = {
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${generateTestToken()}`
-    }
+      Authorization: `Bearer ${generateTestToken()}`,
+    },
   };
-  
+
   const mergedOptions = { ...defaultOptions, ...options };
-  
+
   try {
     const response = await fetch(url, mergedOptions);
     if (!response.ok) {
@@ -109,40 +109,40 @@ Lead: ${execution.lead?.email || 'Unknown'}
 async function main() {
   console.log('🔍 AI Email Marketing System - Pipeline Checker');
   console.log('===============================================\n');
-  
+
   // Check if API is running
   console.log('Checking if API is running...');
   const apiRunning = await checkApiStatus();
-  
+
   if (!apiRunning) {
     console.log('❌ API is not running. Please start the API server first:');
     console.log('   Run: npm run dev --filter=api');
     console.log('   Or: cd apps/api && npm run dev');
     return;
   }
-  
+
   console.log('✅ API is running\n');
-  
+
   // Get all pipelines
   console.log('Fetching pipelines...');
   const pipelines = await getPipelines();
-  
+
   if (!pipelines) {
     console.log('❌ Failed to fetch pipelines');
     return;
   }
-  
+
   if (pipelines.length === 0) {
     console.log('ℹ️  No pipelines found');
     return;
   }
-  
+
   console.log(`\n📋 Found ${pipelines.length} pipeline(s):\n`);
-  
+
   // Display pipeline information
   for (const pipeline of pipelines) {
     console.log(formatPipeline(pipeline));
-    
+
     // If pipeline has executions, show some of them
     if (pipeline.pipelineExecutions && pipeline.pipelineExecutions.length > 0) {
       console.log('Recent Executions:');
@@ -151,27 +151,34 @@ async function main() {
         console.log(formatExecution(execution));
       }
       if (pipeline.pipelineExecutions.length > 3) {
-        console.log(`... and ${pipeline.pipelineExecutions.length - 3} more executions`);
+        console.log(
+          `... and ${pipeline.pipelineExecutions.length - 3} more executions`
+        );
       }
     }
-    
+
     console.log('---');
   }
-  
+
   // Show detailed information for the first pipeline
   if (pipelines.length > 0) {
     const firstPipeline = pipelines[0];
     console.log(`\n🔍 Detailed view for pipeline: ${firstPipeline.name}`);
-    
+
     const detailedPipeline = await getPipelineById(firstPipeline.id);
     if (detailedPipeline) {
       console.log(formatPipeline(detailedPipeline));
-      
+
       // Show steps if available
-      if (detailedPipeline.pipelineSteps && detailedPipeline.pipelineSteps.length > 0) {
+      if (
+        detailedPipeline.pipelineSteps &&
+        detailedPipeline.pipelineSteps.length > 0
+      ) {
         console.log('Steps:');
         detailedPipeline.pipelineSteps.forEach((step, index) => {
-          console.log(`  ${index + 1}. ${step.stepType} - Delay: ${step.delayHours} hours`);
+          console.log(
+            `  ${index + 1}. ${step.stepType} - Delay: ${step.delayHours} hours`
+          );
           if (step.emailTemplate) {
             console.log(`     Template: ${step.emailTemplate.name}`);
           }
@@ -192,6 +199,6 @@ if (require.main === module) {
     const { execSync } = require('child_process');
     execSync('npm install dotenv jsonwebtoken', { stdio: 'inherit' });
   }
-  
+
   main().catch(console.error);
 }

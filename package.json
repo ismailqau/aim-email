@@ -40,7 +40,7 @@
     "start:api": "turbo run start --filter=api",
     "validate": "npm run type-check && npm run lint && npm run format:check",
     "validate:fix": "npm run type-check && npm run lint:fix && npm run format",
-    "pre-commit": "lint-staged",
+    "pre-commit": "lint-staged && npm run validate",
     "setup:git": "./scripts/setup-git.sh",
     "prepare": "husky",
     "check:pipelines": "node scripts/check-pipelines.js",
@@ -79,7 +79,12 @@
     "resolve.exports": "^2.0.3"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "prettier --write",
+    "apps/**/*.{ts,tsx}": [
+      "prettier --write"
+    ],
+    "packages/**/*.{ts,tsx}": [
+      "prettier --write"
+    ],
     "docs/**/*.{js,jsx}": [
       "eslint --fix --no-eslintrc --config .eslintrc.simple.js",
       "prettier --write"

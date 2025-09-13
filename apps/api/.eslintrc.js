@@ -17,6 +17,9 @@ module.exports = {
     es2022: true,
     jest: true,
   },
+  globals: {
+    NodeJS: 'readonly',
+  },
   extends: ['eslint:recommended', 'prettier'],
   parser: '@typescript-eslint/parser',
   parserOptions: {

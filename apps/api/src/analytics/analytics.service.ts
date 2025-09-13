@@ -10,7 +10,7 @@
  * For commercial use, please maintain proper attribution.
  */
 
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '../common/database/database.service';
 
 interface PerformanceData {
