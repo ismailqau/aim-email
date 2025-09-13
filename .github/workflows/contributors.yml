@@ -451,10 +451,11 @@ jobs:
           sed -i "s/id=\"contributor-count\">-/id=\"contributor-count\">${CONTRIBUTORS}/g" docs/index.html
           sed -i "s/id=\"commit-count\">-/id=\"commit-count\">${COMMITS}/g" docs/index.html
 
-      - name: Commit updates
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add docs/
-          git commit -m "chore: update contributor statistics and badges" || exit 0
-          git push
+      # Note: Files are updated but not committed to prevent auto-generated commits
+      # The updated files will be available for the deploy-pages workflow
+      - name: Archive updated documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: updated-docs
+          path: docs/
+          retention-days: 1

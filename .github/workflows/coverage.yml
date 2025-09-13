@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+  actions: write
+
 env:
   NODE_VERSION: '18'
 
@@ -257,14 +261,5 @@ jobs:
             apps/api/coverage/
           retention-days: 30
 
-      - name: Trigger Pages Deployment
-        if: github.ref == 'refs/heads/main'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'deploy-pages.yml',
-              ref: 'main'
-            })
+      # Note: The deploy-pages workflow will automatically run on push to main
+      # No manual trigger needed as it's already configured with 'on: push: branches: [main]'

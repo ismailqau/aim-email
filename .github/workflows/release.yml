@@ -236,13 +236,14 @@ jobs:
           See the [full changelog](https://github.com/${{ github.repository }}/releases/tag/${{ needs.create-release.outputs.version }}) for details.
           EOF
 
-      - name: Commit documentation updates
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add docs/
-          git commit -m "docs: update documentation for ${{ needs.create-release.outputs.version }}" || exit 0
-          git push
+      # Note: Documentation is updated but not committed to prevent auto-generated commits
+      # The updated files will be available for the deploy-pages workflow
+      - name: Archive updated documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-docs
+          path: docs/
+          retention-days: 7
 
   notify:
     name: Notify Release

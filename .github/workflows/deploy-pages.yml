@@ -66,6 +66,20 @@ jobs:
           path: ./coverage-artifacts
         continue-on-error: true
 
+      - name: Download updated docs from contributors
+        uses: actions/download-artifact@v4
+        with:
+          name: updated-docs
+          path: ./docs-artifacts/contributors
+        continue-on-error: true
+
+      - name: Download updated docs from release
+        uses: actions/download-artifact@v4
+        with:
+          name: release-docs
+          path: ./docs-artifacts/release
+        continue-on-error: true
+
       - name: Setup environment for tests
         run: |
           cp .env.example .env
@@ -119,8 +133,19 @@ jobs:
           # Ensure docs directory exists with all content
           mkdir -p _site
 
-          # Copy existing documentation
-          cp -r docs/* _site/ 2>/dev/null || echo "No existing docs found"
+          # Copy documentation (prioritize artifacts from workflows, then local)
+          if [ -d "docs-artifacts/release" ]; then
+            cp -r docs-artifacts/release/* _site/
+            echo "Documentation copied from release artifacts"
+          elif [ -d "docs-artifacts/contributors" ]; then
+            cp -r docs-artifacts/contributors/* _site/
+            echo "Documentation copied from contributors artifacts"
+          elif [ -d "docs" ]; then
+            cp -r docs/* _site/ 2>/dev/null
+            echo "Documentation copied from local docs"
+          else
+            echo "No documentation found"
+          fi
 
           # Copy coverage reports if they exist (prioritize artifacts, then local)
           if [ -d "coverage-artifacts/coverage" ]; then
