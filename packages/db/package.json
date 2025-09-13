@@ -17,7 +17,7 @@
     }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "npx prisma generate && tsc",
     "dev": "tsc --watch",
     "test": "echo 'No tests for db package'",
     "test:watch": "echo 'No tests for db package'",
@@ -42,7 +42,7 @@
   "dependencies": {
     "@prisma/client": "^5.2.0",
     "bcryptjs": "^2.4.3",
-    "nanoid": "^4.0.2"
+    "nanoid": "^5.1.5"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",

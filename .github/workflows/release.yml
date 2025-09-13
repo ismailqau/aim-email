@@ -55,6 +55,9 @@ jobs:
       - name: Run tests
         run: npm run test:coverage
 
+      - name: Generate Prisma client
+        run: npx prisma generate --schema=packages/db/prisma/schema.prisma
+
       - name: Build applications
         run: npm run build
 
