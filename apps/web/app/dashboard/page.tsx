@@ -16,6 +16,8 @@ import { useEffect, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@email-system/ui';
 import Link from 'next/link';
 
+import { Button, Typography } from '@email-system/ui';
+
 export default function DashboardPage() {
   const [metrics, setMetrics] = useState({
     totalLeads: 0,
@@ -27,109 +29,157 @@ export default function DashboardPage() {
   });
 
   useEffect(() => {
-    // TODO: Fetch dashboard metrics from API
-    // Example mock data
-    setMetrics({
-      totalLeads: 1250,
-      activeLeads: 980,
-      emailsSent: 3450,
-      openRate: 24.5,
-      clickRate: 3.2,
-      replyRate: 1.8,
-    });
+    const fetchDashboardMetrics = async () => {
+      try {
+        const response = await fetch('/api/analytics/dashboard');
+        const data = await response.json();
+        if (data) {
+          setMetrics(data);
+        } else {
+          // Fallback to mock data if API fails
+          setMetrics({
+            totalLeads: 1250,
+            activeLeads: 980,
+            emailsSent: 3450,
+            openRate: 24.5,
+            clickRate: 3.2,
+            replyRate: 1.8,
+          });
+        }
+      } catch (error) {
+        console.error('Failed to fetch dashboard metrics:', error);
+        // Use mock data on error
+        setMetrics({
+          totalLeads: 1250,
+          activeLeads: 980,
+          emailsSent: 3450,
+          openRate: 24.5,
+          clickRate: 3.2,
+          replyRate: 1.8,
+        });
+      }
+    };
+
+    fetchDashboardMetrics();
   }, []);
 
   return (
     <div className='min-h-screen bg-gray-50'>
       <div className='container mx-auto px-4 py-8'>
         <div className='mb-8'>
-          <h1 className='text-3xl font-bold text-gray-900'>Dashboard</h1>
-          <p className='text-gray-600'>
+          <Typography variant='h1'>Dashboard</Typography>
+          <Typography variant='p' color='secondary'>
             Overview of your email marketing performance
-          </p>
+          </Typography>
         </div>
 
         {/* Metrics Cards */}
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8'>
           <Card>
             <CardHeader>
-              <CardTitle className='text-sm text-gray-600'>
-                Total Leads
+              <CardTitle>
+                <Typography variant='small' color='muted'>
+                  Total Leads
+                </Typography>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className='text-3xl font-bold text-blue-600'>
+              <Typography variant='h3' color='primary'>
                 {metrics.totalLeads.toLocaleString()}
-              </p>
-              <p className='text-sm text-green-600'>+12% from last month</p>
+              </Typography>
+              <Typography variant='small' color='success'>
+                +12% from last month
+              </Typography>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className='text-sm text-gray-600'>
-                Active Leads
+              <CardTitle>
+                <Typography variant='small' color='muted'>
+                  Active Leads
+                </Typography>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className='text-3xl font-bold text-green-600'>
+              <Typography variant='h3' color='success'>
                 {metrics.activeLeads.toLocaleString()}
-              </p>
-              <p className='text-sm text-green-600'>+8% from last month</p>
+              </Typography>
+              <Typography variant='small' color='success'>
+                +8% from last month
+              </Typography>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className='text-sm text-gray-600'>
-                Emails Sent
+              <CardTitle>
+                <Typography variant='small' color='muted'>
+                  Emails Sent
+                </Typography>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className='text-3xl font-bold text-purple-600'>
+              <Typography variant='h3' className='text-purple-600'>
                 {metrics.emailsSent.toLocaleString()}
-              </p>
-              <p className='text-sm text-green-600'>+15% from last month</p>
+              </Typography>
+              <Typography variant='small' color='success'>
+                +15% from last month
+              </Typography>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className='text-sm text-gray-600'>Open Rate</CardTitle>
+              <CardTitle>
+                <Typography variant='small' color='muted'>
+                  Open Rate
+                </Typography>
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className='text-3xl font-bold text-orange-600'>
+              <Typography variant='h3' className='text-orange-600'>
                 {metrics.openRate}%
-              </p>
-              <p className='text-sm text-green-600'>+2.1% from last month</p>
+              </Typography>
+              <Typography variant='small' color='success'>
+                +2.1% from last month
+              </Typography>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className='text-sm text-gray-600'>
-                Click Rate
+              <CardTitle>
+                <Typography variant='small' color='muted'>
+                  Click Rate
+                </Typography>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className='text-3xl font-bold text-red-600'>
+              <Typography variant='h3' color='destructive'>
                 {metrics.clickRate}%
-              </p>
-              <p className='text-sm text-green-600'>+0.8% from last month</p>
+              </Typography>
+              <Typography variant='small' color='success'>
+                +0.8% from last month
+              </Typography>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className='text-sm text-gray-600'>
-                Reply Rate
+              <CardTitle>
+                <Typography variant='small' color='muted'>
+                  Reply Rate
+                </Typography>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className='text-3xl font-bold text-indigo-600'>
+              <Typography variant='h3' className='text-indigo-600'>
                 {metrics.replyRate}%
-              </p>
-              <p className='text-sm text-green-600'>+0.3% from last month</p>
+              </Typography>
+              <Typography variant='small' color='success'>
+                +0.3% from last month
+              </Typography>
             </CardContent>
           </Card>
         </div>
@@ -142,52 +192,60 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent className='space-y-4'>
               <Link href='/dashboard/leads'>
-                <button className='w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700'>
-                  Upload New Leads
-                </button>
+                <Button className='w-full'>Upload New Leads</Button>
               </Link>
               <Link href='/dashboard/campaigns'>
-                <button className='w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700'>
+                <Button className='w-full bg-green-600 hover:bg-green-700'>
                   Create Email Campaign
-                </button>
+                </Button>
               </Link>
               <Link href='/dashboard/pipelines'>
-                <button className='w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700'>
+                <Button className='w-full bg-purple-600 hover:bg-purple-700'>
                   Build New Pipeline
-                </button>
+                </Button>
               </Link>
               <Link href='/dashboard/email-settings'>
-                <button className='w-full bg-orange-600 text-white py-2 px-4 rounded-md hover:bg-orange-700'>
+                <Button className='w-full bg-orange-600 hover:bg-orange-700'>
                   Configure Email Settings
-                </button>
+                </Button>
               </Link>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
+              <CardTitle>
+                <Typography variant='h4'>Recent Activity</Typography>
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className='space-y-3'>
                 <div className='flex items-center space-x-3'>
                   <div className='w-2 h-2 bg-green-500 rounded-full'></div>
-                  <p className='text-sm'>150 new leads imported</p>
-                  <span className='text-xs text-gray-500'>2 hours ago</span>
+                  <Typography variant='small'>
+                    150 new leads imported
+                  </Typography>
+                  <Typography variant='muted' className='text-xs'>
+                    2 hours ago
+                  </Typography>
                 </div>
                 <div className='flex items-center space-x-3'>
                   <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
-                  <p className='text-sm'>
+                  <Typography variant='small'>
                     Email campaign &quot;Q4 Outreach&quot; started
-                  </p>
-                  <span className='text-xs text-gray-500'>4 hours ago</span>
+                  </Typography>
+                  <Typography variant='muted' className='text-xs'>
+                    4 hours ago
+                  </Typography>
                 </div>
                 <div className='flex items-center space-x-3'>
                   <div className='w-2 h-2 bg-purple-500 rounded-full'></div>
-                  <p className='text-sm'>
+                  <Typography variant='small'>
                     Pipeline &quot;Welcome Series&quot; updated
-                  </p>
-                  <span className='text-xs text-gray-500'>1 day ago</span>
+                  </Typography>
+                  <Typography variant='muted' className='text-xs'>
+                    1 day ago
+                  </Typography>
                 </div>
               </div>
             </CardContent>

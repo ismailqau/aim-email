@@ -16,6 +16,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { authApi } from '@/lib/api';
+import { Button, Input, Typography } from '@email-system/ui';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -44,10 +45,10 @@ export default function LoginPage() {
     <div className='min-h-screen flex items-center justify-center bg-gray-50'>
       <div className='max-w-md w-full space-y-8'>
         <div>
-          <h2 className='text-center text-3xl font-extrabold text-gray-900'>
+          <Typography variant='h2' className='text-center'>
             Sign in to your account
-          </h2>
-          <p className='mt-2 text-center text-sm text-gray-600'>
+          </Typography>
+          <Typography variant='muted' className='mt-2 text-center'>
             Or{' '}
             <Link
               href='/register'
@@ -55,41 +56,37 @@ export default function LoginPage() {
             >
               create a new account
             </Link>
-          </p>
+          </Typography>
         </div>
         <form className='mt-8 space-y-6' onSubmit={handleSubmit}>
           {error && (
             <div className='bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded'>
-              {error}
+              <Typography variant='small' color='destructive'>
+                {error}
+              </Typography>
             </div>
           )}
           <div>
-            <input
+            <Input
               type='email'
               required
-              className='w-full px-3 py-2 border border-gray-300 rounded-md'
               placeholder='Email address'
               value={email}
               onChange={e => setEmail(e.target.value)}
             />
           </div>
           <div>
-            <input
+            <Input
               type='password'
               required
-              className='w-full px-3 py-2 border border-gray-300 rounded-md'
               placeholder='Password'
               value={password}
               onChange={e => setPassword(e.target.value)}
             />
           </div>
-          <button
-            type='submit'
-            disabled={isLoading}
-            className='w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50'
-          >
+          <Button type='submit' disabled={isLoading} className='w-full'>
             {isLoading ? 'Signing in...' : 'Sign in'}
-          </button>
+          </Button>
         </form>
       </div>
     </div>

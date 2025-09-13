@@ -10,13 +10,23 @@
  * For commercial use, please maintain proper attribution.
  */
 
-export { Button } from './button';
-export { Input } from './input';
+// Atomic Design - Atoms (Basic building blocks)
+export * from './atoms';
+
+// Atomic Design - Molecules (Combinations of atoms)
+export * from './molecules';
+
+// Legacy exports for backward compatibility
+export { Button } from './atoms/button';
+export { Input } from './atoms/input';
 export {
   Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
 } from './card';
+export { Badge } from './atoms/badge';
+export { Avatar, AvatarFallback, AvatarImage } from './atoms/avatar';
+export { Label } from './atoms/label';

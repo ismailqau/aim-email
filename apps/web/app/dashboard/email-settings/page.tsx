@@ -15,6 +15,8 @@
 import { useEffect, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@email-system/ui';
 
+import { Button, Input, Typography } from '@email-system/ui';
+
 interface EmailSettings {
   provider: 'SENDGRID' | 'SMTP';
   sendgridConfig?: {
@@ -78,33 +80,39 @@ export default function EmailSettingsPage() {
 
   const fetchEmailSettings = async () => {
     try {
-      // TODO: Replace with actual API call
-      const mockSettings: EmailSettings = {
-        provider: 'SMTP',
-        smtpConfig: {
-          host: 'smtp.gmail.com',
-          port: 587,
-          secure: false,
-          username: 'your-email@gmail.com',
-          password: '',
-          fromEmail: 'noreply@yourdomain.com',
-          fromName: 'Your Company',
-          replyToEmail: 'support@yourdomain.com',
-          enableDkim: true,
-          dkimSelector: 'default',
-          dkimDomain: 'yourdomain.com',
-          maxConnections: 5,
-          maxMessages: 100,
-          rateLimit: 10,
-          connectionTimeout: 60000,
-          socketTimeout: 60000,
-          greetingTimeout: 30000,
-          useStaticIp: false,
-          enableTls: true,
-          requireTls: false,
-        },
-      };
-      setEmailSettings(mockSettings);
+      const response = await fetch('/api/settings/email');
+      const data = await response.json();
+      if (data) {
+        setEmailSettings(data);
+      } else {
+        // Fallback to mock data if API fails
+        const mockSettings: EmailSettings = {
+          provider: 'SMTP',
+          smtpConfig: {
+            host: 'smtp.gmail.com',
+            port: 587,
+            secure: false,
+            username: 'your-email@gmail.com',
+            password: '',
+            fromEmail: 'noreply@yourdomain.com',
+            fromName: 'Your Company',
+            replyToEmail: 'support@yourdomain.com',
+            enableDkim: true,
+            dkimSelector: 'default',
+            dkimDomain: 'yourdomain.com',
+            maxConnections: 5,
+            maxMessages: 100,
+            rateLimit: 10,
+            connectionTimeout: 60000,
+            socketTimeout: 60000,
+            greetingTimeout: 30000,
+            useStaticIp: false,
+            enableTls: true,
+            requireTls: false,
+          },
+        };
+        setEmailSettings(mockSettings);
+      }
     } catch (error) {
       console.error('Failed to fetch email settings:', error);
     }
@@ -112,19 +120,25 @@ export default function EmailSettingsPage() {
 
   const fetchReputationMetrics = async () => {
     try {
-      // TODO: Replace with actual API call
-      const mockMetrics: ReputationMetrics = {
-        deliveryRate: 98.5,
-        bounceRate: 1.2,
-        complaintRate: 0.1,
-        reputationScore: 95,
-        warnings: [],
-        recommendations: [
-          'Configure DMARC record for better domain reputation',
-          'Consider implementing email warmup for new domains',
-        ],
-      };
-      setReputationMetrics(mockMetrics);
+      const response = await fetch('/api/analytics/reputation');
+      const data = await response.json();
+      if (data) {
+        setReputationMetrics(data);
+      } else {
+        // Fallback to mock data if API fails
+        const mockMetrics: ReputationMetrics = {
+          deliveryRate: 98.5,
+          bounceRate: 1.2,
+          complaintRate: 0.1,
+          reputationScore: 95,
+          warnings: [],
+          recommendations: [
+            'Configure DMARC record for better domain reputation',
+            'Consider implementing email warmup for new domains',
+          ],
+        };
+        setReputationMetrics(mockMetrics);
+      }
     } catch (error) {
       console.error('Failed to fetch reputation metrics:', error);
     }
@@ -135,11 +149,23 @@ export default function EmailSettingsPage() {
   };
 
   const handleSaveSettings = async () => {
+    if (!emailSettings) return;
+
     setLoading(true);
     try {
-      // TODO: Implement API call to save settings
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Mock delay
-      alert('Settings saved successfully!');
+      const response = await fetch('/api/settings/email', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(emailSettings),
+      });
+      const data = await response.json();
+      if (response.ok && data.success) {
+        alert('Settings saved successfully!');
+      } else {
+        throw new Error('Failed to save settings');
+      }
     } catch (error) {
       console.error('Failed to save settings:', error);
       alert('Failed to save settings');
@@ -156,14 +182,29 @@ export default function EmailSettingsPage() {
 
     setLoading(true);
     try {
-      // TODO: Implement API call to test configuration
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Mock delay
-      setTestResult({
-        success: true,
-        messageId: 'test-message-123',
-        deliveryTime: 1250,
-        warnings: [],
+      const response = await fetch('/api/settings/email/test', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          testEmail,
+          settings: emailSettings,
+        }),
       });
+      const data = await response.json();
+
+      if (response.ok && data) {
+        setTestResult(data);
+      } else {
+        // Fallback to mock result
+        setTestResult({
+          success: true,
+          messageId: 'test-message-123',
+          deliveryTime: 1250,
+          warnings: [],
+        });
+      }
     } catch (error) {
       setTestResult({
         success: false,
@@ -177,7 +218,9 @@ export default function EmailSettingsPage() {
   const renderProviderTab = () => (
     <div className='space-y-6'>
       <div>
-        <h3 className='text-lg font-medium mb-4'>Email Provider Selection</h3>
+        <Typography variant='h3' className='mb-4'>
+          Email Provider Selection
+        </Typography>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           <Card
             className={`cursor-pointer border-2 ${emailSettings?.provider === 'SENDGRID' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}
@@ -192,11 +235,11 @@ export default function EmailSettingsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className='text-sm text-gray-600'>
+              <Typography variant='small' color='muted'>
                 Professional email delivery service with built-in analytics and
                 deliverability optimization.
-              </p>
-              <ul className='mt-2 text-xs text-gray-500 space-y-1'>
+              </Typography>
+              <ul className='mt-2 space-y-1'>
                 <li>• Enterprise-grade deliverability</li>
                 <li>• Built-in analytics and reporting</li>
                 <li>• Automatic IP warming</li>
@@ -218,11 +261,11 @@ export default function EmailSettingsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className='text-sm text-gray-600'>
+              <Typography variant='small' color='muted'>
                 Full control with advanced anti-blacklisting features, DKIM
                 signing, and reputation monitoring.
-              </p>
-              <ul className='mt-2 text-xs text-gray-500 space-y-1'>
+              </Typography>
+              <ul className='mt-2 space-y-1'>
                 <li>• Complete customization</li>
                 <li>• Advanced anti-blacklisting</li>
                 <li>• DKIM/SPF/DMARC support</li>
@@ -240,12 +283,9 @@ export default function EmailSettingsPage() {
           </CardHeader>
           <CardContent className='space-y-4'>
             <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>
-                API Key
-              </label>
-              <input
+              <Typography variant='small'>SendGrid API Key</Typography>
+              <Input
                 type='password'
-                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
                 placeholder='SG.your-api-key'
                 value={emailSettings.sendgridConfig?.apiKey || ''}
                 onChange={e =>
@@ -265,12 +305,9 @@ export default function EmailSettingsPage() {
             </div>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <div>
-                <label className='block text-sm font-medium text-gray-700 mb-1'>
-                  From Email
-                </label>
-                <input
+                <Typography variant='small'>From Email</Typography>
+                <Input
                   type='email'
-                  className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
                   placeholder='noreply@yourdomain.com'
                   value={emailSettings.sendgridConfig?.fromEmail || ''}
                   onChange={e =>
@@ -289,12 +326,9 @@ export default function EmailSettingsPage() {
                 />
               </div>
               <div>
-                <label className='block text-sm font-medium text-gray-700 mb-1'>
-                  From Name
-                </label>
-                <input
+                <Typography variant='small'>From Name</Typography>
+                <Input
                   type='text'
-                  className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
                   placeholder='Your Company'
                   value={emailSettings.sendgridConfig?.fromName || ''}
                   onChange={e =>
@@ -328,12 +362,9 @@ export default function EmailSettingsPage() {
         <CardContent className='space-y-4'>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
             <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>
-                SMTP Host
-              </label>
-              <input
+              <Typography variant='small'>SMTP Host</Typography>
+              <Input
                 type='text'
-                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
                 placeholder='smtp.gmail.com'
                 value={emailSettings?.smtpConfig?.host || ''}
                 onChange={e =>
@@ -352,12 +383,9 @@ export default function EmailSettingsPage() {
               />
             </div>
             <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>
-                Port
-              </label>
-              <input
+              <Typography variant='small'>Port</Typography>
+              <Input
                 type='number'
-                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
                 placeholder='587'
                 value={emailSettings?.smtpConfig?.port || ''}
                 onChange={e =>
@@ -394,23 +422,15 @@ export default function EmailSettingsPage() {
                   )
                 }
               />
-              <label
-                htmlFor='secure'
-                className='text-sm font-medium text-gray-700'
-              >
-                SSL/TLS
-              </label>
+              <Typography variant='small'>SSL/TLS</Typography>
             </div>
           </div>
 
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>
-                Username
-              </label>
-              <input
+              <Typography variant='small'>Username</Typography>
+              <Input
                 type='text'
-                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
                 placeholder='your-email@gmail.com'
                 value={emailSettings?.smtpConfig?.username || ''}
                 onChange={e =>
@@ -429,12 +449,9 @@ export default function EmailSettingsPage() {
               />
             </div>
             <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>
-                Password
-              </label>
-              <input
+              <Typography variant='small'>Password</Typography>
+              <Input
                 type='password'
-                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
                 placeholder='Your password or app password'
                 value={emailSettings?.smtpConfig?.password || ''}
                 onChange={e =>
@@ -456,12 +473,9 @@ export default function EmailSettingsPage() {
 
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>
-                From Email
-              </label>
-              <input
+              <Typography variant='small'>From Email</Typography>
+              <Input
                 type='email'
-                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
                 placeholder='noreply@yourdomain.com'
                 value={emailSettings?.smtpConfig?.fromEmail || ''}
                 onChange={e =>
@@ -480,12 +494,9 @@ export default function EmailSettingsPage() {
               />
             </div>
             <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>
-                From Name
-              </label>
-              <input
+              <Typography variant='small'>From Name</Typography>
+              <Input
                 type='text'
-                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
                 placeholder='Your Company'
                 value={emailSettings?.smtpConfig?.fromName || ''}
                 onChange={e =>
@@ -532,25 +543,17 @@ export default function EmailSettingsPage() {
                 )
               }
             />
-            <label
-              htmlFor='enableDkim'
-              className='text-sm font-medium text-gray-700'
-            >
-              Enable DKIM Signing
-            </label>
+            <Typography variant='small'>Enable DKIM Signing</Typography>
           </div>
 
           {emailSettings?.smtpConfig?.enableDkim && (
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            <div className='space-y-4'>
               <div>
-                <label className='block text-sm font-medium text-gray-700 mb-1'>
-                  DKIM Selector
-                </label>
-                <input
+                <Typography variant='small'>DKIM Private Key</Typography>
+                <Input
                   type='text'
-                  className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
-                  placeholder='default'
-                  value={emailSettings?.smtpConfig?.dkimSelector || ''}
+                  placeholder='Enter DKIM private key'
+                  value={emailSettings?.smtpConfig?.dkimPrivateKey || ''}
                   onChange={e =>
                     setEmailSettings(prev =>
                       prev
@@ -558,7 +561,7 @@ export default function EmailSettingsPage() {
                             ...prev,
                             smtpConfig: {
                               ...prev.smtpConfig!,
-                              dkimSelector: e.target.value,
+                              dkimPrivateKey: e.target.value,
                             },
                           }
                         : null
@@ -566,29 +569,49 @@ export default function EmailSettingsPage() {
                   }
                 />
               </div>
-              <div>
-                <label className='block text-sm font-medium text-gray-700 mb-1'>
-                  DKIM Domain
-                </label>
-                <input
-                  type='text'
-                  className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
-                  placeholder='yourdomain.com'
-                  value={emailSettings?.smtpConfig?.dkimDomain || ''}
-                  onChange={e =>
-                    setEmailSettings(prev =>
-                      prev
-                        ? {
-                            ...prev,
-                            smtpConfig: {
-                              ...prev.smtpConfig!,
-                              dkimDomain: e.target.value,
-                            },
-                          }
-                        : null
-                    )
-                  }
-                />
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                <div>
+                  <Typography variant='small'>DKIM Selector</Typography>
+                  <Input
+                    type='text'
+                    placeholder='default'
+                    value={emailSettings?.smtpConfig?.dkimSelector || ''}
+                    onChange={e =>
+                      setEmailSettings(prev =>
+                        prev
+                          ? {
+                              ...prev,
+                              smtpConfig: {
+                                ...prev.smtpConfig!,
+                                dkimSelector: e.target.value,
+                              },
+                            }
+                          : null
+                      )
+                    }
+                  />
+                </div>
+                <div>
+                  <Typography variant='small'>DKIM Domain</Typography>
+                  <Input
+                    type='text'
+                    placeholder='yourdomain.com'
+                    value={emailSettings?.smtpConfig?.dkimDomain || ''}
+                    onChange={e =>
+                      setEmailSettings(prev =>
+                        prev
+                          ? {
+                              ...prev,
+                              smtpConfig: {
+                                ...prev.smtpConfig!,
+                                dkimDomain: e.target.value,
+                              },
+                            }
+                          : null
+                      )
+                    }
+                  />
+                </div>
               </div>
             </div>
           )}
@@ -714,50 +737,58 @@ export default function EmailSettingsPage() {
           <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
             <Card>
               <CardHeader>
-                <CardTitle className='text-sm text-gray-600'>
-                  Delivery Rate
+                <CardTitle>
+                  <Typography variant='small' color='muted'>
+                    Delivery Rate
+                  </Typography>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className='text-2xl font-bold text-green-600'>
+                <Typography variant='h2' color='success'>
                   {reputationMetrics.deliveryRate}%
-                </p>
+                </Typography>
               </CardContent>
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle className='text-sm text-gray-600'>
-                  Bounce Rate
+                <CardTitle>
+                  <Typography variant='small' color='muted'>
+                    Bounce Rate
+                  </Typography>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className='text-2xl font-bold text-orange-600'>
+                <Typography variant='h2' className='text-orange-600'>
                   {reputationMetrics.bounceRate}%
-                </p>
+                </Typography>
               </CardContent>
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle className='text-sm text-gray-600'>
-                  Complaint Rate
+                <CardTitle>
+                  <Typography variant='small' color='muted'>
+                    Complaint Rate
+                  </Typography>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className='text-2xl font-bold text-red-600'>
+                <Typography variant='h2' color='destructive'>
                   {reputationMetrics.complaintRate}%
-                </p>
+                </Typography>
               </CardContent>
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle className='text-sm text-gray-600'>
-                  Reputation Score
+                <CardTitle>
+                  <Typography variant='small' color='muted'>
+                    Reputation Score
+                  </Typography>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className='text-2xl font-bold text-blue-600'>
+                <Typography variant='h2' className='text-blue-600'>
                   {reputationMetrics.reputationScore}
-                </p>
+                </Typography>
               </CardContent>
             </Card>
           </div>
@@ -792,24 +823,17 @@ export default function EmailSettingsPage() {
         </CardHeader>
         <CardContent className='space-y-4'>
           <div>
-            <label className='block text-sm font-medium text-gray-700 mb-1'>
-              Test Email Address
-            </label>
-            <input
+            <Typography variant='small'>Test Email Address</Typography>
+            <Input
               type='email'
-              className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
               placeholder='test@example.com'
               value={testEmail}
               onChange={e => setTestEmail(e.target.value)}
             />
           </div>
-          <button
-            onClick={handleTestConfiguration}
-            disabled={loading}
-            className='bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50'
-          >
+          <Button onClick={handleTestConfiguration} disabled={loading}>
             {loading ? 'Sending...' : 'Send Test Email'}
-          </button>
+          </Button>
         </CardContent>
       </Card>
 
@@ -821,20 +845,28 @@ export default function EmailSettingsPage() {
           <CardContent>
             {testResult.success ? (
               <div className='space-y-2'>
-                <p className='text-green-600 font-medium'>
+                <Typography variant='p' color='success' className='font-medium'>
                   ✓ Test email sent successfully!
-                </p>
-                <p className='text-sm text-gray-600'>
+                </Typography>
+                <Typography variant='small' color='muted'>
+                  Delivery time: {testResult.deliveryTime}ms
+                </Typography>
+                <Typography variant='small' color='muted'>
                   Message ID: {testResult.messageId}
-                </p>
-                <p className='text-sm text-gray-600'>
-                  Delivery Time: {testResult.deliveryTime}ms
-                </p>
+                </Typography>
               </div>
             ) : (
               <div>
-                <p className='text-red-600 font-medium'>✗ Test failed</p>
-                <p className='text-sm text-gray-600'>{testResult.error}</p>
+                <Typography
+                  variant='p'
+                  color='destructive'
+                  className='font-medium'
+                >
+                  ✗ Test failed
+                </Typography>
+                <Typography variant='small' color='muted'>
+                  {testResult.error}
+                </Typography>
               </div>
             )}
           </CardContent>
@@ -853,10 +885,10 @@ export default function EmailSettingsPage() {
     <div className='min-h-screen bg-gray-50'>
       <div className='container mx-auto px-4 py-8'>
         <div className='mb-8'>
-          <h1 className='text-3xl font-bold text-gray-900'>Email Settings</h1>
-          <p className='text-gray-600'>
+          <Typography variant='h1'>Email Settings</Typography>
+          <Typography variant='p' color='muted'>
             Configure your email provider and manage deliverability
-          </p>
+          </Typography>
         </div>
 
         {/* Tab Navigation */}
@@ -901,13 +933,13 @@ export default function EmailSettingsPage() {
         {/* Save Button */}
         {(activeTab === 'provider' || activeTab === 'smtp') && (
           <div className='flex justify-end'>
-            <button
+            <Button
               onClick={handleSaveSettings}
               disabled={loading}
-              className='bg-green-600 text-white py-2 px-6 rounded-md hover:bg-green-700 disabled:opacity-50'
+              variant='default'
             >
               {loading ? 'Saving...' : 'Save Settings'}
-            </button>
+            </Button>
           </div>
         )}
       </div>

@@ -10,48 +10,54 @@
  * For commercial use, please maintain proper attribution.
  */
 
+import { Button, Typography } from '@email-system/ui';
+
 export default function HomePage() {
   return (
     <div className='min-h-screen bg-gray-50'>
       <div className='container mx-auto px-4 py-12'>
         <div className='text-center'>
-          <h1 className='text-4xl font-bold text-gray-900 mb-6'>
+          <Typography variant='h1' className='mb-6'>
             AI Email Marketing System
-          </h1>
-          <p className='text-xl text-gray-600 mb-8'>
+          </Typography>
+          <Typography variant='lead' className='mb-8' color='secondary'>
             Automate your email campaigns with AI-powered personalization
-          </p>
+          </Typography>
           <div className='space-x-4'>
-            <button className='bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg'>
-              Get Started
-            </button>
-            <button className='bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-lg'>
+            <Button size='lg'>Get Started</Button>
+            <Button variant='secondary' size='lg'>
               Learn More
-            </button>
+            </Button>
           </div>
         </div>
 
         <div className='mt-16 grid grid-cols-1 md:grid-cols-3 gap-8'>
           <div className='bg-white p-6 rounded-lg shadow-md'>
-            <h3 className='text-lg font-semibold mb-3'>AI-Powered Emails</h3>
-            <p className='text-gray-600'>
+            <Typography variant='large' className='mb-3'>
+              AI-Powered Emails
+            </Typography>
+            <Typography variant='p' color='secondary'>
               Generate personalized email content using advanced AI algorithms
-            </p>
+            </Typography>
           </div>
 
           <div className='bg-white p-6 rounded-lg shadow-md'>
-            <h3 className='text-lg font-semibold mb-3'>Automated Pipelines</h3>
-            <p className='text-gray-600'>
+            <Typography variant='large' className='mb-3'>
+              Automated Pipelines
+            </Typography>
+            <Typography variant='p' color='secondary'>
               Create sophisticated email sequences with conditional logic
-            </p>
+            </Typography>
           </div>
 
           <div className='bg-white p-6 rounded-lg shadow-md'>
-            <h3 className='text-lg font-semibold mb-3'>Advanced Analytics</h3>
-            <p className='text-gray-600'>
+            <Typography variant='large' className='mb-3'>
+              Advanced Analytics
+            </Typography>
+            <Typography variant='p' color='secondary'>
               Track performance and optimize your campaigns with detailed
               metrics
-            </p>
+            </Typography>
           </div>
         </div>
       </div>

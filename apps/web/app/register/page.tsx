@@ -16,6 +16,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { authApi } from '@/lib/api';
+import { Button, Input, Typography } from '@email-system/ui';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -54,10 +55,10 @@ export default function RegisterPage() {
     <div className='min-h-screen flex items-center justify-center bg-gray-50'>
       <div className='max-w-md w-full space-y-8'>
         <div>
-          <h2 className='text-center text-3xl font-extrabold text-gray-900'>
+          <Typography variant='h2' className='text-center'>
             Create your account
-          </h2>
-          <p className='mt-2 text-center text-sm text-gray-600'>
+          </Typography>
+          <Typography variant='muted' className='mt-2 text-center'>
             Or{' '}
             <Link
               href='/login'
@@ -65,55 +66,50 @@ export default function RegisterPage() {
             >
               sign in to existing account
             </Link>
-          </p>
+          </Typography>
         </div>
         <form className='mt-8 space-y-6' onSubmit={handleSubmit}>
           {error && (
             <div className='bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded'>
-              {error}
+              <Typography variant='small' color='destructive'>
+                {error}
+              </Typography>
             </div>
           )}
           <div>
-            <input
+            <Input
               name='name'
               type='text'
               required
-              className='w-full px-3 py-2 border border-gray-300 rounded-md'
               placeholder='Full name'
               value={formData.name}
               onChange={handleChange}
             />
           </div>
           <div>
-            <input
+            <Input
               name='email'
               type='email'
               required
-              className='w-full px-3 py-2 border border-gray-300 rounded-md'
               placeholder='Email address'
               value={formData.email}
               onChange={handleChange}
             />
           </div>
           <div>
-            <input
+            <Input
               name='password'
               type='password'
               required
               minLength={8}
-              className='w-full px-3 py-2 border border-gray-300 rounded-md'
               placeholder='Password (min 8 characters)'
               value={formData.password}
               onChange={handleChange}
             />
           </div>
-          <button
-            type='submit'
-            disabled={isLoading}
-            className='w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50'
-          >
+          <Button type='submit' disabled={isLoading} className='w-full'>
             {isLoading ? 'Creating account...' : 'Create account'}
-          </button>
+          </Button>
         </form>
       </div>
     </div>
