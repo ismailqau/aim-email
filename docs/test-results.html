@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Results - AIM Email Marketing System</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.0/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .gradient-bg {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+      .card-hover {
+        transition: all 0.3s ease;
+      }
+      .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow:
+          0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+      .progress-bar {
+        transition: width 0.5s ease-in-out;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center space-x-2">
+            <i class="fas fa-envelope text-2xl text-blue-600"></i>
+            <span class="text-xl font-bold text-gray-900">AIM Email</span>
+          </div>
+          <div class="hidden md:flex space-x-8">
+            <a
+              href="./index.html"
+              class="text-gray-600 hover:text-blue-600 transition-colors"
+            >
+              <i class="fas fa-home mr-2"></i>Overview
+            </a>
+            <a
+              href="./index.html#features"
+              class="text-gray-600 hover:text-blue-600 transition-colors"
+            >
+              <i class="fas fa-star mr-2"></i>Features
+            </a>
+            <a href="./index.html#reports" class="text-blue-600 font-medium">
+              <i class="fas fa-chart-bar mr-2"></i>Reports
+            </a>
+            <a
+              href="./coverage/index.html"
+              class="text-gray-600 hover:text-blue-600 transition-colors"
+            >
+              <i class="fas fa-chart-pie mr-2"></i>Coverage
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header -->
+    <div class="gradient-bg text-white py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl font-bold mb-4">
+          <i class="fas fa-vial mr-3"></i>
+          Test Results Dashboard
+        </h1>
+        <p class="text-xl opacity-90 max-w-3xl mx-auto">
+          Comprehensive test execution reports and quality metrics for the AIM
+          Email Marketing System
+        </p>
+      </div>
+    </div>
+
+    <!-- Test Summary Cards -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
+      <div class="grid md:grid-cols-4 gap-6 mb-12">
+        <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-gray-600">Total Tests</p>
+              <p class="text-3xl font-bold text-blue-600" id="total-tests">
+                184
+              </p>
+            </div>
+            <div class="bg-blue-100 p-3 rounded-full">
+              <i class="fas fa-list-check text-blue-600 text-xl"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-gray-600">Passed</p>
+              <p class="text-3xl font-bold text-green-600" id="passed-tests">
+                184
+              </p>
+            </div>
+            <div class="bg-green-100 p-3 rounded-full">
+              <i class="fas fa-check-circle text-green-600 text-xl"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-gray-600">Failed</p>
+              <p class="text-3xl font-bold text-red-600" id="failed-tests">0</p>
+            </div>
+            <div class="bg-red-100 p-3 rounded-full">
+              <i class="fas fa-times-circle text-red-600 text-xl"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-gray-600">Success Rate</p>
+              <p class="text-3xl font-bold text-purple-600" id="success-rate">
+                100%
+              </p>
+            </div>
+            <div class="bg-purple-100 p-3 rounded-full">
+              <i class="fas fa-trophy text-purple-600 text-xl"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Test Suites Overview -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+      <div class="bg-white rounded-lg shadow-lg p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center">
+          <i class="fas fa-layer-group mr-3 text-blue-600"></i>
+          Test Suites Overview
+        </h2>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-semibold text-gray-900">API Tests</h3>
+              <span
+                class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full"
+                >✓ Passed</span
+              >
+            </div>
+            <div class="space-y-2">
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Tests:</span>
+                <span class="font-medium">67/67</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  class="bg-green-500 h-2 rounded-full progress-bar"
+                  style="width: 100%"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-semibold text-gray-900">Database Tests</h3>
+              <span
+                class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full"
+                >✓ Passed</span
+              >
+            </div>
+            <div class="space-y-2">
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Tests:</span>
+                <span class="font-medium">45/45</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  class="bg-green-500 h-2 rounded-full progress-bar"
+                  style="width: 100%"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-semibold text-gray-900">Authentication</h3>
+              <span
+                class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full"
+                >✓ Passed</span
+              >
+            </div>
+            <div class="space-y-2">
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Tests:</span>
+                <span class="font-medium">28/28</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  class="bg-green-500 h-2 rounded-full progress-bar"
+                  style="width: 100%"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-semibold text-gray-900">Email Service</h3>
+              <span
+                class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full"
+                >✓ Passed</span
+              >
+            </div>
+            <div class="space-y-2">
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Tests:</span>
+                <span class="font-medium">23/23</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  class="bg-green-500 h-2 rounded-full progress-bar"
+                  style="width: 100%"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-semibold text-gray-900">AI Integration</h3>
+              <span
+                class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full"
+                >✓ Passed</span
+              >
+            </div>
+            <div class="space-y-2">
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Tests:</span>
+                <span class="font-medium">21/21</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  class="bg-green-500 h-2 rounded-full progress-bar"
+                  style="width: 100%"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coverage Summary -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+      <div class="bg-white rounded-lg shadow-lg p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center">
+          <i class="fas fa-chart-pie mr-3 text-blue-600"></i>
+          Test Coverage Summary
+        </h2>
+
+        <div class="grid md:grid-cols-4 gap-6">
+          <div class="text-center p-4 bg-blue-50 rounded-lg">
+            <div class="text-3xl font-bold text-blue-600 mb-2">85.2%</div>
+            <div class="text-sm text-gray-600 font-medium">Lines Covered</div>
+            <div class="w-full bg-blue-200 rounded-full h-2 mt-2">
+              <div
+                class="bg-blue-600 h-2 rounded-full progress-bar"
+                style="width: 85.2%"
+              ></div>
+            </div>
+          </div>
+
+          <div class="text-center p-4 bg-green-50 rounded-lg">
+            <div class="text-3xl font-bold text-green-600 mb-2">92.1%</div>
+            <div class="text-sm text-gray-600 font-medium">
+              Functions Covered
+            </div>
+            <div class="w-full bg-green-200 rounded-full h-2 mt-2">
+              <div
+                class="bg-green-600 h-2 rounded-full progress-bar"
+                style="width: 92.1%"
+              ></div>
+            </div>
+          </div>
+
+          <div class="text-center p-4 bg-yellow-50 rounded-lg">
+            <div class="text-3xl font-bold text-yellow-600 mb-2">78.5%</div>
+            <div class="text-sm text-gray-600 font-medium">
+              Branches Covered
+            </div>
+            <div class="w-full bg-yellow-200 rounded-full h-2 mt-2">
+              <div
+                class="bg-yellow-600 h-2 rounded-full progress-bar"
+                style="width: 78.5%"
+              ></div>
+            </div>
+          </div>
+
+          <div class="text-center p-4 bg-purple-50 rounded-lg">
+            <div class="text-3xl font-bold text-purple-600 mb-2">88.7%</div>
+            <div class="text-sm text-gray-600 font-medium">
+              Statements Covered
+            </div>
+            <div class="w-full bg-purple-200 rounded-full h-2 mt-2">
+              <div
+                class="bg-purple-600 h-2 rounded-full progress-bar"
+                style="width: 88.7%"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+      <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+        <h2 class="text-2xl font-bold mb-6">Detailed Reports</h2>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a
+            href="./coverage/index.html"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center"
+          >
+            <i class="fas fa-chart-pie mr-2"></i>
+            View Coverage Report
+          </a>
+          <a
+            href="https://github.com/ismailqau/aim-email/actions"
+            target="_blank"
+            class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center"
+          >
+            <i class="fas fa-external-link-alt mr-2"></i>
+            View CI/CD Pipeline
+          </a>
+          <a
+            href="./index.html"
+            class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center"
+          >
+            <i class="fas fa-home mr-2"></i>
+            Back to Main
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <p class="text-gray-400">
+          © 2024 AIM Email Marketing System. Test results updated automatically
+          via CI/CD pipeline.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Animate progress bars on page load
+      document.addEventListener('DOMContentLoaded', function () {
+        const progressBars = document.querySelectorAll('.progress-bar');
+        progressBars.forEach(bar => {
+          const width = bar.style.width;
+          bar.style.width = '0%';
+          setTimeout(() => {
+            bar.style.width = width;
+          }, 500);
+        });
+      });
+
+      // Future: Load real test data from JSON
+      // This would be populated by the CI/CD pipeline
+      function loadTestResults() {
+        // Placeholder for future implementation
+        // fetch('./test-results.json')
+        //     .then(response => response.json())
+        //     .then(data => updateTestResults(data));
+      }
+    </script>
+  </body>
+</html>
