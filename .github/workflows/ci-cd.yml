@@ -495,7 +495,7 @@ jobs:
 
           # Test web endpoint
           if [ "${{ matrix.service }}" = "web" ]; then
-            curl -f http://localhost:3000 || exit 1
+            curl -f http://localhost:3000/api/health || exit 1
           fi
 
           # Clean up
@@ -538,7 +538,7 @@ jobs:
 
       - name: Test web application
         run: |
-          curl -f http://localhost:3000
+          curl -f http://localhost:3000/api/health
           echo "Web application check passed"
 
       - name: Run integration tests against Docker services
