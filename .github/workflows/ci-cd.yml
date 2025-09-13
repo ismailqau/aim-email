@@ -255,7 +255,7 @@ jobs:
           npx plato -r -d reports/quality/complexity apps/ packages/
 
           # Generate TypeScript complexity metrics
-          npx ts-complexity --output reports/quality/ts-complexity.json apps/ packages/ || true
+          npx tsc --noEmit --listFiles apps/ packages/ 2>&1 | wc -l > reports/quality/ts-file-count.txt || true
 
           # Generate bundle analysis
           npm run build 2>&1 | tee reports/quality/build-output.txt || true
@@ -270,7 +270,7 @@ jobs:
           echo "" >> reports/quality/summary.txt
           echo "Reports generated:" >> reports/quality/summary.txt
           echo "- Complexity analysis (Plato)" >> reports/quality/summary.txt
-          echo "- TypeScript complexity metrics" >> reports/quality/summary.txt
+          echo "- TypeScript file analysis" >> reports/quality/summary.txt
           echo "- Circular dependency analysis" >> reports/quality/summary.txt
           echo "- Dependency summary" >> reports/quality/summary.txt
           echo "- Build output analysis" >> reports/quality/summary.txt
