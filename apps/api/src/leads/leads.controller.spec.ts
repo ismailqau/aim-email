@@ -11,9 +11,13 @@
  */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { Express } from 'express';
+import { Express, Request as ExpressRequest } from 'express';
 import { LeadsController } from './leads.controller';
 import { LeadsService } from './leads.service';
+
+interface CustomRequest extends ExpressRequest {
+  user: { companyId: string };
+}
 
 describe('LeadsController', () => {
   let controller: LeadsController;
@@ -30,11 +34,9 @@ describe('LeadsController', () => {
 
   const mockRequest = {
     user: {
-      sub: 'user-1',
-      email: 'user@example.com',
       companyId: 'company-1',
     },
-  };
+  } as CustomRequest;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

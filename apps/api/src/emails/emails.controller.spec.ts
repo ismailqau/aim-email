@@ -11,12 +11,20 @@
  */
 
 import { Test, TestingModule } from '@nestjs/testing';
+import { Request as ExpressRequest } from 'express';
 import { EmailsController } from './emails.controller';
 import { EmailsService } from './emails.service';
 import { EmailDeliveryService } from './email-delivery.service';
 import { EmailProviderService } from './email-provider.service';
 import { DnsValidationService } from './dns-validation.service';
 import { EmailReputationService } from './email-reputation.service';
+
+interface CustomRequest extends ExpressRequest {
+  user: {
+    sub: string;
+    companyId: string;
+  };
+}
 
 describe('EmailsController', () => {
   let controller: EmailsController;
@@ -58,13 +66,12 @@ describe('EmailsController', () => {
     trackEmailDelivery: jest.fn(),
   };
 
-  const mockRequest = {
+  const mockRequest: CustomRequest = {
     user: {
       sub: 'user-1',
-      email: 'user@example.com',
       companyId: 'company-1',
     },
-  };
+  } as CustomRequest;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

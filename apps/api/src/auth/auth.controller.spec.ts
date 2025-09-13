@@ -11,9 +11,17 @@
  */
 
 import { Test, TestingModule } from '@nestjs/testing';
+import { Request as ExpressRequest } from 'express';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { RegisterDto, LoginDto } from './dto/auth.dto';
+
+interface CustomRequest extends ExpressRequest {
+  user: {
+    sub: string;
+    companyId: string;
+  };
+}
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -114,12 +122,12 @@ describe('AuthController', () => {
   });
 
   describe('getProfile', () => {
-    const mockRequest = {
+    const mockRequest: CustomRequest = {
       user: {
         sub: 'user-1',
-        email: 'john@example.com',
+        companyId: 'company-1',
       },
-    };
+    } as CustomRequest;
 
     const mockUser = {
       id: 'user-1',

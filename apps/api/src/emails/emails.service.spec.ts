@@ -51,7 +51,12 @@ describe('EmailsService', () => {
   };
 
   const mockConfigService = {
-    get: jest.fn(),
+    get: jest.fn().mockImplementation((key: string) => {
+      if (key === 'GEMINI_API_KEY') {
+        return 'mock-api-key';
+      }
+      return undefined;
+    }),
   };
 
   beforeEach(async () => {

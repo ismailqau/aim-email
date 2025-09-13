@@ -11,8 +11,16 @@
  */
 
 import { Test, TestingModule } from '@nestjs/testing';
+import { Request as ExpressRequest } from 'express';
 import { PipelinesController } from './pipelines.controller';
 import { PipelinesService } from './pipelines.service';
+
+interface CustomRequest extends ExpressRequest {
+  user: {
+    sub: string;
+    companyId: string;
+  };
+}
 
 describe('PipelinesController', () => {
   let controller: PipelinesController;
@@ -27,13 +35,12 @@ describe('PipelinesController', () => {
     deletePipeline: jest.fn(),
   };
 
-  const mockRequest = {
+  const mockRequest: CustomRequest = {
     user: {
       sub: 'user-1',
-      email: 'user@example.com',
       companyId: 'company-1',
     },
-  };
+  } as CustomRequest;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
