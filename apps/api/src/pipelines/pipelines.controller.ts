@@ -21,6 +21,13 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
+import { Request as ExpressRequest } from 'express';
+
+interface CustomRequest extends ExpressRequest {
+  user: {
+    companyId: string;
+  };
+}
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { PipelinesService } from './pipelines.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -34,7 +41,10 @@ export class PipelinesController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new pipeline' })
-  async createPipeline(@Request() req, @Body() pipelineData: any) {
+  async createPipeline(
+    @Request() req: CustomRequest,
+    @Body() pipelineData: any
+  ) {
     return this.pipelinesService.createPipeline(
       req.user.companyId,
       pipelineData
@@ -43,13 +53,16 @@ export class PipelinesController {
 
   @Get()
   @ApiOperation({ summary: 'Get all pipelines' })
-  async getPipelines(@Request() req) {
+  async getPipelines(@Request() req: CustomRequest) {
     return this.pipelinesService.getPipelines(req.user.companyId);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get pipeline by ID' })
-  async getPipelineById(@Request() req, @Param('id') id: string) {
+  async getPipelineById(
+    @Request() req: CustomRequest,
+    @Param('id') id: string
+  ) {
     return this.pipelinesService.getPipelineById(req.user.companyId, id);
   }
 
@@ -65,7 +78,7 @@ export class PipelinesController {
   @Put(':id')
   @ApiOperation({ summary: 'Update pipeline' })
   async updatePipeline(
-    @Request() req,
+    @Request() req: CustomRequest,
     @Param('id') id: string,
     @Body() updateData: any
   ) {
@@ -78,7 +91,7 @@ export class PipelinesController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete pipeline' })
-  async deletePipeline(@Request() req, @Param('id') id: string) {
+  async deletePipeline(@Request() req: CustomRequest, @Param('id') id: string) {
     return this.pipelinesService.deletePipeline(req.user.companyId, id);
   }
 }

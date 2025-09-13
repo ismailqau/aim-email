@@ -96,6 +96,7 @@ jobs:
           configPath: './lighthouserc.json'
           uploadArtifacts: true
           temporaryPublicStorage: true
+          artifactName: lighthouse-reports
 
       - name: Upload Lighthouse reports
         uses: actions/upload-artifact@v4

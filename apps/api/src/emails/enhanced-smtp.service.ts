@@ -61,7 +61,10 @@ export interface EmailDeliveryResult {
 @Injectable()
 export class EnhancedSmtpService {
   private readonly logger = new Logger(EnhancedSmtpService.name);
-  private transporterPool: Map<string, nodemailer.Transporter> = new Map();
+  private transporterPool: Map<string, nodemailer.Transporter> = new Map<
+    string,
+    nodemailer.Transporter
+  >();
   private connectionStats: Map<string, any> = new Map();
 
   constructor(
@@ -75,7 +78,10 @@ export class EnhancedSmtpService {
     const configKey = this.generateConfigKey(config);
 
     if (this.transporterPool.has(configKey)) {
-      return this.transporterPool.get(configKey);
+      const transporter = this.transporterPool.get(configKey);
+      if (transporter) {
+        return transporter;
+      }
     }
 
     const transportOptions: any = {

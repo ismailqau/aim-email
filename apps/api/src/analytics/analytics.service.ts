@@ -10,8 +10,17 @@
  * For commercial use, please maintain proper attribution.
  */
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { DatabaseService } from '../common/database/database.service';
+
+interface PerformanceData {
+  period: string;
+  emailsSent: number;
+  opens: number;
+  clicks: number;
+  replies: number;
+  conversions: number;
+}
 
 @Injectable()
 export class AnalyticsService {
@@ -84,7 +93,7 @@ export class AnalyticsService {
     });
 
     // Group by date
-    const performanceByDate = {};
+    const performanceByDate: Record<string, PerformanceData> = {};
 
     emails.forEach(email => {
       const date = email.sentAt?.toISOString().split('T')[0];

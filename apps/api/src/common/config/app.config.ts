@@ -11,7 +11,7 @@
  */
 
 export const appConfig = () => ({
-  port: parseInt(process.env.PORT, 10) || 3001,
+  port: parseInt(process.env.PORT!, 10) || 3001,
   database: {
     url: process.env.DATABASE_URL,
   },
@@ -26,7 +26,7 @@ export const appConfig = () => ({
   },
   smtp: {
     host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT, 10) || 587,
+    port: parseInt(process.env.SMTP_PORT!, 10) || 587,
     secure: process.env.SMTP_SECURE === 'true',
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,

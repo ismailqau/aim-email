@@ -24,7 +24,11 @@ export class EmailsService {
     private readonly database: DatabaseService
   ) {
     const apiKey = this.configService.get<string>('GEMINI_API_KEY');
-    this.genAI = new GoogleGenerativeAI(apiKey);
+    if (apiKey) {
+      this.genAI = new GoogleGenerativeAI(apiKey);
+    } else {
+      console.error('GEMINI_API_KEY is not configured.');
+    }
   }
 
   async generateEmailContent(leadId: string, context: any = {}) {

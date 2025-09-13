@@ -378,7 +378,7 @@ export class EmailProviderService {
 
       const required = ['host', 'port', 'username', 'password', 'fromEmail'];
       for (const field of required) {
-        if (!config.smtpConfig[field]) {
+        if (!config.smtpConfig[field as keyof SmtpConfigData]) {
           throw new Error(`SMTP configuration requires ${field}`);
         }
       }

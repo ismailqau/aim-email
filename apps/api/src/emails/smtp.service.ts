@@ -90,9 +90,10 @@ export class SmtpService {
       };
     }
 
-    const fromEmail =
+    const fromEmail: string =
       this.configService.get<string>('SMTP_FROM_EMAIL') ||
-      this.configService.get<string>('SMTP_USER');
+      this.configService.get<string>('SMTP_USER') ||
+      '';
     const fromName =
       this.configService.get<string>('SMTP_FROM_NAME') ||
       'AI Email Marketing System';
@@ -108,7 +109,8 @@ export class SmtpService {
     };
 
     try {
-      const info = await this.transporter.sendMail(mailOptions);
+      const info: nodemailer.SentMessageInfo =
+        await this.transporter.sendMail(mailOptions);
 
       // Update email record if leadId provided
       if (emailData.leadId) {

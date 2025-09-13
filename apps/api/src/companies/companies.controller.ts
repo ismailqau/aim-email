@@ -21,6 +21,11 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
+import { Request as ExpressRequest } from 'express';
+
+interface CustomRequest extends ExpressRequest {
+  user: { sub: string };
+}
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { CompaniesService } from './companies.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -34,26 +39,26 @@ export class CompaniesController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new company' })
-  async createCompany(@Request() req, @Body() companyData: any) {
+  async createCompany(@Request() req: CustomRequest, @Body() companyData: any) {
     return this.companiesService.createCompany(req.user.sub, companyData);
   }
 
   @Get()
   @ApiOperation({ summary: 'Get all companies' })
-  async getCompanies(@Request() req) {
+  async getCompanies(@Request() req: CustomRequest) {
     return this.companiesService.getCompanies(req.user.sub);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get company by ID' })
-  async getCompanyById(@Request() req, @Param('id') id: string) {
+  async getCompanyById(@Request() req: CustomRequest, @Param('id') id: string) {
     return this.companiesService.getCompanyById(req.user.sub, id);
   }
 
   @Put(':id')
   @ApiOperation({ summary: 'Update company' })
   async updateCompany(
-    @Request() req,
+    @Request() req: CustomRequest,
     @Param('id') id: string,
     @Body() updateData: any
   ) {
@@ -62,7 +67,7 @@ export class CompaniesController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete company' })
-  async deleteCompany(@Request() req, @Param('id') id: string) {
+  async deleteCompany(@Request() req: CustomRequest, @Param('id') id: string) {
     return this.companiesService.deleteCompany(req.user.sub, id);
   }
 }

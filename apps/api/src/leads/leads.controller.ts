@@ -26,6 +26,17 @@ import {
 } from '@nestjs/common';
 import { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Request as ExpressRequest } from 'express';
+
+interface CustomRequest extends ExpressRequest {
+  user: {
+    companyId: string;
+  };
+}
+
+interface LeadCsvData {
+  [key: string]: string;
+}
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { LeadsService } from './leads.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -39,26 +50,26 @@ export class LeadsController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new lead' })
-  async createLead(@Request() req, @Body() leadData: any) {
+  async createLead(@Request() req: CustomRequest, @Body() leadData: any) {
     return this.leadsService.createLead(req.user.companyId, leadData);
   }
 
   @Get()
   @ApiOperation({ summary: 'Get all leads' })
-  async getLeads(@Request() req, @Query() query: any) {
+  async getLeads(@Request() req: CustomRequest, @Query() query: any) {
     return this.leadsService.getLeads(req.user.companyId, query);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get lead by ID' })
-  async getLeadById(@Request() req, @Param('id') id: string) {
+  async getLeadById(@Request() req: CustomRequest, @Param('id') id: string) {
     return this.leadsService.getLeadById(req.user.companyId, id);
   }
 
   @Put(':id')
   @ApiOperation({ summary: 'Update lead' })
   async updateLead(
-    @Request() req,
+    @Request() req: CustomRequest,
     @Param('id') id: string,
     @Body() updateData: any
   ) {
@@ -67,7 +78,7 @@ export class LeadsController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete lead' })
-  async deleteLead(@Request() req, @Param('id') id: string) {
+  async deleteLead(@Request() req: CustomRequest, @Param('id') id: string) {
     return this.leadsService.deleteLead(req.user.companyId, id);
   }
 
@@ -75,11 +86,11 @@ export class LeadsController {
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({ summary: 'Upload leads from CSV file' })
   async uploadLeads(
-    @Request() req,
+    @Request() req: CustomRequest,
     @UploadedFile() _file: Express.Multer.File
   ) {
     // Parse CSV data here and pass to service
-    const csvData = []; // TODO: Parse CSV file
+    const csvData: LeadCsvData[] = []; // TODO: Parse CSV file
     return this.leadsService.uploadLeadsFromCsv(req.user.companyId, csvData);
   }
 }

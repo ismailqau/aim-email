@@ -9,9 +9,16 @@ COPY turbo.json ./
 COPY apps/web/package*.json ./apps/web/
 COPY packages/ui/package*.json ./packages/ui/
 COPY packages/types/package*.json ./packages/types/
+COPY packages/db/package*.json ./packages/db/
+COPY packages/db/prisma ./packages/db/prisma
 
 # Install dependencies
 RUN npm install
+
+# Generate Prisma client
+WORKDIR packages/db
+RUN npx prisma generate --schema=prisma/schema.prisma
+WORKDIR /app
 
 # Copy source code
 COPY apps/web ./apps/web

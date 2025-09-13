@@ -20,6 +20,13 @@ import {
   Request,
   Query,
 } from '@nestjs/common';
+import { Request as ExpressRequest } from 'express';
+
+interface CustomRequest extends ExpressRequest {
+  user: {
+    companyId: string;
+  };
+}
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { EmailsService } from './emails.service';
 import { EmailDeliveryService } from './email-delivery.service';
@@ -52,7 +59,7 @@ export class EmailsController {
 
   @Post('send')
   @ApiOperation({ summary: 'Send email to lead' })
-  async sendEmail(@Body() emailData: any, @Request() req) {
+  async sendEmail(@Body() emailData: any, @Request() req: CustomRequest) {
     // Use the company-specific email provider configuration
     return this.emailProviderService.sendEmailWithCompanyConfig({
       to: emailData.to,
@@ -79,7 +86,10 @@ export class EmailsController {
   // Email Provider Configuration
   @Post('provider/configure')
   @ApiOperation({ summary: 'Configure email provider (SendGrid or SMTP)' })
-  async configureProvider(@Body() configData: any, @Request() req) {
+  async configureProvider(
+    @Body() configData: any,
+    @Request() req: CustomRequest
+  ) {
     return this.emailProviderService.configureEmailProvider({
       ...configData,
       companyId: req.user.companyId,
@@ -88,19 +98,22 @@ export class EmailsController {
 
   @Get('provider/config')
   @ApiOperation({ summary: 'Get current email provider configuration' })
-  async getProviderConfig(@Request() req) {
+  async getProviderConfig(@Request() req: CustomRequest) {
     return this.emailProviderService.getEmailProviderConfig(req.user.companyId);
   }
 
   @Get('provider/validate')
   @ApiOperation({ summary: 'Validate email provider setup' })
-  async validateSetup(@Request() req) {
+  async validateSetup(@Request() req: CustomRequest) {
     return this.emailProviderService.validateEmailSetup(req.user.companyId);
   }
 
   @Post('provider/test')
   @ApiOperation({ summary: 'Test email configuration' })
-  async testConfiguration(@Body() testData: { email: string }, @Request() req) {
+  async testConfiguration(
+    @Body() testData: { email: string },
+    @Request() req: CustomRequest
+  ) {
     return this.emailProviderService.testEmailConfiguration(
       req.user.companyId,
       testData.email
@@ -119,14 +132,17 @@ export class EmailsController {
 
   @Post('dkim/generate')
   @ApiOperation({ summary: 'Generate DKIM key pair' })
-  async generateDKIM(@Request() req) {
+  async generateDKIM(@Request() req: CustomRequest) {
     return this.emailProviderService.generateDKIMKeyPair(req.user.companyId);
   }
 
   // Email Analytics
   @Get('stats')
   @ApiOperation({ summary: 'Get email delivery statistics' })
-  async getDeliveryStats(@Request() req, @Query('days') days?: string) {
+  async getDeliveryStats(
+    @Request() req: CustomRequest,
+    @Query('days') days?: string
+  ) {
     const period = days ? parseInt(days, 10) : 30;
     return this.emailProviderService.getDeliveryStats(
       req.user.companyId,
@@ -136,13 +152,16 @@ export class EmailsController {
 
   @Get('templates')
   @ApiOperation({ summary: 'Get email templates' })
-  async getTemplates(@Request() req) {
+  async getTemplates(@Request() req: CustomRequest) {
     return this.emailsService.getEmailTemplates(req.user.companyId);
   }
 
   @Post('templates')
   @ApiOperation({ summary: 'Create email template' })
-  async createTemplate(@Request() req, @Body() templateData: any) {
+  async createTemplate(
+    @Request() req: CustomRequest,
+    @Body() templateData: any
+  ) {
     return this.emailsService.createEmailTemplate(
       req.user.companyId,
       templateData
@@ -152,7 +171,7 @@ export class EmailsController {
   // Email Reputation Monitoring
   @Get('reputation/metrics')
   @ApiOperation({ summary: 'Get email reputation metrics' })
-  async getReputationMetrics(@Request() req) {
+  async getReputationMetrics(@Request() req: CustomRequest) {
     return this.emailReputationService.getCompanyReputationMetrics(
       req.user.companyId
     );
@@ -160,7 +179,7 @@ export class EmailsController {
 
   @Get('reputation/optimization')
   @ApiOperation({ summary: 'Get delivery optimization recommendations' })
-  async getDeliveryOptimization(@Request() req) {
+  async getDeliveryOptimization(@Request() req: CustomRequest) {
     return this.emailReputationService.analyzeDeliveryOptimization(
       req.user.companyId
     );
@@ -174,7 +193,10 @@ export class EmailsController {
 
   @Post('reputation/track')
   @ApiOperation({ summary: 'Track email delivery event' })
-  async trackDeliveryEvent(@Body() eventData: any, @Request() req) {
+  async trackDeliveryEvent(
+    @Body() eventData: any,
+    @Request() req: CustomRequest
+  ) {
     return this.emailReputationService.trackEmailDelivery({
       ...eventData,
       companyId: req.user.companyId,

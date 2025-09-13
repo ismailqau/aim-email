@@ -11,7 +11,7 @@
  */
 
 import { Injectable, Logger } from '@nestjs/common';
-import * as dns from 'dns-lookup';
+import * as dns from 'dns';
 import * as crypto from 'crypto';
 import { DatabaseService } from '../common/database/database.service';
 
@@ -21,7 +21,7 @@ export interface DnsRecordValidation {
   isValid: boolean;
   currentValue?: string;
   recommendedValue?: string;
-  issues?: string[];
+  issues: string[];
   lastChecked: Date;
 }
 
@@ -257,30 +257,26 @@ export class DnsValidationService {
   }
 
   private async lookupTXTRecords(domain: string): Promise<string[]> {
-    return new Promise((resolve, reject) => {
-      dns.default.txt(domain, (err, records) => {
-        if (err) {
-          reject(err);
-        } else {
-          const flatRecords = (records || []).map(record =>
-            Array.isArray(record) ? record.join('') : record
-          );
-          resolve(flatRecords);
-        }
-      });
-    });
+    try {
+      const records = await dns.promises.resolveTxt(domain);
+      const flatRecords = records.map(record =>
+        Array.isArray(record) ? record.join('') : record
+      );
+      return flatRecords;
+    } catch (error) {
+      this.logger.error(`TXT lookup failed for ${domain}:`, error);
+      throw error;
+    }
   }
 
-  private async lookupMXRecords(domain: string): Promise<any[]> {
-    return new Promise((resolve, reject) => {
-      dns.default.mx(domain, (err, records) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(records || []);
-        }
-      });
-    });
+  private async lookupMXRecords(domain: string): Promise<dns.MxRecord[]> {
+    try {
+      const records = await dns.promises.resolveMx(domain);
+      return records;
+    } catch (error) {
+      this.logger.error(`MX lookup failed for ${domain}:`, error);
+      throw error;
+    }
   }
 
   private generateSPFRecord(domain: string, smtpHost?: string): string {

@@ -40,7 +40,7 @@ services:
   api-dev:
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: apps/api/Dockerfile.dev
       target: api-dev
     container_name: email-marketing-api-dev
     restart: unless-stopped
@@ -69,7 +69,7 @@ services:
   web-dev:
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: apps/web/Dockerfile
       target: web-dev
     container_name: email-marketing-web-dev
     restart: unless-stopped

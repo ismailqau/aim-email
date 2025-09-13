@@ -35,7 +35,11 @@ export class SendGridService {
     private readonly database: DatabaseService
   ) {
     const apiKey = this.configService.get<string>('SENDGRID_API_KEY');
-    sgMail.setApiKey(apiKey);
+    if (apiKey) {
+      sgMail.setApiKey(apiKey);
+    } else {
+      console.error('SendGrid API Key is not configured.');
+    }
   }
 
   async sendEmail(emailData: {
@@ -44,8 +48,10 @@ export class SendGridService {
     content: string;
     leadId?: string;
   }) {
-    const fromEmail = this.configService.get<string>('SENDGRID_FROM_EMAIL');
-    const fromName = this.configService.get<string>('SENDGRID_FROM_NAME');
+    const fromEmail: string =
+      this.configService.get<string>('SENDGRID_FROM_EMAIL') || '';
+    const fromName: string =
+      this.configService.get<string>('SENDGRID_FROM_NAME') || '';
 
     const msg = {
       to: emailData.to,
