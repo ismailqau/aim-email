@@ -4,6 +4,25 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      deploy_environment:
+        description: 'Deployment environment'
+        required: false
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+      skip_tests:
+        description: 'Skip running tests (faster deployment)'
+        required: false
+        default: false
+        type: boolean
+      force_rebuild:
+        description: 'Force rebuild all dependencies'
+        required: false
+        default: false
+        type: boolean
   workflow_run:
     workflows: ['Test Coverage Report']
     types:
@@ -49,6 +68,15 @@ jobs:
         ports:
           - 6379:6379
     steps:
+      - name: Display manual deployment info
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "🚀 Manual deployment triggered"
+          echo "Environment: ${{ github.event.inputs.deploy_environment || 'production' }}"
+          echo "Skip tests: ${{ github.event.inputs.skip_tests || 'false' }}"
+          echo "Force rebuild: ${{ github.event.inputs.force_rebuild || 'false' }}"
+          echo "Triggered by: ${{ github.actor }}"
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -62,7 +90,14 @@ jobs:
         uses: actions/configure-pages@v4
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          if [ "${{ github.event.inputs.force_rebuild }}" = "true" ]; then
+            echo "Force rebuilding dependencies..."
+            rm -rf node_modules package-lock.json
+            npm install
+          else
+            npm ci
+          fi
 
       - name: Download coverage artifacts
         uses: actions/download-artifact@v4
@@ -132,14 +167,19 @@ jobs:
         continue-on-error: true
 
       - name: Run tests with coverage
+        if: github.event.inputs.skip_tests != 'true'
         run: npm run test:coverage
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/email_marketing_test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
           REDIS_URL: redis://localhost:6379
-          JWT_SECRET: test-secret
-          SENDGRID_API_KEY: SG.test-key
-          GEMINI_API_KEY: test-gemini-key
+          NODE_ENV: test
         continue-on-error: true
+
+      - name: Build project
+        run: npm run build
+        env:
+          NODE_ENV: ${{ github.event.inputs.deploy_environment || 'production' }}
+          DEPLOY_ENV: ${{ github.event.inputs.deploy_environment || 'production' }}
 
       - name: Prepare documentation and reports
         run: |
