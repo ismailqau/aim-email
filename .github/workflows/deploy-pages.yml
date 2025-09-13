@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  workflow_run:
+    workflows: ['Test Coverage Report']
+    types:
+      - completed
+    branches: [main]
 
 concurrency:
   group: pages
@@ -64,6 +69,14 @@ jobs:
         with:
           name: coverage-report
           path: ./coverage-artifacts
+        continue-on-error: true
+
+      - name: Debug coverage artifacts
+        run: |
+          echo "Checking coverage artifacts structure:"
+          find ./coverage-artifacts -type f -name "*.html" | head -10 || echo "No HTML files found"
+          find ./coverage-artifacts -type f -name "*.json" | head -5 || echo "No JSON files found"
+          ls -la ./coverage-artifacts/ || echo "Coverage artifacts directory not found"
         continue-on-error: true
 
       - name: Download updated docs from contributors
@@ -148,26 +161,51 @@ jobs:
           fi
 
           # Copy coverage reports if they exist (prioritize artifacts, then local)
+          mkdir -p _site/coverage
+          COVERAGE_COPIED=false
+
+          # Check for coverage artifacts in multiple possible locations
           if [ -d "coverage-artifacts/coverage" ]; then
-            mkdir -p _site/coverage
             cp -r coverage-artifacts/coverage/* _site/coverage/
-            echo "Coverage reports copied from artifacts"
+            echo "Coverage reports copied from artifacts/coverage"
+            COVERAGE_COPIED=true
           elif [ -d "coverage-artifacts/apps/api/coverage" ]; then
-            mkdir -p _site/coverage
             cp -r coverage-artifacts/apps/api/coverage/* _site/coverage/
             echo "API coverage reports copied from artifacts"
-          elif [ -d "apps/api/coverage" ]; then
-            mkdir -p _site/coverage
-            cp -r apps/api/coverage/* _site/coverage/
-            echo "Local coverage reports copied"
-          elif [ -d "coverage" ]; then
-            mkdir -p _site/coverage
-            cp -r coverage/* _site/coverage/
-            echo "Root coverage reports copied"
-          else
+            COVERAGE_COPIED=true
+          elif [ -d "coverage-artifacts" ] && find coverage-artifacts -name "*.html" -path "*/coverage/*" | head -1 | grep -q .; then
+            # Find and copy any coverage HTML files from artifacts
+            find coverage-artifacts -name "*.html" -path "*/coverage/*" -exec cp {} _site/coverage/ \;
+            find coverage-artifacts -name "*.json" -path "*/coverage/*" -exec cp {} _site/coverage/ \;
+            find coverage-artifacts -name "*.css" -path "*/coverage/*" -exec cp {} _site/coverage/ \;
+            find coverage-artifacts -name "*.js" -path "*/coverage/*" -exec cp {} _site/coverage/ \;
+            echo "Coverage files copied from artifacts using find"
+            COVERAGE_COPIED=true
+          fi
+
+          # Fallback to local coverage if artifacts not found
+          if [ "$COVERAGE_COPIED" = "false" ]; then
+            if [ -d "apps/api/coverage" ]; then
+              cp -r apps/api/coverage/* _site/coverage/
+              echo "Local API coverage reports copied"
+              COVERAGE_COPIED=true
+            elif [ -d "coverage" ]; then
+              cp -r coverage/* _site/coverage/
+              echo "Root coverage reports copied"
+              COVERAGE_COPIED=true
+            fi
+          fi
+
+          # Create placeholder if no coverage found
+          if [ "$COVERAGE_COPIED" = "false" ]; then
             echo "No coverage reports found, creating placeholder"
-            mkdir -p _site/coverage
             echo '<!DOCTYPE html><html><head><title>Coverage Report</title></head><body><h1>Coverage Report</h1><p>Coverage reports will be available after CI runs.</p></body></html>' > _site/coverage/index.html
+          fi
+
+          # Ensure coverage index exists
+          if [ ! -f "_site/coverage/index.html" ] && [ -f "_site/coverage/lcov-report/index.html" ]; then
+            cp _site/coverage/lcov-report/index.html _site/coverage/index.html
+            echo "Copied lcov-report index as main coverage index"
           fi
 
           # Create test results directory
