@@ -32,4 +32,4 @@ RUN npm run build --filter=web
 EXPOSE 3000
 
 # Start the application
-CMD [\"npm\", \"run\", \"start\", \"--filter=web\"]
+CMD ["npm", "run", "start", "--filter=web"]

@@ -37,10 +37,15 @@ EXPOSE 3001
 
 FROM node:18-alpine
 
-WORKDIR /app/apps/api
+# Install OpenSSL for Prisma
+RUN apk add --no-cache openssl curl
 
-COPY --from=builder /app/apps/api/dist ./dist
-COPY --from=builder /app/apps/api/package.json ./package.json
-COPY --from=builder /app/apps/api/node_modules ./node_modules
+WORKDIR /app
 
-CMD ["npm", "run", "start:prod"]
+COPY --from=builder /app/apps/api/dist ./apps/api/dist
+COPY --from=builder /app/apps/api/package.json ./apps/api/package.json
+COPY --from=builder /app/packages/db/dist ./packages/db/dist
+COPY --from=builder /app/packages/db/package.json ./packages/db/package.json
+COPY --from=builder /app/node_modules ./node_modules
+
+CMD ["node", "apps/api/dist/apps/api/src/main.js"]
