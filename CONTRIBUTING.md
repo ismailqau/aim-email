@@ -145,12 +145,28 @@ git rebase main
 
 ### Automated Quality Checks
 
-This project uses **pre-commit hooks** that automatically run:
+This project uses **GitHub-native code quality tools** and **pre-commit hooks** that automatically run:
+
+#### CI/CD Quality Pipeline
+
+- **CodeQL**: Security vulnerability and code quality analysis
+- **ESLint with SARIF**: Advanced linting with GitHub Security tab integration
+- **Dependency Audit**: NPM vulnerability scanning
+- **TypeScript Strict Checks**: Enhanced type safety validation
+
+#### Local Development Hooks
 
 - **ESLint**: Code linting and quality checks
 - **Prettier**: Code formatting
 - **TypeScript**: Type checking
 - **License Headers**: Copyright notice validation
+
+#### Comprehensive Code Analysis
+
+- **Plato**: Complexity analysis and maintainability metrics
+- **Madge**: Circular dependency detection
+- **ts-complexity**: TypeScript-specific complexity metrics
+- **Bundle Analysis**: Build output optimization insights
 
 ### Code Style Guidelines
 

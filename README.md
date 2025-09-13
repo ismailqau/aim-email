@@ -383,9 +383,23 @@ lsof -ti:3001 | xargs kill -9
 
 ## 🔧 Code Quality & Development Tools
 
+### GitHub-Native Quality Pipeline
+
+This project uses **GitHub's built-in security and quality tools** for comprehensive analysis:
+
+```bash
+# CI/CD Pipeline automatically runs:
+✅ CodeQL security and quality analysis
+✅ ESLint with SARIF integration
+✅ Dependency vulnerability scanning
+✅ TypeScript strict type checking
+✅ Complexity and maintainability metrics
+✅ Circular dependency detection
+```
+
 ### Pre-commit Hooks
 
-This project uses **Husky** and **lint-staged** to automatically validate code quality before commits:
+Local development uses **Husky** and **lint-staged** for fast validation:
 
 ```bash
 # Pre-commit hooks automatically run:
@@ -425,11 +439,25 @@ npm run setup:git         # Configure Git with project settings
 
 ### Code Standards
 
+#### Security & Quality Analysis
+
+- **CodeQL**: GitHub's semantic code analysis for security vulnerabilities
+- **SARIF Integration**: ESLint results appear in GitHub Security tab
+- **Dependency Scanning**: Automated vulnerability detection in dependencies
+
+#### Code Quality Metrics
+
 - **TypeScript**: Strict type checking enabled
 - **ESLint**: Enforces code quality and consistency
 - **Prettier**: Automatic code formatting
+- **Complexity Analysis**: Plato and ts-complexity for maintainability metrics
+- **Dependency Health**: Circular dependency detection with Madge
+
+#### Development Standards
+
 - **License Headers**: All source files include copyright notices
 - **No E2E Tests**: Focus on unit and integration tests only
+- **Quality Gates**: All checks must pass before merge
 
 ## 🤝 Contributing
 

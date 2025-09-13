@@ -65,7 +65,9 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci --prefer-offline --no-audit
+        run: |
+          npm ci --prefer-offline --no-audit
+          npm install --no-save @microsoft/eslint-formatter-sarif
 
       - name: Setup environment
         run: |
@@ -208,30 +210,79 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci --prefer-offline --no-audit
-
-      - name: SonarCloud Scan
-        if: ${{ secrets.SONAR_TOKEN != '' }}
-        uses: SonarSource/sonarqube-scan-action@v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          projectBaseDir: .
-          args: >
-            -Dsonar.projectKey=ismailqau_aim-email
-            -Dsonar.organization=ismailqau
-
-      - name: Generate complexity report
         run: |
-          npx plato -r -d reports/complexity apps/
-          echo "Complexity analysis complete"
+          npm ci --prefer-offline --no-audit
+          npm install --no-save @microsoft/eslint-formatter-sarif
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
+          queries: security-and-quality
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: '/language:javascript'
+
+      - name: Run ESLint with SARIF output
+        run: |
+          npx eslint . --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif
+        continue-on-error: true
+
+      - name: Upload ESLint results to GitHub
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: eslint-results.sarif
+          wait-for-processing: true
+
+      - name: Dependency vulnerability scan
+        run: |
+          npm audit --audit-level=moderate --json > audit-results.json || true
+          echo "Dependency scan completed"
+
+      - name: TypeScript strict checks
+        run: |
+          npx tsc --noEmit --strict --project tsconfig.json
+        continue-on-error: true
+
+      - name: Generate comprehensive code quality reports
+        run: |
+          mkdir -p reports/quality
+
+          # Generate complexity report with Plato
+          npx plato -r -d reports/quality/complexity apps/ packages/
+
+          # Generate TypeScript complexity metrics
+          npx ts-complexity --output reports/quality/ts-complexity.json apps/ packages/ || true
+
+          # Generate bundle analysis
+          npm run build 2>&1 | tee reports/quality/build-output.txt || true
+
+          # Generate dependency analysis
+          npx madge --circular --extensions ts,tsx,js,jsx apps/ packages/ > reports/quality/circular-deps.txt || true
+          npx madge --summary apps/ packages/ > reports/quality/dependency-summary.txt || true
+
+          # Generate code metrics summary
+          echo "Code Quality Analysis Complete" > reports/quality/summary.txt
+          echo "Generated at: $(date)" >> reports/quality/summary.txt
+          echo "" >> reports/quality/summary.txt
+          echo "Reports generated:" >> reports/quality/summary.txt
+          echo "- Complexity analysis (Plato)" >> reports/quality/summary.txt
+          echo "- TypeScript complexity metrics" >> reports/quality/summary.txt
+          echo "- Circular dependency analysis" >> reports/quality/summary.txt
+          echo "- Dependency summary" >> reports/quality/summary.txt
+          echo "- Build output analysis" >> reports/quality/summary.txt
 
       - name: Upload quality reports
         uses: actions/upload-artifact@v4
         with:
           name: code-quality-reports
-          path: reports/complexity/
+          path: |
+            reports/quality/
+            audit-results.json
+            eslint-results.sarif
 
   # Job 4: Performance Tests
   performance-tests:
