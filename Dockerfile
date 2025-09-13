@@ -13,12 +13,14 @@ COPY package*.json ./
 COPY turbo.json ./
 COPY packages/*/package.json ./packages/
 COPY apps/*/package.json ./apps/
-RUN npm ci --ignore-scripts
+RUN npm ci
 
 # Build stage
 FROM base AS builder
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
+RUN npm install
+RUN npx turbo run db:generate
 RUN npm run build
 RUN ls -l apps/api/dist
 # Temporarily removed failing COPY commands for debugging
