@@ -163,10 +163,11 @@ This project uses **GitHub-native code quality tools** and **pre-commit hooks** 
 
 #### Comprehensive Code Analysis
 
-- **Plato**: Complexity analysis and maintainability metrics
+- **jscpd**: Code duplication detection and analysis
 - **Madge**: Circular dependency detection
-- **ts-complexity**: TypeScript-specific complexity metrics
+- **File Metrics**: TypeScript and JavaScript file counting
 - **Bundle Analysis**: Build output optimization insights
+- **Enhanced Security**: High/critical vulnerability scanning with detailed reporting
 
 ### Code Style Guidelines
 

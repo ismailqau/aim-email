@@ -450,8 +450,9 @@ npm run setup:git         # Configure Git with project settings
 - **TypeScript**: Strict type checking enabled
 - **ESLint**: Enforces code quality and consistency
 - **Prettier**: Automatic code formatting
-- **Complexity Analysis**: Plato and ts-complexity for maintainability metrics
+- **Code Duplication**: jscpd for duplicate code detection
 - **Dependency Health**: Circular dependency detection with Madge
+- **Security Scanning**: Enhanced vulnerability detection with detailed reporting
 
 #### Development Standards
 
