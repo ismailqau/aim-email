@@ -16,6 +16,9 @@ export * from './atoms';
 // Atomic Design - Molecules (Combinations of atoms)
 export * from './molecules';
 
+// Atomic Design - Organisms (Complex UI components)
+export * from './organisms';
+
 // Legacy exports for backward compatibility
 export { Button } from './atoms/button';
 export { Input } from './atoms/input';

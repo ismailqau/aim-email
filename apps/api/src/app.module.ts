@@ -30,7 +30,7 @@ import { appConfig } from './common/config/app.config';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig],
-      envFilePath: ['.env'],
+      envFilePath: ['../../.env', '.env'],
     }),
     ThrottlerModule.forRoot({
       ttl: 60000, // 1 minute

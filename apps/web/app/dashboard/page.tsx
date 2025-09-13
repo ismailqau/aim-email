@@ -13,12 +13,22 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@email-system/ui';
-import Link from 'next/link';
+import {
+  DashboardLayout,
+  PerformanceMetrics,
+  QuickActions,
+  RecentActivity,
+  SimpleBarChart,
+  SimpleLineChart,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  Typography,
+} from '@email-system/ui';
+import { withAuth } from '@/lib/auth-context';
 
-import { Button, Typography } from '@email-system/ui';
-
-export default function DashboardPage() {
+function DashboardPage() {
   const [metrics, setMetrics] = useState({
     totalLeads: 0,
     activeLeads: 0,
@@ -63,195 +73,71 @@ export default function DashboardPage() {
     fetchDashboardMetrics();
   }, []);
 
+  // Sample chart data
+  const chartData = [
+    { label: 'Jan', value: 4000 },
+    { label: 'Feb', value: 3000 },
+    { label: 'Mar', value: 2000 },
+    { label: 'Apr', value: 2780 },
+    { label: 'May', value: 1890 },
+    { label: 'Jun', value: 2390 },
+  ];
+
+  const lineData = [
+    { label: 'Week 1', value: 24.5 },
+    { label: 'Week 2', value: 26.2 },
+    { label: 'Week 3', value: 25.8 },
+    { label: 'Week 4', value: 28.1 },
+  ];
+
   return (
-    <div className='min-h-screen bg-gray-50'>
-      <div className='container mx-auto px-4 py-8'>
+    <DashboardLayout>
+      <div className='space-y-6'>
+        {/* Header */}
         <div className='mb-8'>
-          <Typography variant='h1'>Dashboard</Typography>
-          <Typography variant='p' color='secondary'>
-            Overview of your email marketing performance
+          <Typography
+            variant='h1'
+            className='text-3xl font-bold text-gray-900 mb-2'
+          >
+            Email Campaign Dashboard
+          </Typography>
+          <Typography variant='p' className='text-gray-600'>
+            Monitor your email campaigns and track performance metrics
           </Typography>
         </div>
 
-        {/* Metrics Cards */}
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8'>
+        {/* Performance Metrics */}
+        <PerformanceMetrics metrics={metrics} />
+
+        {/* Charts Section */}
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8'>
           <Card>
             <CardHeader>
-              <CardTitle>
-                <Typography variant='small' color='muted'>
-                  Total Leads
-                </Typography>
-              </CardTitle>
+              <CardTitle>Email Performance Trends</CardTitle>
             </CardHeader>
             <CardContent>
-              <Typography variant='h3' color='primary'>
-                {metrics.totalLeads.toLocaleString()}
-              </Typography>
-              <Typography variant='small' color='success'>
-                +12% from last month
-              </Typography>
+              <SimpleBarChart data={chartData} />
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>
-                <Typography variant='small' color='muted'>
-                  Active Leads
-                </Typography>
-              </CardTitle>
+              <CardTitle>Open Rate Trend</CardTitle>
             </CardHeader>
             <CardContent>
-              <Typography variant='h3' color='success'>
-                {metrics.activeLeads.toLocaleString()}
-              </Typography>
-              <Typography variant='small' color='success'>
-                +8% from last month
-              </Typography>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                <Typography variant='small' color='muted'>
-                  Emails Sent
-                </Typography>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Typography variant='h3' className='text-purple-600'>
-                {metrics.emailsSent.toLocaleString()}
-              </Typography>
-              <Typography variant='small' color='success'>
-                +15% from last month
-              </Typography>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                <Typography variant='small' color='muted'>
-                  Open Rate
-                </Typography>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Typography variant='h3' className='text-orange-600'>
-                {metrics.openRate}%
-              </Typography>
-              <Typography variant='small' color='success'>
-                +2.1% from last month
-              </Typography>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                <Typography variant='small' color='muted'>
-                  Click Rate
-                </Typography>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Typography variant='h3' color='destructive'>
-                {metrics.clickRate}%
-              </Typography>
-              <Typography variant='small' color='success'>
-                +0.8% from last month
-              </Typography>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                <Typography variant='small' color='muted'>
-                  Reply Rate
-                </Typography>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Typography variant='h3' className='text-indigo-600'>
-                {metrics.replyRate}%
-              </Typography>
-              <Typography variant='small' color='success'>
-                +0.3% from last month
-              </Typography>
+              <SimpleLineChart data={lineData} />
             </CardContent>
           </Card>
         </div>
 
-        {/* Quick Actions */}
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent className='space-y-4'>
-              <Link href='/dashboard/leads'>
-                <Button className='w-full'>Upload New Leads</Button>
-              </Link>
-              <Link href='/dashboard/campaigns'>
-                <Button className='w-full bg-green-600 hover:bg-green-700'>
-                  Create Email Campaign
-                </Button>
-              </Link>
-              <Link href='/dashboard/pipelines'>
-                <Button className='w-full bg-purple-600 hover:bg-purple-700'>
-                  Build New Pipeline
-                </Button>
-              </Link>
-              <Link href='/dashboard/email-settings'>
-                <Button className='w-full bg-orange-600 hover:bg-orange-700'>
-                  Configure Email Settings
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                <Typography variant='h4'>Recent Activity</Typography>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className='space-y-3'>
-                <div className='flex items-center space-x-3'>
-                  <div className='w-2 h-2 bg-green-500 rounded-full'></div>
-                  <Typography variant='small'>
-                    150 new leads imported
-                  </Typography>
-                  <Typography variant='muted' className='text-xs'>
-                    2 hours ago
-                  </Typography>
-                </div>
-                <div className='flex items-center space-x-3'>
-                  <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
-                  <Typography variant='small'>
-                    Email campaign &quot;Q4 Outreach&quot; started
-                  </Typography>
-                  <Typography variant='muted' className='text-xs'>
-                    4 hours ago
-                  </Typography>
-                </div>
-                <div className='flex items-center space-x-3'>
-                  <div className='w-2 h-2 bg-purple-500 rounded-full'></div>
-                  <Typography variant='small'>
-                    Pipeline &quot;Welcome Series&quot; updated
-                  </Typography>
-                  <Typography variant='muted' className='text-xs'>
-                    1 day ago
-                  </Typography>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Quick Actions and Recent Activity */}
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
+          <QuickActions />
+          <RecentActivity />
         </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 }
+
+export default withAuth(DashboardPage);

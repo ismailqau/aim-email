@@ -16,6 +16,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { authApi } from '@/lib/api';
+import { useAuth } from '@/lib/auth-context';
 import { Button, Input, Typography } from '@email-system/ui';
 
 export default function RegisterPage() {
@@ -26,6 +27,7 @@ export default function RegisterPage() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const { login } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -35,7 +37,7 @@ export default function RegisterPage() {
 
     try {
       const response = await authApi.register(formData);
-      localStorage.setItem('auth_token', response.data.token);
+      login(response.data.token, response.data.user);
       router.push('/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Registration failed');

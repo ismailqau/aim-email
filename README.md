@@ -246,6 +246,35 @@ npm run dev --filter=web
 npm run build --filter=web
 ```
 
+### Docker Commands
+
+```bash
+# Build Docker images
+docker build -f apps/api/Dockerfile -t aim-email-api .
+docker build -f apps/web/Dockerfile -t aim-email-web .
+
+# Run individual containers
+# API (requires PostgreSQL and Redis)
+docker run -d --name aim-email-api \
+  -p 3001:3001 \
+  -e DATABASE_URL="postgresql://postgres:password@host.docker.internal:5432/email_marketing_system" \
+  -e REDIS_URL="redis://host.docker.internal:6379" \
+  -e JWT_SECRET="your-jwt-secret" \
+  -e SENDGRID_API_KEY="your-sendgrid-key" \
+  -e GEMINI_API_KEY="your-gemini-key" \
+  aim-email-api
+
+# Web (requires API to be running)
+docker run -d --name aim-email-web \
+  -p 3000:3000 \
+  -e NEXT_PUBLIC_API_URL="http://localhost:3001/api/v1" \
+  aim-email-web
+
+# Stop containers
+docker stop aim-email-api aim-email-web
+docker rm aim-email-api aim-email-web
+```
+
 ## 🔐 Environment Variables Reference
 
 ### Required Variables
