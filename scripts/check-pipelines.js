@@ -19,7 +19,7 @@ if (fs.existsSync(envPath)) {
 }
 
 // Get API configuration
-const API_PORT = process.env.API_PORT || 3001;
+const API_PORT = process.env.API_PORT || 3501;
 const API_BASE_URL = `http://localhost:${API_PORT}`;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-jwt-secret';
 

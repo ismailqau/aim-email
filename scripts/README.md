@@ -109,7 +109,7 @@ A bash script that:
 If you get an error that the API is not running:
 
 1. Make sure you've started the API server with `npm run dev --filter=api`
-2. Check that the API is running on the correct port (default: 3001)
+2. Check that the API is running on the correct port (default: 3501)
 3. Verify that there are no port conflicts
 
 ### Authentication Issues
@@ -127,7 +127,7 @@ If you get errors about missing modules:
 
 You can customize the behavior of these scripts by setting environment variables:
 
-- `API_PORT`: The port the API is running on (default: 3001)
+- `API_PORT`: The port the API is running on (default: 3501)
 
 Example:
 

@@ -10,7 +10,7 @@
 set -e
 
 # Configuration
-API_PORT=${API_PORT:-3001}
+API_PORT=${API_PORT:-3501}
 API_BASE_URL="http://localhost:${API_PORT}/api/v1"
 
 # Colors

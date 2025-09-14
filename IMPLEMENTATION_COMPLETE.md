@@ -135,8 +135,8 @@ email/
 
 5. **Access Applications**:
    - Frontend: http://localhost:3500
-   - Backend API: http://localhost:3001
-   - API Docs: http://localhost:3001/api/docs
+   - Backend API: http://localhost:3501
+   - API Docs: http://localhost:3501/api/docs
 
 ### **🎯 Ready for Production**
 

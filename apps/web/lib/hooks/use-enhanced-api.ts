@@ -542,7 +542,7 @@ export const useRealTimeUpdates = () => {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    const wsUrl = `${process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:3001'}/ws?token=${token}`;
+    const wsUrl = `${process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:3501'}/ws?token=${token}`;
     wsRef.current = new WebSocket(wsUrl);
 
     wsRef.current.onmessage = event => {

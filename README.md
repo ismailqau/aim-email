@@ -72,11 +72,11 @@ REDIS_PASSWORD=""
 
 # Application Configuration
 NODE_ENV="development"
-PORT=3001
+PORT=3501
 FRONTEND_URL="http://localhost:3500"
 
 # Next.js Frontend Configuration
-NEXT_PUBLIC_API_URL="http://localhost:3001/api/v1"
+NEXT_PUBLIC_API_URL="http://localhost:3501/api/v1"
 ```
 
 #### 4. Set Up PostgreSQL Database
@@ -131,9 +131,9 @@ npm run dev
 
 This will start:
 
-- **Backend API**: http://localhost:3001
+- **Backend API**: http://localhost:3501
 - **Frontend Web**: http://localhost:3500
-- **API Documentation**: http://localhost:3001/api/docs
+- **API Documentation**: http://localhost:3501/api/docs
 
 ### 🔧 Alternative: Full Docker Setup
 
@@ -178,7 +178,7 @@ docker-compose exec api npm run db:seed
 
 ### 4. Test API Endpoints
 
-- Visit http://localhost:3001/api/docs for Swagger documentation
+- Visit http://localhost:3501/api/docs for Swagger documentation
 - Test endpoints directly from the docs
 
 ## 📊 Verification Checklist
@@ -193,7 +193,7 @@ npm run db:studio
 ✅ **API Health Check**
 
 ```bash
-curl http://localhost:3001/api/v1/auth/me
+curl http://localhost:3501/api/v1/auth/me
 # Should return 401 (unauthorized) if not logged in
 ```
 
@@ -256,7 +256,7 @@ docker build -f apps/web/Dockerfile -t aim-email-web .
 # Run individual containers
 # API (requires PostgreSQL and Redis)
 docker run -d --name aim-email-api \
-  -p 3001:3001 \
+  -p 3501:3501 \
   -e DATABASE_URL="postgresql://postgres:password@host.docker.internal:5432/email_marketing_system" \
   -e REDIS_URL="redis://host.docker.internal:6379" \
   -e JWT_SECRET="your-jwt-secret" \
@@ -267,7 +267,7 @@ docker run -d --name aim-email-api \
 # Web (requires API to be running)
 docker run -d --name aim-email-web \
   -p 3500:3500 \
-  -e NEXT_PUBLIC_API_URL="http://localhost:3001/api/v1" \
+  -e NEXT_PUBLIC_API_URL="http://localhost:3501/api/v1" \
   aim-email-web
 
 # Stop containers
@@ -291,7 +291,7 @@ docker rm aim-email-api aim-email-web
 | Variable       | Description             | Default                  |
 | -------------- | ----------------------- | ------------------------ |
 | `REDIS_URL`    | Redis connection string | `redis://localhost:6379` |
-| `PORT`         | API server port         | `3001`                   |
+| `PORT`         | API server port         | `3501`                   |
 | `NODE_ENV`     | Environment mode        | `development`            |
 | `FRONTEND_URL` | Frontend URL for CORS   | `http://localhost:3500`  |
 
@@ -364,9 +364,9 @@ npm install
 **5. Port Already in Use**
 
 ```bash
-# Find and kill process using port 3500 or 3001
+# Find and kill process using port 3500 or 3501
 lsof -ti:3500 | xargs kill -9
-lsof -ti:3001 | xargs kill -9
+lsof -ti:3501 | xargs kill -9
 ```
 
 ### Getting Help
@@ -374,7 +374,7 @@ lsof -ti:3001 | xargs kill -9
 1. Check the logs in the terminal where you ran `npm run dev`
 2. Verify all environment variables are set correctly
 3. Ensure all required services (PostgreSQL, Redis) are running
-4. Check the API documentation at http://localhost:3001/api/docs
+4. Check the API documentation at http://localhost:3501/api/docs
 
 ## 🎯 Key Features
 

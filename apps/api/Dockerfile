@@ -37,11 +37,12 @@ RUN npm run build --workspace=packages/ui
 RUN npm run build --filter=api
 
 # Expose port
-EXPOSE 3001
+EXPOSE 3501
 
 # Add health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:3001/api/v1/health || exit 1
+  CMD curl -f http://localhost:3501/api/v1/health || exit 1
 
-# Start the application
+# Change to API directory and start the application
+WORKDIR /app/apps/api
 CMD ["npm", "run", "start:prod"]
