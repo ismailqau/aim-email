@@ -423,6 +423,31 @@ jobs:
       packages: write
       id-token: write
 
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+        options: >
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 3s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
     strategy:
       matrix:
         service: [api, web]
@@ -481,9 +506,25 @@ jobs:
 
       - name: Test ${{ matrix.service }} container
         run: |
-          docker run --rm --name test-${{ matrix.service }} -d \
-            -p ${{ matrix.service == 'api' && '3001:3001' || '3000:3000' }} \
-            local-test-${{ matrix.service }}:latest
+          # Set environment variables for API container
+          if [ "${{ matrix.service }}" = "api" ]; then
+            docker run --rm --name test-${{ matrix.service }} -d \
+               -p 3001:3001 \
+               --network host \
+               -e NODE_ENV=production \
+               -e PORT=3001 \
+               -e DATABASE_URL=postgresql://test:test@localhost:5432/test_db \
+               -e REDIS_URL=redis://localhost:6379 \
+               -e JWT_SECRET=test-secret-key \
+               -e SENDGRID_API_KEY=SG.test-key \
+               -e GEMINI_API_KEY=test-gemini-key \
+               -e FRONTEND_URL=http://localhost:3000 \
+               local-test-${{ matrix.service }}:latest
+          else
+            docker run --rm --name test-${{ matrix.service }} -d \
+              -p 3000:3000 \
+              local-test-${{ matrix.service }}:latest
+          fi
 
           # Wait for container to start
           sleep 30
