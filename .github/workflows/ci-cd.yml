@@ -30,11 +30,7 @@ jobs:
         env:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: email_marketing_test
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
         ports:
           - 5432:5432
 
@@ -510,11 +506,11 @@ jobs:
                -e JWT_SECRET=test-secret-key \
                -e SENDGRID_API_KEY=SG.test-key \
                -e GEMINI_API_KEY=test-gemini-key \
-               -e FRONTEND_URL=http://localhost:3000 \
+               -e FRONTEND_URL=http://localhost:3500 \
                local-test-${{ matrix.service }}:latest
           else
             docker run --rm --name test-${{ matrix.service }} -d \
-              -p 3000:3000 \
+              -p 3500:3500 \
               local-test-${{ matrix.service }}:latest
           fi
 
@@ -528,7 +524,7 @@ jobs:
 
           # Test web endpoint
           if [ "${{ matrix.service }}" = "web" ]; then
-            curl -f http://localhost:3000/api/health || exit 1
+            curl -f http://localhost:3500/api/health || exit 1
           fi
 
           # Clean up
@@ -553,7 +549,7 @@ jobs:
           echo "JWT_SECRET=test-secret-key-for-docker" >> .env
           echo "SENDGRID_API_KEY=SG.test-key" >> .env
           echo "GEMINI_API_KEY=test-gemini-key" >> .env
-          echo "FRONTEND_URL=http://localhost:3000" >> .env
+          echo "FRONTEND_URL=http://localhost:3500" >> .env
 
       - name: Start services with Docker Compose
         run: docker-compose up -d
@@ -571,7 +567,7 @@ jobs:
 
       - name: Test web application
         run: |
-          curl -f http://localhost:3000/api/health
+          curl -f http://localhost:3500/api/health
           echo "Web application check passed"
 
       - name: Run integration tests against Docker services

@@ -45,19 +45,19 @@ jobs:
           echo "JWT_SECRET=lighthouse-test-secret" >> .env
           echo "SENDGRID_API_KEY=SG.test-key" >> .env
           echo "GEMINI_API_KEY=test-gemini-key" >> .env
-          echo "NEXTAUTH_URL=http://localhost:3000" >> .env
+          echo "NEXTAUTH_URL=http://localhost:3500" >> .env
           echo "NEXTAUTH_SECRET=lighthouse-test-secret" >> .env
           echo "NEXT_PUBLIC_API_URL=http://localhost:3001/api/v1" >> .env
-          echo "NEXT_PUBLIC_APP_URL=http://localhost:3000" >> .env
+          echo "NEXT_PUBLIC_APP_URL=http://localhost:3500" >> .env
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/email_marketing_lighthouse
           JWT_SECRET: lighthouse-test-secret
           SENDGRID_API_KEY: SG.test-key
           GEMINI_API_KEY: test-gemini-key
-          NEXTAUTH_URL: http://localhost:3000
+          NEXTAUTH_URL: http://localhost:3500
           NEXTAUTH_SECRET: lighthouse-test-secret
           NEXT_PUBLIC_API_URL: http://localhost:3001/api/v1
-          NEXT_PUBLIC_APP_URL: http://localhost:3000
+          NEXT_PUBLIC_APP_URL: http://localhost:3500
 
       - name: Generate Prisma Client
         run: npm run db:generate
@@ -79,10 +79,10 @@ jobs:
         run: npm run build
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/email_marketing_lighthouse
-          NEXTAUTH_URL: http://localhost:3000
+          NEXTAUTH_URL: http://localhost:3500
           NEXTAUTH_SECRET: lighthouse-test-secret
           NEXT_PUBLIC_API_URL: http://localhost:3001/api/v1
-          NEXT_PUBLIC_APP_URL: http://localhost:3000
+          NEXT_PUBLIC_APP_URL: http://localhost:3500
 
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v10
@@ -91,10 +91,10 @@ jobs:
           JWT_SECRET: lighthouse-test-secret
           SENDGRID_API_KEY: SG.test-key
           GEMINI_API_KEY: test-gemini-key
-          NEXTAUTH_URL: http://localhost:3000
+          NEXTAUTH_URL: http://localhost:3500
           NEXTAUTH_SECRET: lighthouse-test-secret
           NEXT_PUBLIC_API_URL: http://localhost:3001/api/v1
-          NEXT_PUBLIC_APP_URL: http://localhost:3000
+          NEXT_PUBLIC_APP_URL: http://localhost:3500
         with:
           configPath: './lighthouserc.json'
           uploadArtifacts: false

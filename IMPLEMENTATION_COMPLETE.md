@@ -134,7 +134,7 @@ email/
    ```
 
 5. **Access Applications**:
-   - Frontend: http://localhost:3000
+   - Frontend: http://localhost:3500
    - Backend API: http://localhost:3001
    - API Docs: http://localhost:3001/api/docs
 

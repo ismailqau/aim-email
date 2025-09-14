@@ -40,6 +40,6 @@ export const appConfig = () => ({
     url: process.env.REDIS_URL || 'redis://localhost:6379',
   },
   frontend: {
-    url: process.env.FRONTEND_URL || 'http://localhost:3000',
+    url: process.env.FRONTEND_URL || 'http://localhost:3500',
   },
 });

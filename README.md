@@ -73,7 +73,7 @@ REDIS_PASSWORD=""
 # Application Configuration
 NODE_ENV="development"
 PORT=3001
-FRONTEND_URL="http://localhost:3000"
+FRONTEND_URL="http://localhost:3500"
 
 # Next.js Frontend Configuration
 NEXT_PUBLIC_API_URL="http://localhost:3001/api/v1"
@@ -132,7 +132,7 @@ npm run dev
 This will start:
 
 - **Backend API**: http://localhost:3001
-- **Frontend Web**: http://localhost:3000
+- **Frontend Web**: http://localhost:3500
 - **API Documentation**: http://localhost:3001/api/docs
 
 ### 🔧 Alternative: Full Docker Setup
@@ -158,12 +158,12 @@ docker-compose exec api npm run db:seed
 
 ### 1. Access the Application
 
-- Open http://localhost:3000 in your browser
+- Open http://localhost:3500 in your browser
 - You should see the landing page
 
 ### 2. Create an Account
 
-- Click "Create Account" or go to http://localhost:3000/register
+- Click "Create Account" or go to http://localhost:3500/register
 - Fill in your details and register
 
 ### 3. Login and Explore
@@ -266,7 +266,7 @@ docker run -d --name aim-email-api \
 
 # Web (requires API to be running)
 docker run -d --name aim-email-web \
-  -p 3000:3000 \
+  -p 3500:3500 \
   -e NEXT_PUBLIC_API_URL="http://localhost:3001/api/v1" \
   aim-email-web
 
@@ -293,7 +293,7 @@ docker rm aim-email-api aim-email-web
 | `REDIS_URL`    | Redis connection string | `redis://localhost:6379` |
 | `PORT`         | API server port         | `3001`                   |
 | `NODE_ENV`     | Environment mode        | `development`            |
-| `FRONTEND_URL` | Frontend URL for CORS   | `http://localhost:3000`  |
+| `FRONTEND_URL` | Frontend URL for CORS   | `http://localhost:3500`  |
 
 ## 🏗️ Architecture Overview
 
@@ -364,8 +364,8 @@ npm install
 **5. Port Already in Use**
 
 ```bash
-# Find and kill process using port 3000 or 3001
-lsof -ti:3000 | xargs kill -9
+# Find and kill process using port 3500 or 3001
+lsof -ti:3500 | xargs kill -9
 lsof -ti:3001 | xargs kill -9
 ```
 
