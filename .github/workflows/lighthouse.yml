@@ -54,10 +54,10 @@ jobs:
           JWT_SECRET: lighthouse-test-secret
           SENDGRID_API_KEY: SG.test-key
           GEMINI_API_KEY: test-gemini-key
-          NEXTAUTH_URL: http://localhost:3500
+          NEXTAUTH_URL: http://localhost:3000
           NEXTAUTH_SECRET: lighthouse-test-secret
-          NEXT_PUBLIC_API_URL: http://localhost:3501/api/v1
-          NEXT_PUBLIC_APP_URL: http://localhost:3500
+          NEXT_PUBLIC_API_URL: http://localhost:3001/api/v1
+          NEXT_PUBLIC_APP_URL: http://localhost:3000
 
       - name: Generate Prisma Client
         run: npm run db:generate
@@ -79,6 +79,30 @@ jobs:
         run: npm run build
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/email_marketing_lighthouse
+          NEXTAUTH_URL: http://localhost:3000
+          NEXTAUTH_SECRET: lighthouse-test-secret
+          NEXT_PUBLIC_API_URL: http://localhost:3501/api/v1
+          NEXT_PUBLIC_APP_URL: http://localhost:3000
+
+      - name: Start API server
+        run: |
+          npm run start:api &
+          sleep 30
+          # Wait for API to be ready
+          for i in {1..10}; do
+            if curl -f http://localhost:3501/api/v1/health; then
+              echo "API server is ready"
+              break
+            else
+              echo "Waiting for API server... ($i/10)"
+              sleep 5
+            fi
+          done
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/email_marketing_lighthouse
+          JWT_SECRET: lighthouse-test-secret
+          SENDGRID_API_KEY: SG.test-key
+          GEMINI_API_KEY: test-gemini-key
           NEXTAUTH_URL: http://localhost:3500
           NEXTAUTH_SECRET: lighthouse-test-secret
           NEXT_PUBLIC_API_URL: http://localhost:3501/api/v1

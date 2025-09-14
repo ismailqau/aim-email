@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACTIONS_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -36,7 +36,7 @@ jobs:
 
       - name: Generate contributor statistics
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ACTIONS_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
         run: |
           cat > generate-stats.js << 'EOF'
           const fs = require('fs');
@@ -45,7 +45,7 @@ jobs:
           async function generateStats() {
             
             const octokit = new Octokit({
-              auth: process.env.GITHUB_TOKEN,
+              auth: process.env.ACTIONS_TOKEN,
             });
 
             const owner = '${{ github.repository_owner }}';

@@ -41,3 +41,4 @@ temp/
 
 # TypeScript build info
 *.tsbuildinfo
+*.lighthouseci

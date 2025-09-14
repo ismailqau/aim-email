@@ -6,10 +6,7 @@
         "http://localhost:3500/login",
         "http://localhost:3500/register"
       ],
-      "numberOfRuns": 3,
-      "startServerCommand": "npm run start:web",
-      "startServerReadyPattern": "ready on|Ready on|started server on",
-      "startServerReadyTimeout": 60000
+      "numberOfRuns": 3
     },
     "assert": {
       "assertions": {
