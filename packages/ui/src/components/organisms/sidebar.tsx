@@ -13,8 +13,23 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+
+// Conditional imports for Next.js modules
+let Link: any;
+let usePathname: any;
+
+try {
+  Link = require('next/link').default;
+  usePathname = require('next/navigation').usePathname;
+} catch {
+  // Fallback components when Next.js is not available
+  Link = ({ href, children, ...props }: any) => (
+    <a href={href} {...props}>
+      {children}
+    </a>
+  );
+  usePathname = () => '/';
+}
 import { Button } from '../atoms/button';
 import { Typography } from '../atoms/typography';
 import { Badge } from '../atoms/badge';
