@@ -20,7 +20,7 @@ import { useAuth } from '@/lib/auth-context';
 import { Button, Input, Typography } from '@email-system/ui';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
+  const [emailOrUsername, setEmailOrUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -33,7 +33,7 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const response = await authApi.login({ email, password });
+      const response = await authApi.login({ emailOrUsername, password });
       login(response.data.token, response.data.user);
       router.push('/dashboard');
     } catch (err: any) {
@@ -70,11 +70,11 @@ export default function LoginPage() {
           )}
           <div>
             <Input
-              type='email'
+              type='text'
               required
-              placeholder='Email address'
-              value={email}
-              onChange={e => setEmail(e.target.value)}
+              placeholder='Email address or username'
+              value={emailOrUsername}
+              onChange={e => setEmailOrUsername(e.target.value)}
             />
           </div>
           <div>

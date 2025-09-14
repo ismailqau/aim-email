@@ -12,7 +12,7 @@
 
 // Authentication types
 export interface LoginCredentials {
-  email: string;
+  emailOrUsername: string;
   password: string;
 }
 

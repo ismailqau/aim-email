@@ -17,7 +17,7 @@ export const authApi = {
   register: (userData: { name: string; email: string; password: string }) =>
     apiClient.post('/auth/register', userData),
 
-  login: (credentials: { email: string; password: string }) =>
+  login: (credentials: { emailOrUsername: string; password: string }) =>
     apiClient.post('/auth/login', credentials),
 
   logout: () => apiClient.post('/auth/logout'),

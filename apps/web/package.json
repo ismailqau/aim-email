@@ -19,7 +19,7 @@
     "docs:api": "echo 'API docs for web app'",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "start": "next start",
+    "start": "set PORT=3500 && next start",
     "type-check": "tsc --noEmit",
     "format": "prettier --write \"app/**/*.{ts,tsx}\" \"lib/**/*.{ts,tsx}\" \"*.{js,ts}\"",
     "format:check": "prettier --check \"app/**/*.{ts,tsx}\" \"lib/**/*.{ts,tsx}\" \"*.{js,ts}\"",

@@ -41,4 +41,10 @@ temp/
 
 # TypeScript build info
 *.tsbuildinfo
+
+# Compiled TypeScript files in packages
+packages/*/src/*.js
+packages/*/src/*.d.ts
+packages/*/src/*.js.map
+
 *.lighthouseci

@@ -60,8 +60,13 @@ export class AuthService {
   }
 
   async login(credentials: LoginDto) {
-    const user = await this.database.client.user.findUnique({
-      where: { email: credentials.email },
+    // Check if input is email or username
+    const isEmail = credentials.emailOrUsername.includes('@');
+
+    const user = await this.database.client.user.findFirst({
+      where: isEmail
+        ? { email: credentials.emailOrUsername }
+        : { username: credentials.emailOrUsername },
     });
 
     if (!user) {

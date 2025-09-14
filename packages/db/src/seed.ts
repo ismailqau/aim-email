@@ -10,11 +10,32 @@
  * For commercial use, please maintain proper attribution.
  */
 
+import { config } from 'dotenv';
+import { resolve } from 'path';
 import { prisma } from './client';
 import { hashPassword } from './utils';
 
+// Load environment variables from root .env file
+config({ path: resolve(__dirname, '../../../.env') });
+
 async function main() {
   console.log('🌱 Starting database seed...');
+
+  // Create default admin user
+  const adminHashedPassword = await hashPassword('admin');
+
+  const adminUser = await prisma.user.upsert({
+    where: { email: 'admin@admin.com' },
+    update: {},
+    create: {
+      email: 'admin@admin.com',
+      username: 'admin',
+      name: 'Admin User',
+      password: adminHashedPassword,
+    },
+  });
+
+  console.log('👤 Created admin user:', adminUser.email);
 
   // Create demo user
   const hashedPassword = await hashPassword('password123');
