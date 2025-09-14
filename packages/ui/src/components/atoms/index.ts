@@ -19,3 +19,7 @@ export { Avatar, AvatarImage, AvatarFallback } from './avatar';
 export { Spinner } from './spinner';
 export { Icon } from './icon';
 export { Typography } from './typography';
+export { UserProfile } from './user-profile';
+
+// Export all icons
+export * from '../icons';

@@ -21,7 +21,7 @@ describe('UsersService', () => {
     client: {
       user: {
         findMany: jest.fn(),
-        findUnique: jest.fn(),
+        findFirst: jest.fn(),
       },
     },
   };
@@ -90,18 +90,18 @@ describe('UsersService', () => {
     };
 
     it('should return a user by id', async () => {
-      mockDatabaseService.client.user.findUnique.mockResolvedValue(mockUser);
+      mockDatabaseService.client.user.findFirst.mockResolvedValue(mockUser);
 
       const result = await service.findOne(userId);
 
-      expect(mockDatabaseService.client.user.findUnique).toHaveBeenCalledWith({
+      expect(mockDatabaseService.client.user.findFirst).toHaveBeenCalledWith({
         where: { id: userId },
       });
       expect(result).toEqual(mockUser);
     });
 
     it('should return null when user not found', async () => {
-      mockDatabaseService.client.user.findUnique.mockResolvedValue(null);
+      mockDatabaseService.client.user.findFirst.mockResolvedValue(null);
 
       const result = await service.findOne('non-existent-id');
 

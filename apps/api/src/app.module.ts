@@ -18,6 +18,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { CompaniesModule } from './companies/companies.module';
 import { LeadsModule } from './leads/leads.module';
+import { CampaignsModule } from './campaigns/campaigns.module';
 import { PipelinesModule } from './pipelines/pipelines.module';
 import { EmailsModule } from './emails/emails.module';
 import { AnalyticsModule } from './analytics/analytics.module';
@@ -57,6 +58,7 @@ import { appConfig } from './common/config/app.config';
     UsersModule,
     CompaniesModule,
     LeadsModule,
+    CampaignsModule,
     PipelinesModule,
     EmailsModule,
     AnalyticsModule,

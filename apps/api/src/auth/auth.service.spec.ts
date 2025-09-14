@@ -34,7 +34,7 @@ describe('AuthService', () => {
   const mockDatabaseService = {
     client: {
       user: {
-        findUnique: jest.fn(),
+        findFirst: jest.fn(),
         create: jest.fn(),
       },
     },
@@ -86,14 +86,14 @@ describe('AuthService', () => {
     };
 
     it('should successfully register a new user', async () => {
-      mockDatabaseService.client.user.findUnique.mockResolvedValue(null);
+      mockDatabaseService.client.user.findFirst.mockResolvedValue(null);
       mockDatabaseService.client.user.create.mockResolvedValue(mockUser);
       mockJwtService.sign.mockReturnValue('jwt-token');
 
       const result = await service.register(registerDto);
 
       expect(hashPassword).toHaveBeenCalledWith(registerDto.password);
-      expect(mockDatabaseService.client.user.findUnique).toHaveBeenCalledWith({
+      expect(mockDatabaseService.client.user.findFirst).toHaveBeenCalledWith({
         where: { email: registerDto.email },
       });
       expect(mockDatabaseService.client.user.create).toHaveBeenCalledWith({
@@ -119,7 +119,7 @@ describe('AuthService', () => {
     });
 
     it('should throw ConflictException if user already exists', async () => {
-      mockDatabaseService.client.user.findUnique.mockResolvedValue(mockUser);
+      mockDatabaseService.client.user.findFirst.mockResolvedValue(mockUser);
 
       await expect(service.register(registerDto)).rejects.toThrow(
         new ConflictException('User with this email already exists')
@@ -132,7 +132,7 @@ describe('AuthService', () => {
 
   describe('login', () => {
     const loginDto: LoginDto = {
-      email: 'john@example.com',
+      emailOrUsername: 'john@example.com',
       password: 'password123',
     };
 
@@ -145,14 +145,14 @@ describe('AuthService', () => {
     };
 
     it('should successfully login with valid credentials', async () => {
-      mockDatabaseService.client.user.findUnique.mockResolvedValue(mockUser);
+      mockDatabaseService.client.user.findFirst.mockResolvedValue(mockUser);
       (verifyPassword as jest.Mock).mockResolvedValue(true);
       mockJwtService.sign.mockReturnValue('jwt-token');
 
       const result = await service.login(loginDto);
 
-      expect(mockDatabaseService.client.user.findUnique).toHaveBeenCalledWith({
-        where: { email: loginDto.email },
+      expect(mockDatabaseService.client.user.findFirst).toHaveBeenCalledWith({
+        where: { email: loginDto.emailOrUsername },
       });
       expect(verifyPassword).toHaveBeenCalledWith(
         loginDto.password,
@@ -174,7 +174,7 @@ describe('AuthService', () => {
     });
 
     it('should throw UnauthorizedException if user not found', async () => {
-      mockDatabaseService.client.user.findUnique.mockResolvedValue(null);
+      mockDatabaseService.client.user.findFirst.mockResolvedValue(null);
 
       await expect(service.login(loginDto)).rejects.toThrow(
         new UnauthorizedException('Invalid credentials')
@@ -185,7 +185,7 @@ describe('AuthService', () => {
     });
 
     it('should throw UnauthorizedException if password is invalid', async () => {
-      mockDatabaseService.client.user.findUnique.mockResolvedValue(mockUser);
+      mockDatabaseService.client.user.findFirst.mockResolvedValue(mockUser);
       (verifyPassword as jest.Mock).mockResolvedValue(false);
 
       await expect(service.login(loginDto)).rejects.toThrow(
@@ -210,11 +210,11 @@ describe('AuthService', () => {
     };
 
     it('should return user if found', async () => {
-      mockDatabaseService.client.user.findUnique.mockResolvedValue(mockUser);
+      mockDatabaseService.client.user.findFirst.mockResolvedValue(mockUser);
 
       const result = await service.validateUser(userId);
 
-      expect(mockDatabaseService.client.user.findUnique).toHaveBeenCalledWith({
+      expect(mockDatabaseService.client.user.findFirst).toHaveBeenCalledWith({
         where: { id: userId },
         select: {
           id: true,
@@ -227,7 +227,7 @@ describe('AuthService', () => {
     });
 
     it('should throw UnauthorizedException if user not found', async () => {
-      mockDatabaseService.client.user.findUnique.mockResolvedValue(null);
+      mockDatabaseService.client.user.findFirst.mockResolvedValue(null);
 
       await expect(service.validateUser(userId)).rejects.toThrow(
         new UnauthorizedException('User not found')

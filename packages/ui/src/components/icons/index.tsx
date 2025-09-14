@@ -499,6 +499,283 @@ export const RefreshIcon: React.FC<IconProps> = ({
   </svg>
 );
 
+// Additional Icons for New Pages
+export const TestIcon: React.FC<IconProps> = ({
+  className = '',
+  size = 20,
+  color = 'currentColor',
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 24 24'
+    fill='none'
+    className={className}
+  >
+    <path
+      d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z'
+      fill={color}
+    />
+  </svg>
+);
+
+export const ConnectIcon: React.FC<IconProps> = ({
+  className = '',
+  size = 20,
+  color = 'currentColor',
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 24 24'
+    fill='none'
+    className={className}
+  >
+    <path
+      d='M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z'
+      fill={color}
+    />
+  </svg>
+);
+
+export const DisconnectIcon: React.FC<IconProps> = ({
+  className = '',
+  size = 20,
+  color = 'currentColor',
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 24 24'
+    fill='none'
+    className={className}
+  >
+    <path
+      d='M4 12c0-1.71 1.39-3.1 3.1-3.1h1.9v-2H7C4.24 6.9 2 9.14 2 12s2.24 5.1 5 5.1h1.9v-2H7c-1.71 0-3.1-1.39-3.1-3.1zm4.9 0c0 .55.45 1 1 1h4.2c.55 0 1-.45 1-1s-.45-1-1-1H9.9c-.55 0-1 .45-1 1zm8.1-5.1h-1.9v2H17c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-1.9v2H17c2.76 0 5-2.24 5-5.1s-2.24-5.1-5-5.1z'
+      fill={color}
+    />
+  </svg>
+);
+
+export const SaveIcon: React.FC<IconProps> = ({
+  className = '',
+  size = 20,
+  color = 'currentColor',
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 24 24'
+    fill='none'
+    className={className}
+  >
+    <path
+      d='M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z'
+      fill={color}
+    />
+  </svg>
+);
+
+export const PlayIcon: React.FC<IconProps> = ({
+  className = '',
+  size = 20,
+  color = 'currentColor',
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 24 24'
+    fill='none'
+    className={className}
+  >
+    <path d='M8 5v14l11-7z' fill={color} />
+  </svg>
+);
+
+export const PauseIcon: React.FC<IconProps> = ({
+  className = '',
+  size = 20,
+  color = 'currentColor',
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 24 24'
+    fill='none'
+    className={className}
+  >
+    <path d='M6 19h4V5H6v14zm8-14v14h4V5h-4z' fill={color} />
+  </svg>
+);
+
+export const TemplateIcon: React.FC<IconProps> = ({
+  className = '',
+  size = 20,
+  color = 'currentColor',
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 24 24'
+    fill='none'
+    className={className}
+  >
+    <path
+      d='M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z'
+      fill={color}
+    />
+  </svg>
+);
+
+export const EyeIcon: React.FC<IconProps> = ({
+  className = '',
+  size = 20,
+  color = 'currentColor',
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 24 24'
+    fill='none'
+    className={className}
+  >
+    <path
+      d='M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z'
+      fill={color}
+    />
+  </svg>
+);
+
+export const ArrowLeftIcon: React.FC<IconProps> = ({
+  className = '',
+  size = 20,
+  color = 'currentColor',
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 24 24'
+    fill='none'
+    className={className}
+  >
+    <path
+      d='M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z'
+      fill={color}
+    />
+  </svg>
+);
+
+export const MoveIcon: React.FC<IconProps> = ({
+  className = '',
+  size = 20,
+  color = 'currentColor',
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 24 24'
+    fill='none'
+    className={className}
+  >
+    <path
+      d='M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z'
+      fill={color}
+    />
+  </svg>
+);
+
+export const TrendingUpIcon: React.FC<IconProps> = ({
+  className = '',
+  size = 20,
+  color = 'currentColor',
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 24 24'
+    fill='none'
+    className={className}
+  >
+    <path
+      d='M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z'
+      fill={color}
+    />
+  </svg>
+);
+
+export const PlusIcon: React.FC<IconProps> = ({
+  className = '',
+  size = 20,
+  color = 'currentColor',
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 24 24'
+    fill='none'
+    className={className}
+  >
+    <path d='M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z' fill={color} />
+  </svg>
+);
+
+export const TrashIcon: React.FC<IconProps> = ({
+  className = '',
+  size = 20,
+  color = 'currentColor',
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 24 24'
+    fill='none'
+    className={className}
+  >
+    <path
+      d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'
+      fill={color}
+    />
+  </svg>
+);
+
+export const EditIcon: React.FC<IconProps> = ({
+  className = '',
+  size = 20,
+  color = 'currentColor',
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 24 24'
+    fill='none'
+    className={className}
+  >
+    <path
+      d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'
+      fill={color}
+    />
+  </svg>
+);
+
+export const XIcon: React.FC<IconProps> = ({
+  className = '',
+  size = 20,
+  color = 'currentColor',
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 24 24'
+    fill='none'
+    className={className}
+  >
+    <path
+      d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'
+      fill={color}
+    />
+  </svg>
+);
+
 /**
  * Icon component with consistent styling
  */
@@ -533,6 +810,21 @@ export const Icon: React.FC<IconComponentProps> = ({ name, ...props }) => {
     filter: FilterIcon,
     export: ExportIcon,
     refresh: RefreshIcon,
+    test: TestIcon,
+    connect: ConnectIcon,
+    disconnect: DisconnectIcon,
+    save: SaveIcon,
+    play: PlayIcon,
+    pause: PauseIcon,
+    template: TemplateIcon,
+    eye: EyeIcon,
+    arrowLeft: ArrowLeftIcon,
+    move: MoveIcon,
+    trendingUp: TrendingUpIcon,
+    plus: PlusIcon,
+    trash: TrashIcon,
+    edit: EditIcon,
+    x: XIcon,
   };
 
   const IconComponent = iconMap[name];

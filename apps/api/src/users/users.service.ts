@@ -22,6 +22,6 @@ export class UsersService {
   }
 
   async findOne(id: string) {
-    return this.database.client.user.findUnique({ where: { id } });
+    return this.database.client.user.findFirst({ where: { id } });
   }
 }

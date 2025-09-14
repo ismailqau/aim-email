@@ -90,7 +90,7 @@ describe('AuthController', () => {
 
   describe('login', () => {
     const loginDto: LoginDto = {
-      email: 'john@example.com',
+      emailOrUsername: 'john@example.com',
       password: 'password123',
     };
 

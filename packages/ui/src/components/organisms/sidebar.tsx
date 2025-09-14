@@ -12,7 +12,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Conditional imports for Next.js modules
 let Link: any;
@@ -33,7 +33,7 @@ try {
 import { Button } from '../atoms/button';
 import { Typography } from '../atoms/typography';
 import { Badge } from '../atoms/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../atoms/avatar';
+import { UserProfile } from '../atoms/user-profile';
 import {
   DashboardIcon,
   LeadsIcon,
@@ -183,12 +183,33 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const pathname = usePathname();
 
-  const toggleExpanded = (itemId: string) => {
-    setExpandedItems(prev =>
-      prev.includes(itemId)
-        ? prev.filter(id => id !== itemId)
-        : [...prev, itemId]
+  // Load expanded items from localStorage on component mount
+  useEffect(() => {
+    const savedExpandedItems = localStorage.getItem('sidebar-expanded-items');
+    if (savedExpandedItems) {
+      try {
+        setExpandedItems(JSON.parse(savedExpandedItems));
+      } catch (error) {
+        console.warn('Failed to parse saved sidebar state:', error);
+      }
+    }
+  }, []);
+
+  // Save expanded items to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem(
+      'sidebar-expanded-items',
+      JSON.stringify(expandedItems)
     );
+  }, [expandedItems]);
+
+  const toggleExpanded = (itemId: string) => {
+    setExpandedItems(prev => {
+      const newExpandedItems = prev.includes(itemId)
+        ? prev.filter(id => id !== itemId)
+        : [...prev, itemId];
+      return newExpandedItems;
+    });
   };
 
   const isActive = (href?: string) => {
@@ -368,33 +389,18 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
       {/* User Profile */}
       <div className='p-4 border-t border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900'>
         <div
-          className={`flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:shadow-sm dark:hover:bg-gray-800 transition-all duration-200 cursor-pointer group ${isCollapsed ? 'justify-center' : ''}`}
+          className={`p-3 rounded-lg hover:bg-white hover:shadow-sm dark:hover:bg-gray-800 transition-all duration-200 cursor-pointer group ${isCollapsed ? 'flex justify-center' : ''}`}
         >
-          <div className='relative'>
-            <Avatar className='w-8 h-8 ring-2 ring-white shadow-sm'>
-              <AvatarImage src='/api/placeholder/32/32' alt='User' />
-              <AvatarFallback>MI</AvatarFallback>
-            </Avatar>
-            <div className='absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 border-2 border-white rounded-full'></div>
-          </div>
+          <UserProfile
+            name='Muhammad Ismail'
+            email='ismail@aimnovo.com'
+            gender='male'
+            size='md'
+            showDetails={!isCollapsed}
+            className='group-hover:text-gray-700'
+          />
           {!isCollapsed && (
-            <div className='flex-1 min-w-0 transition-all duration-300'>
-              <Typography
-                variant='small'
-                className='font-medium truncate group-hover:text-gray-700'
-              >
-                Muhammad Ismail
-              </Typography>
-              <Typography
-                variant='muted'
-                className='text-xs truncate group-hover:text-gray-600'
-              >
-                ismail@aimnovo.com
-              </Typography>
-            </div>
-          )}
-          {!isCollapsed && (
-            <ChevronRightIcon className='w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors duration-200' />
+            <ChevronRightIcon className='w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors duration-200 ml-auto' />
           )}
         </div>
 

@@ -93,4 +93,46 @@ export class LeadsController {
     const csvData: LeadCsvData[] = []; // TODO: Parse CSV file
     return this.leadsService.uploadLeadsFromCsv(req.user.companyId, csvData);
   }
+
+  // Lead Scoring Endpoints
+  @Put(':id/score')
+  @ApiOperation({ summary: 'Update lead score' })
+  async updateLeadScore(
+    @Request() req: CustomRequest,
+    @Param('id') id: string,
+    @Body() scoreData: { score: number }
+  ) {
+    return this.leadsService.updateLeadScore(
+      req.user.companyId,
+      id,
+      scoreData.score
+    );
+  }
+
+  @Post(':id/calculate-score')
+  @ApiOperation({ summary: 'Calculate lead score automatically' })
+  async calculateLeadScore(
+    @Request() req: CustomRequest,
+    @Param('id') id: string
+  ) {
+    return this.leadsService.calculateLeadScore(req.user.companyId, id);
+  }
+
+  @Post('bulk-calculate-scores')
+  @ApiOperation({ summary: 'Calculate scores for all leads' })
+  async bulkCalculateScores(@Request() req: CustomRequest) {
+    return this.leadsService.bulkCalculateScores(req.user.companyId);
+  }
+
+  @Get('by-score')
+  @ApiOperation({ summary: 'Get leads filtered by score range' })
+  async getLeadsByScore(
+    @Request() req: CustomRequest,
+    @Query('minScore') minScore?: string,
+    @Query('maxScore') maxScore?: string
+  ) {
+    const min = minScore ? parseFloat(minScore) : 0;
+    const max = maxScore ? parseFloat(maxScore) : 100;
+    return this.leadsService.getLeadsByScore(req.user.companyId, min, max);
+  }
 }

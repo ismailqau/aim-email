@@ -28,7 +28,7 @@ export class AuthService {
   ) {}
 
   async register(userData: RegisterDto) {
-    const existingUser = await this.database.client.user.findUnique({
+    const existingUser = await this.database.client.user.findFirst({
       where: { email: userData.email },
     });
 
@@ -96,7 +96,7 @@ export class AuthService {
   }
 
   async validateUser(userId: string) {
-    const user = await this.database.client.user.findUnique({
+    const user = await this.database.client.user.findFirst({
       where: { id: userId },
       select: {
         id: true,

@@ -150,6 +150,117 @@ export class LeadsService {
   }
 
   private isValidEmail(email: string): boolean {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  // Lead Scoring Methods
+  async updateLeadScore(companyId: string, leadId: string, score: number) {
+    await this.getLeadById(companyId, leadId);
+
+    return this.database.client.lead.update({
+      where: { id: leadId },
+      data: { priorityScore: score },
+    });
+  }
+
+  async calculateLeadScore(companyId: string, leadId: string) {
+    const lead = await this.getLeadById(companyId, leadId);
+
+    let score = 0;
+
+    // Base scoring criteria
+    if (lead.title) {
+      const seniorTitles = [
+        'ceo',
+        'cto',
+        'cfo',
+        'vp',
+        'director',
+        'manager',
+        'head',
+      ];
+      const hasTitle = seniorTitles.some(title =>
+        lead.title!.toLowerCase().includes(title)
+      );
+      if (hasTitle) score += 25;
+    }
+
+    if (lead.companyName) score += 15;
+    if (lead.firstName && lead.lastName) score += 10;
+
+    // Email engagement scoring
+    const emailStats = await this.database.client.email.findMany({
+      where: { leadId },
+      include: {
+        emailEvents: true,
+      },
+    });
+
+    const totalEmails = emailStats.length;
+    const openedEmails = emailStats.filter(email =>
+      email.emailEvents.some(event => event.eventType === 'OPENED')
+    ).length;
+    const clickedEmails = emailStats.filter(email =>
+      email.emailEvents.some(event => event.eventType === 'CLICKED')
+    ).length;
+
+    if (totalEmails > 0) {
+      const openRate = (openedEmails / totalEmails) * 100;
+      const clickRate = (clickedEmails / totalEmails) * 100;
+
+      score += Math.min(openRate * 0.5, 25); // Max 25 points for opens
+      score += Math.min(clickRate * 2, 25); // Max 25 points for clicks
+    }
+
+    // Update the lead with calculated score
+    await this.updateLeadScore(companyId, leadId, Math.min(score, 100));
+
+    return { leadId, calculatedScore: Math.min(score, 100) };
+  }
+
+  async bulkCalculateScores(companyId: string) {
+    const leads = await this.database.client.lead.findMany({
+      where: { companyId },
+      select: { id: true },
+    });
+
+    const results = [];
+
+    for (const lead of leads) {
+      try {
+        const result = await this.calculateLeadScore(companyId, lead.id);
+        results.push(result);
+      } catch (error) {
+        results.push({
+          leadId: lead.id,
+          error: error instanceof Error ? error.message : 'Unknown error',
+        });
+      }
+    }
+
+    return {
+      totalProcessed: leads.length,
+      results,
+    };
+  }
+
+  async getLeadsByScore(
+    companyId: string,
+    minScore: number = 0,
+    maxScore: number = 100
+  ) {
+    return this.database.client.lead.findMany({
+      where: {
+        companyId,
+        priorityScore: {
+          gte: minScore,
+          lte: maxScore,
+        },
+      },
+      orderBy: {
+        priorityScore: 'desc',
+      },
+    });
   }
 }
