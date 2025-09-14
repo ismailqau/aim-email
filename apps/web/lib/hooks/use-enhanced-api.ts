@@ -11,7 +11,12 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  keepPreviousData,
+} from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import {
   authApiEnhanced,
@@ -92,9 +97,9 @@ export const useAuthEnhanced = () => {
     forgotPassword: forgotPasswordMutation.mutate,
     resetPassword: resetPasswordMutation.mutate,
     isLoading:
-      loginMutation.isLoading ||
-      registerMutation.isLoading ||
-      logoutMutation.isLoading,
+      loginMutation.isPending ||
+      registerMutation.isPending ||
+      logoutMutation.isPending,
     error:
       loginMutation.error || registerMutation.error || logoutMutation.error,
   };
@@ -158,7 +163,7 @@ export const useCompanies = (params?: {
   return useQuery({
     queryKey: ['companies', params],
     queryFn: () => companiesApiEnhanced.getCompanies(params),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -231,7 +236,7 @@ export const useLeads = (params?: {
   return useQuery({
     queryKey: ['leads', params],
     queryFn: () => leadsApiEnhanced.getLeads(params),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -341,7 +346,7 @@ export const usePipelines = (params?: {
   return useQuery({
     queryKey: ['pipelines', params],
     queryFn: () => pipelinesApiEnhanced.getPipelines(params),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -422,9 +427,9 @@ export const useEmailTemplates = (params?: {
   search?: string;
 }) => {
   return useQuery({
-    queryKey: ['emails', 'templates', params],
+    queryKey: ['email-templates', params],
     queryFn: () => emailsApiEnhanced.getTemplates(params),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -437,9 +442,9 @@ export const useEmailHistory = (params?: {
   dateTo?: string;
 }) => {
   return useQuery({
-    queryKey: ['emails', 'history', params],
+    queryKey: ['email-history', params],
     queryFn: () => emailsApiEnhanced.getEmailHistory(params),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -465,7 +470,7 @@ export const usePerformanceAnalytics = (params?: {
   return useQuery({
     queryKey: ['analytics', 'performance', params],
     queryFn: () => analyticsApiEnhanced.getPerformance(params),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -475,9 +480,9 @@ export const useLeadInsights = (params?: {
   segmentBy?: 'company' | 'industry' | 'source';
 }) => {
   return useQuery({
-    queryKey: ['analytics', 'leads', params],
+    queryKey: ['analytics', 'lead-insights', params],
     queryFn: () => analyticsApiEnhanced.getLeadInsights(params),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -487,9 +492,9 @@ export const useEmailInsights = (params?: {
   campaignId?: string;
 }) => {
   return useQuery({
-    queryKey: ['analytics', 'emails', params],
+    queryKey: ['analytics', 'email-insights', params],
     queryFn: () => analyticsApiEnhanced.getEmailInsights(params),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
